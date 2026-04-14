@@ -24,7 +24,6 @@ Change formula so there's generally more offense not just purely batting average
 
 DONE
 ------------------------------------
-TODO
 
 Fix an Issue where errors just result in next batter. Should also result in other base runners advancing or scoring. Treat an Error just like a single where runs can score and other runners advance. 
 
@@ -53,3 +52,9 @@ Make each franchise compete in a series out of 7 with the objective to win the W
 For the opponent lineup handedness dont show RH/LH for batters just R/L
 
 Check who is the home team when determining if the game should end
+
+DONE
+____________________________________
+TODO
+
+For tag up - remove icon from the base tagging from

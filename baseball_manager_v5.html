@@ -798,7 +798,7 @@
     return Math.round(min + randBiasedNormal() * (max - min));
   }
 
-  function genHitter(i) {
+  function genHitter(i, aiBonus) {
     const roll = Math.random();
     let handTemp = 'R';        // 65% Righty
 
@@ -813,6 +813,16 @@
     const max = 99;
     const spd = weightedInt(min, max);
     const pos = POSITIONS[i] || pick(POSITIONS);
+
+    if (aiBonus) {
+      return {
+        id: i, name: fn[0] + '. ' + ln, hand, num, pos, spd,
+        avg: r3(rnd(.220, .330)), ops: r2(rnd(.710, .999)),
+        bbRate: r2(rnd(.09, .21)), kRate: r2(rnd(.12, .27)),
+        active: true, inGame: i < 9, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0 }
+      };
+    }
+
     return {
       id: i, name: fn[0] + '. ' + ln, hand, num, pos, spd,
       avg: r3(rnd(.215, .325)), ops: r2(rnd(.640, .990)),
@@ -832,14 +842,14 @@
     };
   }
 
-  function genTeam(name, reuse) {
+  function genTeam(name, reuse, aiBonus) {
     if (reuse) {
       const h = reuse.hitters.map(p => ({ ...p, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0 }, inGame: p.id < 9, active: true }));
       const pi = reuse.pitchers.map(p => ({ ...p, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false }));
       return { name, hitters: h, pitchers: pi, score: {}, runs: 0 };
     }
     return {
-      name, hitters: Array.from({ length: 13 }, (_, i) => genHitter(i)),
+      name, hitters: Array.from({ length: 13 }, (_, i) => genHitter(i, aiBonus)),
       pitchers: Array.from({ length: 13 }, (_, i) => genPitcher(i)), score: {}, runs: 0
     };
   }
@@ -847,8 +857,8 @@
   function initGame() {
     const c1 = pick(CITIES), c2 = pick(CITIES.filter(x => x !== c1));
     const t1 = pick(TEAMS), t2 = pick(TEAMS.filter(x => x !== t1));
-    G.you = genTeam(c1 + ' ' + t1, null);
-    G.opp = genTeam(c2 + ' ' + t2, null);
+    G.you = genTeam(c1 + ' ' + t1, null, false);
+    G.opp = genTeam(c2 + ' ' + t2, null, true);
     setupMatch();
   }
 
