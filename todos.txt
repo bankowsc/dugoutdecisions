@@ -1,0 +1,55 @@
+TODOs
+
+
+Add specialty plays like 1st to 3rd, 2nd to home when 2 outs
+Add manager recommended steals - 
+OVERALL a speed category for players which determines their odds of taking extra bases?
+
+Opposing pitchers actually get tired and sub in new pitchers.
+EMHPHASIZE effects of tiredness. 
+
+Can replace bench players to starters at beginning when setting lineup
+
+Game ends on walkoff / no bottom 9th
+
+Make 3rd section wider such that not spilling to 2 rows
+
+Fix stats to make 4-0 0-4
+
+Show opponent handedness and emphasize better batting averages when pitcher and batter different handedness. Same BA when they are same.
+
+Show opponent pitcher as well as his handedness in the opponent lineup section.
+
+Change formula so there's generally more offense not just purely batting average? Errors added?
+
+DONE
+------------------------------------
+TODO
+
+Fix an Issue where errors just result in next batter. Should also result in other base runners advancing or scoring. Treat an Error just like a single where runs can score and other runners advance. 
+
+Highlight the due up player for the side not batting.
+
+For on base players - Just show their initials not their full name.
+
+For steals. Make the odds of stealing 3rd base from 2nd half as likely as stealing 2nd from 1st
+
+For scoring from Second make sure that the player name doesn't go to 3rd even though they scored
+
+ALSO, a player can select tag up. If the out is ever a flyout the player attempts to tag up as the same % odds success of a steal.
+
+I THINK IT MAY SKIP THE BOTTOM OF THE INNING WHEN THE ROAD TEAM IS WINNING BUT SHOULDNT IF HOME TEAM LOSING??????*****
+
+IMPORTANT: Players who score should have their name removed from the base path. Currently it leaves a runner on 3rd if they score on a single but shouldn't. ACTUALLY I think the issue is going 1st to 3rd. It marks both squares with that players name but should be just 3rd after all said and done. Same with 2nd to home
+
+Highlight what team is MINE - and the others is AI where the batting orders are shown - next to Batting/In Field
+
+Show the same handedness bonus in red instead of green when my team is pitching and AI is batting
+
+If player is subbed in for while they are on the base path. That player gets replaced there too by the subbed in player. Currently it accidentally duplicates the player
+
+Make each franchise compete in a series out of 7 with the objective to win the World Series. if a team reaches 4/7 wins the series ends and that franchise is the winner. This is for "next game (same roster)" button. New franchise button resets the series with new teams.
+
+For the opponent lineup handedness dont show RH/LH for batters just R/L
+
+Check who is the home team when determining if the game should end

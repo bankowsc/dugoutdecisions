@@ -930,22 +930,57 @@
 
   function handednessBonus(bat, pit) { return bat.hand !== pit.hand ? 0.030 : 0; }
 
+  function getHitType(bat) {
+    const power = clamp((bat.ops - 0.700) / 0.300, 0, 1); // normalize power
+
+    const hr = 0.03 + power * 0.07;   // ~3%–10%
+    const dbl = 0.18 + power * 0.05;
+    const trp = 0.02;
+
+    const r = Math.random();
+
+    if (r < hr) return 'HR';
+    if (r < hr + dbl) return '2B';
+    if (r < hr + dbl + trp) return '3B';
+    return '1B';
+  }
+
   function getResult(bat, pit) {
     const pen = staminaPenalty(pit);
     const bonus = handednessBonus(bat, pit);
-    const adjK = clamp(bat.kRate * .5 + pit.kRate * .5 + (pit.whip - 1.2) * .08 - pen * .18, 0, .45);
-    const adjBB = clamp(bat.bbRate * .5 + pit.bbRate * .5 + pen * .15, 0, .28);
-    const baseH = bat.avg * (1 / Math.max(pit.whip, 0.5));
-    const adjH = clamp(baseH + bonus + pen * .22, 0, .50);
+
+    // 1. Strikeout
+    const k = clamp(
+      (bat.kRate * 0.6 + pit.kRate * 0.6) - pen * 0.15,
+      0.05, 0.4
+    );
+
+    // 2. Walk
+    const bb = clamp(
+      (bat.bbRate * 0.6 + pit.bbRate * 0.6) + pen * 0.12,
+      0.03, 0.2
+    );
+
+    // Remaining probability = ball in play
+    const bip = 1 - k - bb;
+
+    // 3. Hit rate on balls in play (BABIP-like)
+    const babip = clamp(
+      0.290 + bonus + (bat.avg - 0.260) * 0.5 - (pit.whip - 1.3) * 0.08 + pen * 0.1,
+      0.240, 0.340
+    );
+
+    const hitProb = bip * babip;
+
     const r = Math.random();
-    if (r < adjK) return 'K';
-    if (r < adjK + adjBB) return 'BB';
-    if (r < adjK + adjBB + adjH * .36) {
-      if (Math.random() < 0.05) return 'E';
-      const h = Math.random(); if (h < .08 + bat.ops * .04) return 'HR'; if (h < .20) return '2B'; if (h < .28) return '3B'; return '1B';
+
+    if (r < k) return 'K';
+    if (r < k + bb) return 'BB';
+    if (r < k + bb + hitProb) {
+      return getHitType(bat);
     }
-    if (Math.random() < 0.05) return 'E';
-    return r < .55 ? 'GO' : 'FO';
+
+    return Math.random() < 0.55 ? 'GO' : 'FO';
   }
 
   function tryExtraBase(runner, chance) { return Math.random() < (runner.spd / 100) * chance; }
@@ -1039,7 +1074,8 @@
     G.outs = 0; G.bases = [null, null, null];
     if (G.half === 'top') {
       G.half = 'bottom';
-      if (G.inning >= G.maxInning && G.opp.runs > G.you.runs) { endGame(); return; }
+      // if (G.inning >= G.maxInning && G.opp.runs > G.you.runs) { endGame(); return; }
+      if (G.inning >= G.maxInning && G.you.runs > G.opp.runs) { endGame(); return; } // TODO ISSUE WHERE NEED TO CHECK WHO IS THE HOME TEAM**
     } else {
       if (G.you.runs !== G.opp.runs && G.inning >= G.maxInning) { endGame(); return; }
       if (G.inning >= G.maxInning && G.you.runs === G.opp.runs) { G.maxInning++; }
