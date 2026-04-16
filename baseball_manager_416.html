@@ -637,15 +637,15 @@
     }
 
     .steal-btn:hover {
-      background: #26215c
+      background: #0f3d26
     }
 
     .dbl-steal-btn {
       padding: 3px 8px;
       font-size: 11px;
-      background: #1a5c3a;
+      background: #3c3489;
       color: #e1f5ee;
-      border: 0.5px solid #1a5c3a;
+      border: 0.5px solid #3c3489;
       border-radius: 6px;
       cursor: pointer;
       margin-right: 4px;
@@ -1309,11 +1309,11 @@
       let msgs = [], done = false;
       // r2 → 3rd
       if (r2 && !G.bases[2]) {
-        if (Math.random() < 0.75 * (0.45 + (r2.spd / 100) * 0.45)) { G.bases[2] = r2; G.bases[1] = null; msgs.push(`${ini(r2.name)} 2nd→3rd ✓`); }
+        if (Math.random() < (1.00 * (0.55 + (r2.spd / 100) * 0.45))) { G.bases[2] = r2; G.bases[1] = null; msgs.push(`${ini(r2.name)} 2nd→3rd ✓`); }
         else { G.bases[1] = null; G.outs++; msgs.push(`${ini(r2.name)} caught @ 3rd`); if (G.outs >= 3) done = true; }
       }
       if (!done && r1 && !G.bases[1]) {
-        if (Math.random() < 0.45 + (r1.spd / 100) * 0.45) { G.bases[1] = r1; G.bases[0] = null; msgs.push(`${ini(r1.name)} 1st→2nd ✓`); }
+        if (Math.random() < (0.70 * (0.45 + (r1.spd / 100) * 0.45))) { G.bases[1] = r1; G.bases[0] = null; msgs.push(`${ini(r1.name)} 1st→2nd ✓`); }
         else { G.bases[0] = null; G.outs++; msgs.push(`${ini(r1.name)} caught @ 2nd`); if (G.outs >= 3) done = true; }
       }
       G.log.unshift({ msg: `Double steal: ${msgs.join(' · ')}`, isSteal: true });
@@ -1533,7 +1533,7 @@
           }
         });
         if (any) {
-          const ha = document.createElement('button'); ha.className = 'hold-btn'; ha.style.marginTop = '3px'; ha.textContent = 'Hold all runners (unlock steals)'; ha.onclick = () => holdAll(); el.appendChild(ha);
+          const ha = document.createElement('button'); ha.className = 'hold-btn'; ha.style.marginTop = '3px'; ha.textContent = 'Hold All Runners'; ha.onclick = () => holdAll(); el.appendChild(ha);
           const note = document.createElement('div'); note.style.cssText = 'font-size:10px;color:#534ab7;width:100%;margin-top:2px'; note.textContent = '★ Steals locked while tag-up decisions pending'; el.appendChild(note);
           return;
         } else { G.tagState = null; G.lastFlyOut = false; G.tagPending = [false, false, false]; }
@@ -1541,14 +1541,39 @@
 
       // STEAL / DOUBLE STEAL
       if (iy && G.tagState !== 'pending') {
-        if (G.bases[0] && G.bases[1] && !G.bases[2]) { // Note: 3rd needs to be empty
-          const txt = G.bases[2] ? `⚡ Dbl Steal (${ini(G.bases[0].name)}+${ini(G.bases[1].name)})` : `⚡ Double Steal (${ini(G.bases[0].name)}+${ini(G.bases[1].name)})`; // TODO ADD % odds
-          const b = document.createElement('button'); b.className = 'dbl-steal-btn'; b.textContent = txt; b.onclick = () => dblSteal(); el.appendChild(b);
+        if (G.bases[0] && G.bases[1] && !G.bases[2]) {
+          const r1 = G.bases[0];
+          const r2 = G.bases[1];
+          const odds = dblStealOdds(r1, r2);
+
+          const txt = `★★ Double Steal (${ini(r1.name)}+${ini(r2.name)}) `
+            + `Both ✓ ~${odds.both}% | 2nd→3rd ~${odds.r2Out}% | 1st→2nd ~${odds.r1Out}%`;
+
+          const b = document.createElement('button');
+          b.className = 'dbl-steal-btn';
+          b.textContent = txt;
+          b.onclick = () => dblSteal();
+          el.appendChild(b);
         }
         if (G.bases[0] && !G.bases[1]) { const r = G.bases[0], p = Math.round((0.45 + (r.spd / 100) * 0.45) * 100); const b = document.createElement('button'); b.className = 'steal-btn'; b.textContent = `★ Steal 2nd: ${ini(r.name)} (~${p}%)`; b.onclick = () => steal(0); el.appendChild(b); }
         if (G.bases[1] && !G.bases[2]) { const r = G.bases[1], p = Math.round(0.75 * (0.45 + (r.spd / 100) * 0.45) * 100); const b = document.createElement('button'); b.className = 'steal-btn'; b.textContent = `★ Steal 3rd: ${ini(r.name)} (~${p}%)`; b.onclick = () => steal(1); el.appendChild(b); }
       }
       if (el.innerHTML === '') el.innerHTML = '<span style="font-size:11px;color:var(--color-text-tertiary)">No steal / tag-up options</span>';
+    }
+
+    function dblStealOdds(r1, r2) {
+      const p1 = 1.00 * (0.55 + (r2.spd / 100) * 0.45); // lead runner makes it odds 
+      const p2 = 0.70 * (0.45 + (r1.spd / 100) * 0.45); // trail runner makes it odds
+
+      const both = p2 * p1;
+      // const r2Out = 1 - p2;
+      // const r1Out = p2 * (1 - p1);
+
+      return {
+        both: Math.round(both * 100),
+        r2Out: Math.round(p1 * 100),
+        r1Out: Math.round(p2 * 100)
+      };
     }
 
     function renderScoreboard() {
