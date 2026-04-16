@@ -1310,11 +1310,11 @@
       // r2 → 3rd
       if (r2 && !G.bases[2]) {
         if (Math.random() < 0.75 * (0.45 + (r2.spd / 100) * 0.45)) { G.bases[2] = r2; G.bases[1] = null; msgs.push(`${ini(r2.name)} 2nd→3rd ✓`); }
-        else { G.bases[1] = null; G.outs++; msgs.push(`${ini(r2.name)} CS 3rd`); if (G.outs >= 3) done = true; }
+        else { G.bases[1] = null; G.outs++; msgs.push(`${ini(r2.name)} caught @ 3rd`); if (G.outs >= 3) done = true; }
       }
       if (!done && r1 && !G.bases[1]) {
         if (Math.random() < 0.45 + (r1.spd / 100) * 0.45) { G.bases[1] = r1; G.bases[0] = null; msgs.push(`${ini(r1.name)} 1st→2nd ✓`); }
-        else { G.bases[0] = null; G.outs++; msgs.push(`${ini(r1.name)} CS 2nd`); if (G.outs >= 3) done = true; }
+        else { G.bases[0] = null; G.outs++; msgs.push(`${ini(r1.name)} caught @ 2nd`); if (G.outs >= 3) done = true; }
       }
       G.log.unshift({ msg: `Double steal: ${msgs.join(' · ')}`, isSteal: true });
       if (done) { endHalf(); renderGame(); return; }
@@ -1334,8 +1334,8 @@
       let msg = '', isRun = false, isE = false, isDP = false;
       G.lastFlyOut = false; G.tagState = null; G.tagPending = [false, false, false];
 
-      // DOUBLE PLAY: 5% on GO with runner on 1st or 2nd, <2 outs
-      const dpOk = (res === 'GO') && (G.bases[0] || G.bases[1]) && G.outs < 2 && Math.random() < 0.05;
+      // DOUBLE PLAY: 15% on GO with runner on 1st or 2nd, <2 outs
+      const dpOk = (res === 'GO') && (G.bases[0] || G.bases[1]) && G.outs < 2 && Math.random() < 0.15;
 
       if (res === 'K') { G.outs++; bat.stats.k++; msg = bat.name + ' strikes out.'; }
       else if (res === 'GO') {
@@ -1541,8 +1541,8 @@
 
       // STEAL / DOUBLE STEAL
       if (iy && G.tagState !== 'pending') {
-        if (G.bases[0] && G.bases[1]) {
-          const txt = G.bases[2] ? `⚡ Dbl Steal (${ini(G.bases[0].name)}+${ini(G.bases[1].name)})` : `⚡ Double Steal (${ini(G.bases[0].name)}+${ini(G.bases[1].name)})`;
+        if (G.bases[0] && G.bases[1] && !G.bases[2]) { // Note: 3rd needs to be empty
+          const txt = G.bases[2] ? `⚡ Dbl Steal (${ini(G.bases[0].name)}+${ini(G.bases[1].name)})` : `⚡ Double Steal (${ini(G.bases[0].name)}+${ini(G.bases[1].name)})`; // TODO ADD % odds
           const b = document.createElement('button'); b.className = 'dbl-steal-btn'; b.textContent = txt; b.onclick = () => dblSteal(); el.appendChild(b);
         }
         if (G.bases[0] && !G.bases[1]) { const r = G.bases[0], p = Math.round((0.45 + (r.spd / 100) * 0.45) * 100); const b = document.createElement('button'); b.className = 'steal-btn'; b.textContent = `★ Steal 2nd: ${ini(r.name)} (~${p}%)`; b.onclick = () => steal(0); el.appendChild(b); }
