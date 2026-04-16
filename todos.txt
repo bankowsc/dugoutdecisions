@@ -83,7 +83,7 @@ Confirm and update to the handedness bonus if a new player is subbed in right be
 
 DONE
 _____________________________
-TODO
+
 
 BASERUNNERS:
 When multiple tag ups able to click all of them / new one should appear. EX: if player on 3rd tags. Player on second should be able to now as well before next at bat.
@@ -123,6 +123,28 @@ PLAY BADGES
 15. Taged - score a run tagging up
 
 
+DONE
 ________________________
+TODO
+
+Track R (run scorer)
+
+Track total Championships in account history. Need to store accounts
+
+Double tag ups logic is broken now. Can also tag 1->3 shouldnt
+Can move into currently players spot - JUST MAKE THE BUTTON NOT CLICKABLE OR SUM if that base occupied
+
+Check double steal - DOESNT WORK - allows when there is a runner ahead of them?
+When no one on third works. But should NOT be available when someone on third
+Says CS when caught stealing
+
+Check double play
+
+Expand to fit full screen. Pitcher stats currently spilling into 2 rows
+
+
+DARK mode
+Add a dark mode
+
 Add a GuardsBall mode where errors are 4x likely
 OR have fielders actually need to play their position or have 2x error chance - might be hard
