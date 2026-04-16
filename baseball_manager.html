@@ -1013,8 +1013,8 @@
         bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .30)),
         active: true, inGame: i < 9, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0 }
       };
-      if (aiBonus) { base.avg = r3(rnd(.230, .335)); base.ops = r2(rnd(.720, .999)); }
-      else { base.avg = r3(rnd(.215, .325)); base.ops = r2(rnd(.640, .980)); }
+      if (aiBonus) { base.avg = r3(rnd(.230, .335)); base.ops = r3(rnd(.720, .999)); }
+      else { base.avg = r3(rnd(.215, .325)); base.ops = r3(rnd(.640, .980)); }
       return base;
     }
     function genPitcher(i) {
@@ -1087,7 +1087,7 @@
       G.yourLineup.forEach((hi, slot) => {
         const h = G.you.hitters[hi], d = document.createElement('div');
         d.className = 'lineup-slot'; d.draggable = true; d.dataset.slot = slot; d.dataset.type = 'lineup';
-        d.innerHTML = `<span style="font-size:11px;color:var(--color-text-tertiary);width:14px;text-align:right;flex-shrink:0">${slot + 1}</span><span style="font-size:10px;color:#0c447c;background:#e6f1fb;padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:13px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .850 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip chip-blue">${h.hand}</span><span class="chip ${speedChip(h.spd)}">${h.spd}spd</span>`;
+        d.innerHTML = `<span style="font-size:11px;color:var(--color-text-tertiary);width:14px;text-align:right;flex-shrink:0">${slot + 1}</span><span style="font-size:10px;color:#0c447c;background:#e6f1fb;padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:13px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip chip-blue">${h.hand}</span><span class="chip ${speedChip(h.spd)}">${h.spd}spd</span>`;
         d.addEventListener('dragstart', e => { window._ds = slot; window._dsType = 'lineup'; d.style.opacity = '.4'; });
         d.addEventListener('dragend', () => d.style.opacity = '1');
         d.addEventListener('dragover', e => { e.preventDefault(); d.classList.add('dragover'); });
@@ -1117,7 +1117,7 @@
       G.benchIds.forEach(bi => {
         const h = G.you.hitters[bi], d = document.createElement('div');
         d.className = 'bench-slot'; d.draggable = true; d.dataset.benchIdx = bi; d.dataset.type = 'bench';
-        d.innerHTML = `<span style="font-size:10px;color:#633806;background:#faeeda;padding:1px 4px;border-radius:4px;flex-shrink:0">BENCH</span><span style="font-size:10px;color:#0c447c;background:#e6f1fb;padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:13px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .850 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip chip-blue">${h.hand}</span><span class="chip ${speedChip(h.spd)}">${h.spd}spd</span>`;
+        d.innerHTML = `<span style="font-size:10px;color:#633806;background:#faeeda;padding:1px 4px;border-radius:4px;flex-shrink:0">BENCH</span><span style="font-size:10px;color:#0c447c;background:#e6f1fb;padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:13px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip chip-blue">${h.hand}</span><span class="chip ${speedChip(h.spd)}">${h.spd}spd</span>`;
         d.addEventListener('dragstart', e => { window._ds = bi; window._dsType = 'bench'; d.style.opacity = '.4'; });
         d.addEventListener('dragend', () => d.style.opacity = '1');
         bd.appendChild(d);
@@ -1146,7 +1146,7 @@
       const cp = curPitcher(G.opp);
       document.getElementById('opp-lineup-display').innerHTML =
         `<div style="padding:6px 8px;border-radius:8px;background:#faeeda;border:0.5px solid #fac775;margin-bottom:6px;font-size:12px"><strong>Starting pitcher:</strong> ${cp.name} | ERA ${cp.era} | WHIP ${cp.whip} | <span class="chip chip-amber" style="font-size:10px">${cp.hand}HP</span></div>` +
-        G.opp.hitters.slice(0, 9).map((h, i) => `<div style="display:flex;gap:5px;align-items:center;padding:2px 0"><span style="width:14px;color:var(--color-text-tertiary);font-size:11px">${i + 1}</span><span style="flex:1;font-weight:500;font-size:12px">${h.name}</span><span class="chip chip-blue" style="font-size:10px">${h.hand}</span><span class="chip chip-gray" style="font-size:10px">${h.pos}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:10px">.${Math.round(h.avg * 1000)}</span><span class="chip ${speedChip(h.spd)}" style="font-size:10px">${h.spd}spd</span></div>`).join('');
+        G.opp.hitters.slice(0, 9).map((h, i) => `<div style="display:flex;gap:5px;align-items:center;padding:2px 0"><span style="width:14px;color:var(--color-text-tertiary);font-size:11px">${i + 1}</span><span style="font-size:10px;color:#0c447c;background:#e6f1fb;padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="flex:1;font-weight:500;font-size:12px">${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:10px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:10px">OPS .${Math.round(h.ops * 1000)}</span><span class="chip chip-blue" style="font-size:10px">${h.hand}</span><span class="chip ${speedChip(h.spd)}" style="font-size:10px">${h.spd}spd</span></div>`).join('');
     }
 
     function startGame() {
@@ -1630,7 +1630,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 6}" font-size="10" fill="#e6f1fb"
           const isDueUp = !active && i === curIdx % 9;
           const cls = isAt ? 'active-batter' : isDeck ? 'on-deck' : isDueUp ? 'due-up-row' : '';
           const badge = isAt ? '<span class="chip chip-green" style="font-size:9px">AB</span>' : isDeck ? '<span class="chip chip-blue" style="font-size:9px">Deck</span>' : isDueUp ? '<span class="chip chip-amber" style="font-size:9px">Due up</span>' : '';
-          return `<div class="order-row ${cls}"><span class="ord-num">${i + 1}</span><span class="ord-pos">${h.pos}</span><span class="ord-name">${h.name}</span>${badge} <span class="chip chip-blue" style="font-size:9px">${h.hand}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}"> .${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .850 ? 'chip-green' : 'chip-gray'}"> .${Math.round(h.ops * 1000)}</span><span class="chip ${speedChip(h.spd)}" style="font-size:9px">${h.spd}spd</span></div>`;
+          return `<div class="order-row ${cls}"><span class="ord-num">${i + 1}</span><span class="ord-pos">${h.pos}</span><span class="ord-name">${h.name}</span>${badge} <span class="chip chip-blue" style="font-size:9px">${h.hand}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}"> .${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}"> .${Math.round(h.ops * 1000)}</span><span class="chip ${speedChip(h.spd)}" style="font-size:9px">${h.spd}spd</span></div>`;
         }).join('');
       }
       const yb = G.half === 'bottom', ob = G.half === 'top';
@@ -1694,12 +1694,12 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 6}" font-size="10" fill="#e6f1fb"
       const bonus = handednessBonus(hb, oppPit);
       const avgAdj = Math.round((hb.avg + bonus) * 1000);
       const avgChip = hb.avg >= .290 ? 'chip-green' : hb.avg >= .250 ? 'chip-gray' : 'chip-amber';
-      const opsChip = hb.ops >= .850 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
+      const opsChip = hb.ops >= .900 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
       const spdChip = speedChip(hb.spd);
       preview.innerHTML = `<div style="padding:6px 8px;border-radius:8px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);font-size:12px">
       <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:3px">
         <span style="font-weight:500">${hb.name}</span>
-        <span class="chip chip-blue" style="font-size:10px">${hb.hand}H</span>
+        <span class="chip chip-blue" style="font-size:10px">${hb.hand}</span>
         <span class="chip ${avgChip}" style="font-size:10px">.${Math.round(hb.avg * 1000)} avg${bonus > 0 ? ` → <strong>.${avgAdj}★ vs ${oppPit.hand}HP</strong>` : ''}</span>
         <span class="chip ${opsChip}" style="font-size:10px">OPS ${hb.ops}</span>
         <span class="chip ${spdChip}" style="font-size:10px">${hb.spd}spd</span>
@@ -1727,7 +1727,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 6}" font-size="10" fill="#e6f1fb"
       const tired = sc < 75;
       let h = '';
       if (tired) { h += `<div class="tired-warn">★ ${cp.name} is ${staminaLabel(sc)} (${sc}%) — effectiveness -${Math.round(pen * 100)}%</div>`; }
-      h += `<div class="alert-info" style="margin-bottom:8px"><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span style="font-weight:500">${cp.name}</span><span class="chip chip-blue">${cp.hand}HP</span><span class="chip chip-gray">WHIP ${cp.whip}</span><span class="chip ${staminaChipClass(sc)}">${staminaLabel(sc)}</span>${tired ? `<span class="chip chip-red">-${Math.round(pen * 100)}% eff.</span>` : ''}</div><div style="margin-top:5px;display:flex;align-items:center;gap:6px"><span style="font-size:11px;color:#0c447c">Stamina</span>${staminaBarHTML(sc)}</div></div>`;
+      h += `<div class="alert-info" style="margin-bottom:8px"><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span style="font-weight:500">${cp.name}</span><span class="chip chip-blue">${cp.hand}HP</span><span class="chip ${cp.era < 3.5 ? 'chip-green' : 'chip-gray'}">ERA ${cp.era}</span><span class="chip ${staminaChipClass(sc)}">${staminaLabel(sc)}</span>${tired ? `<span class="chip chip-red">-${Math.round(pen * 100)}% eff.</span>` : ''}</div><div style="margin-top:5px;display:flex;align-items:center;gap:6px"><span style="font-size:11px;color:#0c447c">Stamina</span>${staminaBarHTML(sc)}</div></div>`;
       const av = G.you.pitchers.filter(p => !p.currentPitcher && !p.usedThisGame);
       if (!av.length) { h += '<div class="alert-danger">No arms available.</div>'; el.innerHTML = h; return; }
       h += '<div class="section-label" style="margin-bottom:5px">Available arms</div>';
@@ -1754,7 +1754,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 6}" font-size="10" fill="#e6f1fb"
         const bonus = handednessBonus(hb, pit);
         const adjAvg = Math.round((hb.avg + bonus) * 1000);
         const avgChip = hb.avg >= .290 ? 'chip-green' : hb.avg >= .250 ? 'chip-gray' : 'chip-amber';
-        const opsChip = hb.ops >= .850 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
+        const opsChip = hb.ops >= .900 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
         h += `<div class="stat-row"><span style="width:13px;color:var(--color-text-tertiary);font-size:11px;flex-shrink:0">${s + 1}</span><span style="flex:1;font-weight:500;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${hb.name}</span><span class="chip chip-blue" style="font-size:9px">${hb.pos}</span><span class="chip chip-blue" style="font-size:9px">${hb.hand}</span>${bonus > 0 ? `<span class="chip chip-green" style="font-size:9px">.${adjAvg}★</span>` : `<span class="chip ${avgChip}" style="font-size:9px">.${Math.round(hb.avg * 1000)}</span>`}<span class="chip ${opsChip}" style="font-size:9px">OPS ${hb.ops}</span><span style="font-size:11px;color:var(--color-text-secondary);white-space:nowrap">${hb.stats.h}-${hb.stats.ab}</span><span style="font-size:11px;color:var(--color-text-secondary)">${hb.stats.rbi}RBI</span></div>`;
       });
       document.getElementById('mgr-stats').innerHTML = h + '<div style="font-size:10px;color:var(--color-text-tertiary);margin-top:4px">★ adj. avg vs current opp pitcher handedness</div>';
@@ -1771,7 +1771,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 6}" font-size="10" fill="#e6f1fb"
         h += '<div class="section-label" style="margin-bottom:4px;margin-top:8px">Opp bullpen</div>';
         bullpen.sort((a, b) => b.stamina - a.stamina).forEach(p => {
           const ps = Math.round(p.stamina);
-          h += `<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;padding:3px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span style="font-size:12px;font-weight:500;flex:1">${p.name}</span><span class="chip ${p.role === 'SP' ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span><span class="chip chip-gray" style="font-size:9px">${p.hand}HP</span><span class="chip chip-gray" style="font-size:9px">ERA ${p.era}</span><span class="chip chip-gray" style="font-size:9px">WHIP ${p.whip}</span><span class="chip ${staminaChipClass(ps)}" style="font-size:9px">${ps}%</span></div>`;
+          h += `<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;padding:3px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span style="font-size:12px;font-weight:500;flex:1">${p.name}</span><span class="chip ${p.role === 'SP' ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span><span class="chip chip-gray" style="font-size:9px">${p.hand}HP</span><span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}">ERA ${p.era}</span><span class="chip ${p.whip < 1 ? 'chip-green' : 'chip-gray'}">WHIP ${p.whip}</span><span class="chip ${staminaChipClass(ps)}" style="font-size:9px">${ps}%</span></div>`;
         });
         const used = G.opp.pitchers.filter(p => p.usedThisGame && !p.currentPitcher);
         if (used.length) { h += `<div style="font-size:10px;color:var(--color-text-tertiary);margin-top:4px">Used this game: ${used.map(p => p.name).join(', ')}</div>`; }
@@ -1782,7 +1782,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 6}" font-size="10" fill="#e6f1fb"
         const hb = G.opp.hitters[hi];
         const bonus = handednessBonus(hb, myPit);
         const avgChip = hb.avg >= .290 ? 'chip-green' : hb.avg >= .250 ? 'chip-gray' : 'chip-amber';
-        const opsChip = hb.ops >= .850 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
+        const opsChip = hb.ops >= .900 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
         const avgDisplay = bonus > 0 ? `<span class="chip chip-red" style="font-size:9px">.${Math.round((hb.avg + bonus) * 1000)}★</span>` : `<span class="chip ${avgChip}" style="font-size:9px">.${Math.round(hb.avg * 1000)}</span>`;
         h += `<div class="stat-row"><span style="width:13px;color:var(--color-text-tertiary);font-size:11px;flex-shrink:0">${s + 1}</span><span style="flex:1;font-weight:500;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${hb.name}</span><span class="chip chip-blue" style="font-size:9px">${hb.hand}</span><span class="chip chip-gray" style="font-size:9px">${hb.pos}</span>${avgDisplay}<span class="chip ${opsChip}" style="font-size:9px">OPS ${hb.ops}</span><span style="font-size:11px;color:var(--color-text-secondary);white-space:nowrap">${hb.stats.h}-${hb.stats.ab}</span><span style="font-size:11px;color:var(--color-text-secondary)">${hb.stats.rbi}RBI</span><span class="chip ${speedChip(hb.spd)}" style="font-size:9px">${hb.spd}spd</span></div>`;
       });

@@ -85,27 +85,44 @@ DONE
 _____________________________
 TODO
 
-When multiple tag ups able to click all of them / new one should appear right? Like vacate 3rd guy on second now gets the chance?
+BASERUNNERS:
+When multiple tag ups able to click all of them / new one should appear. EX: if player on 3rd tags. Player on second should be able to now as well before next at bat.
+Currently it makes you choose one tag up option or decline all if two are available. Then the option goes away after one is clicked. If one of two is clicked the other should stay until declined or next at bat.
+Add the ability for a manager to call for double steal when two players on base - can still do individual steals too 
 
-Add a 5% chance of double play - but offset that defense with higher flyball rate? 
+Add a 5% chance of double play when there is a runner on first or second. Then that runner and the player who put the ball in play are out
 
-Add call for double steal - odds of both safe higher than solos - and individual safes rate 
+END GAME:
+Star of the game? Have a player from the winning team who played the best get picked and stats of game displayed at end game screen
 
-Star of the game?
 
+IF THESE ACCOMPLISHMENTS ARE EVER ACCOMPLISHED AWARD A BADGE:
+Towards the BOTTOM of the page have a 3x5 section of badges that are gray when not yet accomplised and colored in when ACCOMPLISHED
+If you hover over a badge - awarded or not - it shows the description how to get it
+Put a notification in the game log when accomplishment made
 
-Add a GuardsBall mode where errors are 4x likely
-OR have fielders actually need to play their position or have 2x error chance - might be hard
-
-BADGES IDEAS
+SERIES BADGES
 1. Champion - ever a series winner
 2. Dynasty - win 3 championships in 5 seasons
 3. Back-To-Back - win championships in consecutive seasons
 4. Broom - Sweep a series 4-0
 5. Comback Kids - Overcome a 2 game series deficit
 
-6. GuardsBall - score the winning run off an error
+GAME BADGES
+6. Cardiac - win a game overcoming a 4+ run deficit
 7. Blow-Out - win a game by 7+ runs
 8. Maddux - win a game without making a pitching change
 9. Shutout - win a game without allowing a run
 10. Walkoff - win a game in a walkoff
+
+PLAY BADGES
+11. GuardsBall - score a run off an error
+12. Salami - Hit a grand Slam 
+13. Three bag - Hit a triple
+14. On Patrol - Turn a double play
+15. Taged - score a run tagging up
+
+
+________________________
+Add a GuardsBall mode where errors are 4x likely
+OR have fielders actually need to play their position or have 2x error chance - might be hard
