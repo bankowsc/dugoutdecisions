@@ -90,6 +90,29 @@
       gap: 10px
     }
 
+    .game-grid>div:nth-child(2) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .game-grid>div:nth-child(2) .card:first-child {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    #game-btn-row {
+      position: sticky;
+      bottom: 0;
+      background: var(--color-bg-primary);
+      padding: 4px 0;
+      z-index: 10;
+    }
+
+    #game-btn-row {
+      border-top: 1px solid var(--color-border);
+    }
+
     .two-col {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
