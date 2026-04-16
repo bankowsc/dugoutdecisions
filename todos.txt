@@ -54,7 +54,58 @@ For the opponent lineup handedness dont show RH/LH for batters just R/L
 Check who is the home team when determining if the game should end
 
 DONE
+
+
+TAG UP ISSUES:
+And if the ability to steal should be taken away from a runner where the tag up option is also currently available.
+Currently if the user chooses to steal they can STILL tag up on the next move and double dip they should only be able to tag up or decline then get their steal opprotunity back.
 ____________________________________
+
+
+GAME END ISSUES:
+When the game is over replace the "At-Bat" "Sim Frame" "Sim Game" buttons with a "Confirm Game End" button that moves on to the "Game Over" page when clicked. 
+Clicking Sim Game also results in this confirm button being shown before going right to the "Game End" page.
+Then the sim buttons are reset for the next game. This way, the user can still see stats of the game before it suddenly ends.
+ALSO if home team ever takes the lead in the bottom of the 9th or later it should be a walkoff and the game should end right there as well.
+The rest of the inning doesnt need to be played the "Confirm Game End" button should be available then too.
+
+
+LINEUP SET PAGE:
+Make each cell of the starting pitcher drop down the according color of the pitchers stamina. 
+Instead of having the "Start" button to sub in players can you make the bench also drag and drop like the rest of the lineup.
+
+
+GAME STATS and SUBS:
+For the "My Stats" and "Opp Stats" section add OPS to both sections for visibility. Also add the opponenets bullpen player statistics and current stamina
+For the "Subs" section add OPS as well as color for each of the stats like average, OPS, and speed if they are good/bad
+Change "Make sub" text to "Confirm Pinch Hit"
+Confirm and update to the handedness bonus if a new player is subbed in right before an At-Bat is to happen. Not just about who the starting pitcher was.
+
+DONE
+_____________________________
 TODO
 
-For tag up - remove icon from the base tagging from
+When multiple tag ups able to click all of them / new one should appear right? Like vacate 3rd guy on second now gets the chance?
+
+Add a 5% chance of double play - but offset that defense with higher flyball rate? 
+
+Add call for double steal - odds of both safe higher than solos - and individual safes rate 
+
+Star of the game?
+
+
+Add a GuardsBall mode where errors are 4x likely
+OR have fielders actually need to play their position or have 2x error chance - might be hard
+
+BADGES IDEAS
+1. Champion - ever a series winner
+2. Dynasty - win 3 championships in 5 seasons
+3. Back-To-Back - win championships in consecutive seasons
+4. Broom - Sweep a series 4-0
+5. Comback Kids - Overcome a 2 game series deficit
+
+6. GuardsBall - score the winning run off an error
+7. Blow-Out - win a game by 7+ runs
+8. Maddux - win a game without making a pitching change
+9. Shutout - win a game without allowing a run
+10. Walkoff - win a game in a walkoff
