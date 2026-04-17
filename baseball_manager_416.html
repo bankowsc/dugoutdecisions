@@ -1283,30 +1283,30 @@
     // G.tagPending[i]: true = runner on base i still has an unresolved tag-up choice
     // After each action (use or hold-one), remaining pending options persist until all resolved or at-bat starts
 
-    function doTagUp(bi) {
-      const runner = G.bases[bi]; if (!runner) return;
-      const ok = Math.random() < (runner.spd / 100) * 1.25;
-      if (ok) {
-        if (bi === 2) {
-          // Score
-          const iy = G.half === 'bottom', k = G.inning + '_' + (iy ? 'you' : 'opp'), bt = iy ? G.you : G.opp;
-          bt.score[k] = (bt.score[k] || 0) + 1; bt.runs += 1; runner.stats.r++; G.bases[2] = null; G.tagPending[2] = false;
-          G.log.unshift({ msg: `Tag-up! ${runner.name} scores from 3rd! (spd ${runner.spd})`, isRun: true, isSteal: true });
-          award('tagged');
-          checkWalkoff();
+    function doTagUp(baseIdx) {
+      const runner = G.bases[baseIdx];
+      if (!runner) return;
+      const successChance = (runner.spd / 100) * 1.25; // slightly MORE than steal
+      if (Math.random() < successChance) {
+        if (baseIdx === 2) {
+          // score from 3rd
+          const bt = G.half === 'bottom' ? G.you : G.opp;
+          const k = G.inning + '_' + (G.half === 'bottom' ? 'you' : 'opp');
+          bt.score[k] = (bt.score[k] || 0) + 1; bt.runs += 1;
+          runner.stats.r++;
+          G.bases[2] = null;
+          G.log.unshift({ msg: `Tag-up! ${runner.name} scores from 3rd! (spd ${runner.spd})`, isRun: true, isSub: false, isSep: false, isSteal: true, isError: false });
         } else {
-          G.bases[bi + 1] = runner; G.bases[bi] = null; G.tagPending[bi] = false;
-          const dest = bi === 0 ? '2nd' : '3rd';
-          G.log.unshift({ msg: `Tag-up! ${runner.name} advances to ${dest}. (spd ${runner.spd})`, isSteal: true });
-          // Runner now at bi+1 can chain tag if that base leads somewhere open
-          if (G.tagState === 'pending' && bi + 1 < 2 && !G.bases[bi + 2]) G.tagPending[bi + 1] = true;
+          G.bases[baseIdx + 1] = runner; G.bases[baseIdx] = null;
+          const dest = baseIdx === 0 ? '2nd' : '3rd';
+          G.log.unshift({ msg: `Tag-up! ${runner.name} advances to ${dest}. (spd ${runner.spd})`, isRun: false, isSub: false, isSep: false, isSteal: true, isError: false });
         }
       } else {
-        G.bases[bi] = null; G.tagPending[bi] = false; G.outs++;
-        G.log.unshift({ msg: `${runner.name} thrown out tagging up. (spd ${runner.spd})`, isSteal: true });
-        if (G.outs >= 3) { G.tagState = null; G.tagPending = [false, false, false]; endHalf(); renderGame(); return; }
+        G.bases[baseIdx] = null;   // remove runner
+        G.outs++;                  // record the out
+        G.log.unshift({ msg: `${runner.name} thrown out tagging up. (spd ${runner.spd})`, isRun: false, isSub: false, isSep: false, isSteal: true, isError: false });
       }
-      if (!G.tagPending.some(x => x)) { G.tagState = 'declined'; G.lastFlyOut = false; }
+      G.lastFlyOut = false;
       renderGame();
     }
 

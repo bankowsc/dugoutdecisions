@@ -127,24 +127,27 @@ DONE
 ________________________
 TODO
 
-Track R (run scorer)
+Statistic:
+Can you add the tracking of a run scorer (R).
+Add this stat to both the "My stats" and "Opp stats" tracking page and even the highlighted player of the game at the end
 
-Track total Championships in account history. Need to store accounts
+Total Championships:
+Track total Championships in account history show it in bigger text above the badges section Example: (# series wins)x champs 
 
-Double tag ups logic is broken now. Can also tag 1->3 shouldnt
-Can move into currently players spot - JUST MAKE THE BUTTON NOT CLICKABLE OR SUM if that base occupied
+Tag up logic:
+Double tag ups logic is broken now. The buttons allow a runner to go from 1st to 2nd then 2nd to 3rd off the same flyball.
+The base runner should only be able to advance one base per flyball not as many as it wants.
+Also, the option to tag up is available for base runners even when the base ahead of them is occupied. Can you add a check such that baserunners can only tag whe the base ahead of them is open or if its to score a run.
+Dont have this check prevent the scenario where runners are on 3rd base and 2nd base and a flyball is hit. The runner on second cannot tag, but if the runner on 3rd does (succsefful or not) now that base is open and they can since the runner on 3rd left between the flyball and now.
+Could even display the button but have it gray and unclickable if the base ahead is occupied and then light up and become clickable if the base runner ahead moves.
 
-Check double steal - DOESNT WORK - allows when there is a runner ahead of them?
-When no one on third works. But should NOT be available when someone on third
-Says CS when caught stealing
-
-Check double play
-
-Expand to fit full screen. Pitcher stats currently spilling into 2 rows
-
+Style**
+Can you expand to fit full window. Ignore the constriant to have the file playable in the claude page. Just produce the html. 
+The pitcher stats currently spilling into 2 rows and a wider window would fix this.
 
 DARK mode
-Add a dark mode
+IMPORTANT: Add a sleek dark mode theme and toggle slider for it at the top of the page to toggle light and dark mode.
+____________________________
 
 Add a GuardsBall mode where errors are 4x likely
 OR have fielders actually need to play their position or have 2x error chance - might be hard
