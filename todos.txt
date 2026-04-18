@@ -149,5 +149,15 @@ DARK mode
 IMPORTANT: Add a sleek dark mode theme and toggle slider for it at the top of the page to toggle light and dark mode.
 ____________________________
 
-Add a GuardsBall mode where errors are 4x likely
+TODO
+
+Quality of life checks
+- some button hover styles
+- ordering of some run stats or visuals
+
+Does new frnachise count as a lost season properly for dynasty badge?
+Are badges to browser of file
+
+
+
 OR have fielders actually need to play their position or have 2x error chance - might be hard
