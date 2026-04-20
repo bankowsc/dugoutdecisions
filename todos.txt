@@ -151,6 +151,63 @@ ____________________________
 
 TODO
 
+For the simulating season button - add a play button that just keeps going unless a pause button is clicked and goes through and sims the games
+This is in addition to the already existing +10 games button and skip to end.
+
+
+Playoff continuance issues:
+If the team gets a first round bye in the playoffs by being one of the top 2 teams in their leauge the game cannot progress because there isnt yet a team to play
+Add a "Sim Wild Card" button that simulates the wild card games and advances an opponent to the next round to face our team
+
+If the team is eliminated in an early round the leauge championship has assigned records but no team names jsut TBD. Complete the logic by advancing the team name as well and add a world series at the bottom with a simulated winner
+Also on this page add a "New Franchise" Button. Currently the game is locked there if you are eliminated you cant continue to next season
+
+If the team advances the first game of the next series automatically has an acknowledge game end button. Need to have that reset to the sim buttons between series
+MOST IMPORTANT THOUGH: Have a "New Franchise" button avaialble after the team is eliminated from the playoffs or wins it
+
+
+
+Linup setting:
+Currently when a lineup is being set. If the order is ever changed the starting pitcher is defaulted back to the first.
+Make is so that when the starting pitcher is picked out of the drop down it isnt reset whenever the lineup is changed.
+
+Also, carry over the past lineup order from the previous game to the next one but still have the option to change.
+Automatically have the starting pitchers sorted by stamina in the dropdown selector when setting lineups such that the highest stamina pitcher is auto picked for the next game unless manually set
+
+Simulate Game:
+Similar to the way the AI makes a bullpen substitution when an SP is below 65 stamina or an RP is below 75. Make is to that clicking the sim game or frame button for the human player also has this check and makes an AutoSub   "if((cp.stamina<65&&cp.isStarter)||(cp.stamina<75&&!cp.isStarter)){ ..."
+
+
+
+
+
+
+
+________________________
+
+Playoff Sims:
+"View bracket" then messes up series so far - going back to the game then has it reset to game 1 even if a game has happened - it just shows the confirm game end button and doesnt remeeber the series record so far.
+If you are in Divison series and sim end of playoffs it doesnt
+Sim series button needs to be clicked a time per game - like in the wild card the sim rest of series button has to be clicked 3 times
+It didnt advance me past the division series even though i won
+
+
+STAMINA and Availability:
+Need to get all new players when click "New Franchise" randomly generate new ones. 
+Currently its the same players on different "team"
+All pitchers should be 100% stamina when starting the playoffs. And in between series get 20% stamina back.
+
+For the human's sim frame and game when to auto sub in a pitcher. Adjust to below 50% for starters and 60% for relief pitchers.
+
+The bench currently only has 1 player when generated but should have 4 - making 13 batters total.
+
+
+
+
+
+___
+TODO
+
 Quality of life checks
 - some button hover styles
 - ordering of some run stats or visuals
