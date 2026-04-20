@@ -204,8 +204,68 @@ The bench currently only has 1 player when generated but should have 4 - making 
 
 
 
+__
 
-___
+RESETTING SIM BUTTONS:
+Previous season series needs to get the sim buttons reset. In between series the buttons are not reset such that the confirm game end button is showing to start game 1.
+Checking the current bracket results in confirm game end also results in the confirm game end button being shown when it shouldnt
+
+"Sim series" button doesnt drain stamina from players - make it so that it sim the game and drains the pitchers stamina accordingly
+
+
+SIM SEASON SECTION:
+Add a new manager button that can affect if the team wins more games during the season affecting if they make the playoffs.
+Can backfire and result in more games lost too.
+
+TROPHY TO MOST RECENT WINNER:
+When going back to the choose new franshise section where all teams are listed. Put a trophy icon next to the most recent winner.
+The game starts with no most recent winner
+______________
+
+TODO
+
+I have 4 changes and updates for you.
+
+1 - SIM REST OF SERIES BUTTON:
+Remove this button.
+
+2 - RECENT CHAMP:
+Most recent champion isnt updating between years - it just stays with who wins the first one.
+Doesnt assign a champ if the team the player is manageing doesnt make the playoffs.
+
+
+3 - PRESTIGE AND AVAILABLE JOBS:
+Presitge - each team has a prestige number and the manager/player also has a prestige amount. They can only manager for teams where they meet a certain prestige
+Buttons for teams that player cant manager are gray and unclickable. They show the required prestige number needed to manage that team.
+
+4/5 teams from each division are assigned a random prestige 11-99.
+The 5th team is assigned a prestige of 1.
+The manager/player starts with a prestige of 10%.
+
+Missing the playoffs subtracts from the player/managers prestige. The prestige lost is determined by the team they are managing.
+They should lose the 0.1x of the team they managed prestige (ceil). Ex- If you miss the playoffs with a 45% prestige team. Lose 4% prestige as a manager.
+Ex2- If you mis the playoffs with one of those 1 prestige team lose 1%.
+
+The lowest prestige a user can go to is 1 such that they can always manage some teams.
+
+Making the playoffs adds 10% to a players prestige.
+Making it to the divison series adds 5 more percent.
+Making it to the LCS adds 5 more percent.
+Making it to the World series adds 5 more percent.
+Winning the world series add 10%.
+EXAMPLE: If the player had 10% at the begging of a season and managed the team to a world series win he would then have 45% prestige.
+
+Then for the next season the player can manage a higher prestige team because their prestige improved.
+
+4 - MAMANGER MOVES:
+Change the manager move button limit from 8 games to 10 games
+Add a prestige boost to the manager move such that the moves odds of success are increased by the player having more prestige (cap 75% success rate)
+
+_______________
+
+
+
+
 TODO
 
 Quality of life checks
