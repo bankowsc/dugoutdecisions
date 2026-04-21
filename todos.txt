@@ -303,6 +303,7 @@ Something wrong with clicking manager button in terms of number of games played.
 Should also sim one game for the other teams in the divison when clicked so everyone has played the same number.
 
 
+LEAVE ALL OTHER STUFF THE SAME
 
 
 Quality of life checks
