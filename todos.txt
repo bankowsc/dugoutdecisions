@@ -226,8 +226,12 @@ TODO
 
 I have 4 changes and updates for you.
 
-1 - SIM REST OF SERIES BUTTON:
-Remove this button.
+1 - "SIM REST OF SERIES BUTTON" and "Confirm Game end button" at beginning of a game:
+Remove this button. No longer needed just have the move to set lineups button
+Keep the other sim buttons as is
+
+Clicking on view bracket in between games of a playoff series sets the "Confirm Game end" button popup back up.
+Instead the sim buttons should be up to start a new game. Issues where starting a game in a series has the "Confirm game end button already up"
 
 2 - RECENT CHAMP:
 Most recent champion isnt updating between years - it just stays with who wins the first one.
@@ -263,10 +267,43 @@ Add a prestige boost to the manager move such that the moves odds of success are
 
 _______________
 
-
-
-
 TODO
+
+PITCHER STAMINA DRAINING:
+Drains too much then everyone is at 50% ish. Need more recovery -> maybe double what it is now
+
+PRESTIGE:
+Add more prestige for making the playoffs with a better team - + 0.1x bonus for making the playoffs with that team. Same rate as lost for missing playoffs
+But then making playoffs now only worth 5 instead of 10.
+
+Have it such that the prestige needed to manage teams is more consistent.
+Team that is high stays high unless bad for a long time.
+
+Order the teams by prestige WITHIN each division by thier ordering here. Where early is lower and last is higher. EX 'Lakewood Pilgrims' < 'Springfield Crabs'
+Keep it such that the first of each division is still 1 always
+
+   const LEAGUE_STRUCTURE = {
+      'Realistic League': {
+        'RL East': ['Lakewood Pilgrims', 'Springfield Crabs', 'Riverdale Redbirds', 'Oakburg Beavers', 'Eastville Barracudas'],
+        'RL Central': ['Millard Pioneers', 'Millport Machines', 'Centertown Blizzard', 'Hendersonville Seals', 'Lemonte Bolts'],
+        'RL West': ['Sunnydale Herons', 'Westgate Firespitters', 'Summit Phantoms', 'Seaport Ironclads', 'Washborough Ostrich Riders'],
+      },
+      'Fantasy League': {
+        'FL East': ['Quartz Hollow Craftsmen', 'Crestmere Firehawks', 'Mystridge Princes', 'Norwyn Bay Seacats', 'Stonefall Fairies'],
+        'FL Central': ['Silverkeep Doves', 'Ashbourne Wizards', 'Frostford Freeze', 'Mooncliff Dreamers', 'Stormhaven Igniters'],
+        'FL West': ['Zandria Gladiators', 'Brickmoor Serpents', 'Atlantica Hammerheads', 'Farlands Keeperss', 'Portaltown Tungsten Cubes'],
+      }
+    };
+
+Add a stipulation that a manager can always remanage a team if they made the playoffs with them the previous season.
+If they missed the playoffs with that team then they need the required number still to manage again
+
+MANAGER BUTTON DURING SEASON.
+Something wrong with clicking manager button in terms of number of games played. 
+Should also sim one game for the other teams in the divison when clicked so everyone has played the same number.
+
+
+
 
 Quality of life checks
 - some button hover styles
