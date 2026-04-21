@@ -305,19 +305,34 @@ Should also sim one game for the other teams in the divison when clicked so ever
 
 LEAVE ALL OTHER STUFF THE SAME
 _______________
+TODO ADD or FIX
 
 PITCHING SIM: 
-Default to RP until all SP gone
+When simming frames or games have the pitching sub Default to RP until all gone then play SP.
 
 
-HELP DISCRIPTION:
-Shows informational about each point of the game, how sims work, 
-
+HELP DISCRIPTION ON HOME SCREEN:
+Button that when clicked
+Shows informational about each point of the game, how sims work, available on the home page
+Then can be collapsed from clicking again
 
 REGULAR SEASON:
-Show other buttons from the start too not just start
+Show other buttons from the start too not just "Simulate Season button" in case someone wants to play a game slower
+
+
+PRESTIGE STORAGE:
+Have the current manager prestige stored like the badges are in browser. If even go back to the page or hit refresh the progess is still there
+Have a "Retire" button that resets prestige back to 10 and all badges and badge progess on the home screen. Hovering over the button says what the buttons does.
+
 
 _________
+
+
+I probably killed the make new winner thing whoops... TODO get that back
+Pretty much - sim the "view bracket end" button without showing the page unless called upon
+
+
+_______________
 Quality of life checks
 - some button hover styles
 - ordering of some run stats or visuals
