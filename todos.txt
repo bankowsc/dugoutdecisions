@@ -304,7 +304,12 @@ Should also sim one game for the other teams in the divison when clicked so ever
 
 
 LEAVE ALL OTHER STUFF THE SAME
+_______________
 
+Find button thats stale
+Reset team names
+Add fairy player names
+Default to RP until all SP gone
 
 Quality of life checks
 - some button hover styles

@@ -2344,7 +2344,7 @@
     function recoverPitchersBetweenSeries() {
       // Recover 20% stamina between series (not full reset)
       if (G.you && G.you.pitchers) {
-        G.you.pitchers.forEach(p => { p.stamina = Math.min(100, p.stamina + 40); p.usedThisGame = false; p.currentPitcher = false; p.active = false; });
+        G.you.pitchers.forEach(p => { p.stamina = Math.min(100, p.stamina + 30); p.usedThisGame = false; p.currentPitcher = false; p.active = false; });
       }
     }
 
@@ -2725,14 +2725,14 @@
         const sp = starters[0] || G.you.pitchers.filter(p => !p.usedThisGame)[0];
         if (sp) {
           const inningsPitched = rndI(4, 7);
-          const drain = inningsPitched * sp.drainPerPitch * rndI(2, 3);
+          const drain = inningsPitched * sp.drainPerPitch * rndI(1, 1); // no need for bonus tired
           sp.stamina = Math.max(0, sp.stamina - drain);
           sp.usedThisGame = true;
           if (inningsPitched < 7) {
             const rps = G.you.pitchers.filter(p => !p.isStarter && !p.usedThisGame && p.stamina > 20);
             if (rps.length) {
               const rp = rps[Math.floor(Math.random() * Math.min(rps.length, 2))];
-              rp.stamina = Math.max(0, rp.stamina - (9 - inningsPitched) * rp.drainPerPitch * rndI(2, 3));
+              rp.stamina = Math.max(0, rp.stamina - (9 - inningsPitched) * rp.drainPerPitch * rndI(1, 1));
               rp.usedThisGame = true;
             }
           }

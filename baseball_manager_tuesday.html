@@ -1799,7 +1799,7 @@
       'Fantasy League': {
         'FL East': ['Quartz Hollow Craftsmen', 'Crestmere Firehawks', 'Mystridge Princes', 'Norwyn Bay Seacats', 'Stonefall Fairies'],
         'FL Central': ['Silverkeep Doves', 'Ashbourne Wizards', 'Frostford Freeze', 'Mooncliff Dreamers', 'Stormhaven Igniters'],
-        'FL West': ['Zandria Gladiators', 'Brickmoor Serpents', 'Atlantica Hammerheads', 'Farlands Keeperss', 'Portaltown Tungsten Cubes'],
+        'FL West': ['Zandria Gladiators', 'Brickmoor Serpents', 'Atlantica Hammerheads', 'Farlands Keepers', 'Portaltown Tungsten Cubes'],
       }
     };
     // Flatten all teams
@@ -1894,20 +1894,36 @@
     let LAST_CHAMP = null; // persists across franchises
     let MANAGER_PRESTIGE = 10; // player starts at 10 prestige
 
+    let LAST_MANAGED_TEAM = null; // team managed last season
+    let LAST_MANAGED_MADE_PLAYOFFS = false; // did they make playoffs?
+
     // Generate team prestiges: 4 random 11-99, 1 always=1 (the weakest)
     const TEAM_PRESTIGE = {}; // name -> prestige 1-99
-    function generateTeamPrestige() {
-      Object.keys(TEAM_META).forEach(t => TEAM_PRESTIGE[t] = null);
-      // For each division, assign prestige to 5 teams: 4 random 11-99, 1 = 1
+    function generateTeamPrestige(isInit) {
+      // Teams ordered by position in array: index 0 = prestige 1 (weakest), last = highest
+      // Prestiges are fixed tiers with small random variation to make it interesting
+      // Tier values (5 teams per division, index 0 to 4):
+      const PRESTIGE_TIERS = [1, 18, 40, 65, 88]; // index 0 always 1 (weakest)
       Object.entries(LEAGUE_STRUCTURE).forEach(([lg, divs]) => {
         Object.entries(divs).forEach(([div, teams]) => {
-          const shuffled = [...teams].sort(() => Math.random() - 0.5);
-          shuffled.slice(0, 4).forEach(t => TEAM_PRESTIGE[t] = Math.floor(Math.random() * 89) + 11); // 11-99
-          TEAM_PRESTIGE[shuffled[4]] = 1; // weakest team
+          teams.forEach((t, i) => {
+            if (isInit || TEAM_PRESTIGE[t] == null) {
+              // Apply small random jitter ±5 except index 0 which is always 1
+              const base = PRESTIGE_TIERS[i];
+              const val = i === 0 ? 1 : Math.max(11, Math.min(99, base + Math.floor(Math.random() * 11) - 5));
+              TEAM_PRESTIGE[t] = val;
+            } else {
+              // Each season: small drift ±3 to keep it stable but not completely frozen
+              const cur = TEAM_PRESTIGE[t];
+              const base = PRESTIGE_TIERS[i];
+              const drift = Math.floor(Math.random() * 7) - 3;
+              TEAM_PRESTIGE[t] = i === 0 ? 1 : Math.max(Math.max(11, base - 8), Math.min(Math.min(99, base + 8), cur + drift));
+            }
+          });
         });
       });
     }
-    generateTeamPrestige(); // run once on load
+    generateTeamPrestige(true); // run once on load with init flag
 
     function seasonWinPct(name) { const r = SEASON.records[name]; if (!r) return 0; const t = r.w + r.l; return t ? r.w / t : 0; }
     function seasonRecord(name) { const r = SEASON.records[name] || { w: 0, l: 0 }; return `${r.w}-${r.l}`; }
@@ -1916,6 +1932,7 @@
     // FRANCHISE START
     // ══════════════════════════════════════════════════════════════════════════
     function startNewFranchise() {
+      if (SEASON.playerTeam) LAST_MANAGED_TEAM = SEASON.playerTeam; // remember who we managed
       SEASON.year = (SEASON.year || 2024) + 1;
       SEASON.records = {};
       ALL_TEAMS_FLAT.forEach(t => SEASON.records[t] = { w: 0, l: 0 });
@@ -1924,7 +1941,8 @@
       SEASON.seasonLog = [];
       SEASON.simRunning = false;
       SEASON.managerCooldown = 0;
-      generateTeamPrestige(); // fresh prestige each season
+      generateTeamPrestige(false); // small drift each season
+
       // Reset all game state so new franchise gets fresh players
       G = {};
       CURRENT_SERIES = null;
@@ -1955,14 +1973,20 @@
           sorted.forEach(t => {
             const isC = champ && t === champ;
             const tp = TEAM_PRESTIGE[t] || 1;
-            const canManage = MANAGER_PRESTIGE >= tp;
+
+            // Return exception: can always re-manage a team if you made playoffs with them last season
+            const returnException = LAST_MANAGED_TEAM === t && LAST_MANAGED_MADE_PLAYOFFS;
+            const canManage = MANAGER_PRESTIGE >= tp || returnException;
             const style = isC ? ';background:var(--amber2)' : canManage ? '' : ';opacity:.65';
             const nameColor = isC ? 'var(--amber0)' : canManage ? 'var(--tx0)' : 'var(--tx3)';
+
+            const returnBadge = returnException && MANAGER_PRESTIGE < tp ? `<span style="font-size:9px;padding:1px 5px;border-radius:5px;background:var(--teal2);color:var(--teal0);border:.5px solid var(--teal3)">↩ Return</span>` : '';
+
             const btn = canManage
               ? `<button class="btn-sm btn-primary" onclick="selectTeam('${t.replace(/'/g, "\'")}')">Manage</button>`
               : `<span style="font-size:10px;padding:2px 7px;border-radius:6px;background:var(--bg3);color:var(--tx3);border:.5px solid var(--bdr)">Req. ${tp}</span>`;
             const prestigeChip = `<span style="font-size:10px;padding:1px 5px;border-radius:5px;background:${canManage ? 'var(--blue2)' : 'var(--bg3)'};color:${canManage ? 'var(--blue0)' : 'var(--tx3)'};border:.5px solid ${canManage ? 'var(--blue3)' : 'var(--bdr)'}">${tp}</span>`;
-            h += `<div style="display:flex;align-items:center;gap:6px;padding:6px 4px;border-bottom:.5px solid var(--bdr)${style}"><span style="flex:1;font-size:13px;font-weight:${isC ? '700' : '500'};color:${nameColor}">${isC ? '🏆 ' : ''}${t}</span>${prestigeChip}${btn}</div>`;
+            h += `<div style="display:flex;align-items:center;gap:6px;padding:6px 4px;border-bottom:.5px solid var(--bdr)${style}"><span style="flex:1;font-size:13px;font-weight:${isC ? '700' : '500'};color:${nameColor}">${isC ? '🏆 ' : ''}${t}</span>${prestigeChip}${returnBadge}${btn}</div>`;
           });
           h += '</div>';
         });
@@ -1975,6 +1999,8 @@
     function selectTeam(name) {
       SEASON.playerTeam = name;
       // Init season screen
+      LAST_MANAGED_MADE_PLAYOFFS = false; // reset for new season
+
       document.getElementById('season-title').textContent = name + ' – ' + SEASON.year;
       document.getElementById('season-year-pill').textContent = SEASON.year + ' Season';
       document.getElementById('season-your-team').textContent = name;
@@ -2015,8 +2041,16 @@
           if (Math.random() < 0.5) r.w++; else r.l++;
         }
       });
+
+      // Advance AI teams by one game so game counts stay even
+      ALL_TEAMS_FLAT.forEach(t => {
+        if (t === SEASON.playerTeam) return;
+        const r = SEASON.records[t];
+        if (r.w + r.l < SEASON_TOTAL) { if (Math.random() < 0.5) r.w++; else r.l++; }
+      });
       SEASON.gamesPlayed++;
-      if (SEASON.managerCooldown > 0) SEASON.managerCooldown--;
+      if (SEASON.managerCooldown > 0) SEASON.managerCooldown--; // count this as a real game
+
       const r = SEASON.records[SEASON.playerTeam];
       const result = playerWin ? 'W' : 'L';
       SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result });
@@ -2182,9 +2216,14 @@
       document.getElementById('btn-skip-season').style.display = 'none';
       if (document.getElementById('btn-manager-move')) document.getElementById('btn-manager-move').style.display = 'none';
       if (inPlayoffs) {
-        // +10 prestige for making playoffs
-        MANAGER_PRESTIGE = Math.min(99, MANAGER_PRESTIGE + 10);
-        document.getElementById('season-end-sub').textContent = `Your team made the playoffs! (+10 prestige → ${MANAGER_PRESTIGE})`;
+
+        LAST_MANAGED_MADE_PLAYOFFS = true;
+        // +5 base + 0.1x teamPrestige for making playoffs
+        const teamP2 = TEAM_PRESTIGE[SEASON.playerTeam] || 1;
+        const playoffBonus = Math.max(1, 5 + Math.ceil(teamP2 * 0.1));
+        MANAGER_PRESTIGE = Math.min(99, MANAGER_PRESTIGE + playoffBonus);
+        document.getElementById('season-end-sub').textContent = `Your team made the playoffs! (+${playoffBonus} prestige → ${MANAGER_PRESTIGE})`;
+
         document.getElementById('btn-to-playoffs').style.display = '';
         document.getElementById('btn-new-season').style.display = 'none';
       } else {
@@ -2192,6 +2231,8 @@
         const teamP = TEAM_PRESTIGE[SEASON.playerTeam] || 1;
         const lose = Math.max(1, Math.ceil(teamP * 0.1));
         MANAGER_PRESTIGE = Math.max(1, MANAGER_PRESTIGE - lose);
+
+        LAST_MANAGED_MADE_PLAYOFFS = false;
         document.getElementById('season-end-sub').textContent = `Missed the playoffs. -${lose} prestige → ${MANAGER_PRESTIGE}`;
         document.getElementById('btn-to-playoffs').style.display = 'none';
         document.getElementById('btn-new-season').style.display = '';
@@ -2693,14 +2734,14 @@
         const sp = starters[0] || G.you.pitchers.filter(p => !p.usedThisGame)[0];
         if (sp) {
           const inningsPitched = rndI(3, 7);
-          const drain = inningsPitched * sp.drainPerPitch * rndI(3, 5);
+          const drain = inningsPitched * sp.drainPerPitch * rndI(1, 1);
           sp.stamina = Math.max(0, sp.stamina - drain);
           sp.usedThisGame = true;
           if (inningsPitched < 7) {
             const rps = G.you.pitchers.filter(p => !p.isStarter && !p.usedThisGame && p.stamina > 20);
             if (rps.length) {
               const rp = rps[Math.floor(Math.random() * Math.min(rps.length, 2))];
-              rp.stamina = Math.max(0, rp.stamina - (9 - inningsPitched) * rp.drainPerPitch * rndI(3, 4));
+              rp.stamina = Math.max(0, rp.stamina - (9 - inningsPitched) * rp.drainPerPitch * rndI(1, 1));
               rp.usedThisGame = true;
             }
           }
