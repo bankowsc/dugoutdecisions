@@ -1812,8 +1812,8 @@
     });
 
     const POSITIONS = ['C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH'];
-    const NF = ['Carter', 'Eric', 'James', 'Tung', 'Mason', 'Morgan', 'Rickey', 'William', 'Davis', 'Wilson', 'Jack', 'Thompson', 'Robinson', 'Hayes', 'Parker', 'Jackson', 'Miguel', 'Ivan', 'Rodrigo', 'Sam', 'Bob', 'Douglass', 'Archibald', 'Stu', 'Zack', 'Quinn', 'Barry', 'Kevin', 'Johnathan', 'Yung', 'David', 'Andruw', 'Barney', 'Drake', 'Easton', 'Fred', 'Gino', 'Harvey', 'Jesus', 'Zeke', 'Tristan', 'Russell', 'Steven'];
-    const NL_NAMES = ['Smith', 'Johnson', 'Sahur', 'Brown', 'Lee', 'Garcia', 'Rivera', 'Miller', 'Chen', 'Moore', 'Williams', 'Taylor', 'Anderson', 'Thomas', 'Torres', 'Nguyen', 'White', 'Martinez', 'Harris', 'Clark', 'Andrevski', 'Walker', 'Perez', 'Black', 'McCormick', 'Turner', 'Patel', 'Schmirkovski', 'Mrokonov', 'Yao', 'Ling', 'Hardson', 'Malianno', 'Torilli', 'Park', 'Kim', 'Hayes', 'Colon', 'Rodriguez', 'McDonald'];
+    const NF = ['Carter', 'Eric', 'James', 'Tung', 'Mason', 'Morgan', 'Rickey', 'William', 'Davis', 'Wilson', 'Jack', 'Thompson', 'Robinson', 'Hayes', 'Parker', 'Jackson', 'Miguel', 'Ivan', 'Rodrigo', 'Sam', 'Bob', 'Douglass', 'Archibald', 'Stu', 'Zack', 'Quinn', 'Barry', 'Kevin', 'Johnathan', 'Yung', 'David', 'Andruw', 'Barney', 'Drake', 'Easton', 'Fred', 'Gino', 'Harvey', 'Jesus', 'Zeke', 'Tristan', 'Russell', 'Steven', 'Drax', 'Elowen', 'Garruk'];
+    const NL_NAMES = ['Smith', 'Johnson', 'Sahur', 'Brown', 'Lee', 'Garcia', 'Rivera', 'Miller', 'Chen', 'Moore', 'Williams', 'Taylor', 'Anderson', 'Thomas', 'Torres', 'Nguyen', 'White', 'Martinez', 'Harris', 'Clark', 'Andrevski', 'Walker', 'Perez', 'Black', 'McCormick', 'Turner', 'Patel', 'Schmirkovski', 'Mrokonov', 'Yao', 'Ling', 'Hardson', 'Malianno', 'Torilli', 'Park', 'Kim', 'Hayes', 'Colon', 'Rodriguez', 'McDonald', 'Voss', 'Sunspire', 'Ironveil'];
 
     const BADGE_DEFS = [
       { id: 'champion', icon: '🏆', label: 'Champion', desc: 'Win the World Series', cat: 'Series' },
@@ -2060,16 +2060,16 @@
     let simInterval = null;
 
     const MANAGER_MOVES = [
-      { name: 'Sacrifice Bunt Strategy', good: 'The squeeze play worked! Rally extended.', bad: 'Bunt into a double play. Momentum killed.', p: 0.45 },
-      { name: 'Shift the Lineup', good: 'New lineup order sparks the offense!', bad: 'Lineup shake-up throws batters off rhythm.', p: 0.45 },
+      { name: 'Sacrifice Bunt Strategy', good: 'The squeeze play worked! Rally extended.', bad: 'Bunt into a double play. Momentum killed.', p: 0.50 },
+      { name: 'Shift the Lineup', good: 'New lineup order sparks the offense!', bad: 'Lineup shake-up throws batters off rhythm.', p: 0.60 },
       { name: 'Go to the Bullpen Early', good: 'Fresh arm shut them down — smart move!', bad: 'Reliever blew up. Should have stayed with the starter.', p: 0.40 },
-      { name: 'Aggressive Baserunning', good: 'Daring baserunning created two extra runs!', bad: 'Runner thrown out at the plate. Inning over.', p: 0.45 },
+      { name: 'Aggressive Baserunning', good: 'Daring baserunning created two extra runs!', bad: 'Runner thrown out at the plate. Inning over.', p: 0.55 },
       { name: 'Platoon Advantage', good: 'Matchup advantage pays off — batter crushes it!', bad: 'The lefty-righty move backfired badly.', p: 0.50 },
-      { name: 'Call Time on a Hot Pitcher', good: 'Breaking the rhythm rattled their ace!', bad: 'The crowd jeered — momentum shifted to them.', p: 0.40 },
-      { name: 'Intentional Walk to Set Up DP', good: 'Exactly as planned — 5-4-3 double play!', bad: 'The force play fell apart. Bases loaded.', p: 0.45 },
+      { name: 'Mound Visit', good: 'Out of the inning — momentum back!', bad: 'Breaking the rhythm rattled our ace!', p: 0.60 },
+      { name: 'Intentional Walk to Set Up DP', good: 'Exactly as planned — 5-4-3 double play!', bad: 'The force play fell apart. Bases loaded.', p: 0.50 },
       { name: 'Rain Delay Gamble', good: 'Delay disrupted their starting pitcher!', bad: 'Your starter lost his rhythm in the delay.', p: 0.45 },
-      { name: 'Hit and Run', good: 'Hit and run worked — runners in motion!', bad: 'Hit into a double play on the hit and run.', p: 0.45 },
-      { name: 'Steal the Signs', good: 'Reading their signals all game — 3-run inning!', bad: 'Got caught — the other dugout was watching.', p: 0.42 },
+      { name: 'Hit and Run', good: 'Hit and run worked — runners in motion!', bad: 'Hit into a double play on the hit and run.', p: 0.60 },
+      { name: 'Steal the Signs', good: 'Reading their signals all game — 3-run inning!', bad: 'Got caught — the other dugout was watching.', p: 0.30 },
     ];
 
     function doManagerMove() {
@@ -2082,7 +2082,7 @@
       const move = MANAGER_MOVES[Math.floor(Math.random() * MANAGER_MOVES.length)];
       // Prestige boosts success chance: +0.1% per prestige point above 10, max 75%
       const prestigeBoost = Math.max(0, MANAGER_PRESTIGE - 10) * 0.001;
-      const effectiveP = Math.min(0.75, move.p + prestigeBoost);
+      const effectiveP = Math.min(0.75, move.p + prestigeBoost); // cap 75% win rate
       const success = Math.random() < effectiveP;
       if (success) SEASON.records[SEASON.playerTeam].w++;
       else SEASON.records[SEASON.playerTeam].l++;
