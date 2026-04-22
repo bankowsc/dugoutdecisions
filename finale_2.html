@@ -2715,7 +2715,7 @@
             if (s.done) {
                 renderSeriesResult();
             } else {
-                ga.innerHTML = `<div class="card"><div style="font-size:14px;font-weight:500;margin-bottom:8px">Game ${myWins + oppWins + 1} of up to ${s.format}</div><div style="font-size:12px;color:var(--tx2);margin-bottom:12px">${isHome ? 'Home' : 'Away'} at ${opp.name}</div><div class="btn-row"><button class="btn-primary" onclick="launchSeriesGame()">Set lineup &amp; Play</button></div></div>`;
+                ga.innerHTML = `<div class="card"><div style="font-size:14px;font-weight:500;margin-bottom:8px">Game ${myWins + oppWins + 1} of up to ${s.format}</div><div style="font-size:12px;color:var(--tx2);margin-bottom:12px">${isHome ? 'Home' : 'Away'} at ${opp.name}</div><div class="btn-row"><button class="btn-primary" onclick="launchSeriesGame()">Set lineup &amp; Play</button><button class="" onclick="goToPlayoffs()">View Bracket</button></div></div>`;
             }
         }
 
@@ -2820,7 +2820,7 @@
             const btns = document.getElementById('sop-btns');
             btns.innerHTML = '';
             const addB = (t, cls, fn) => { const b = document.createElement('button'); b.className = cls; b.textContent = t; b.onclick = fn; btns.appendChild(b); };
-            addB('View Bracket', 'btn-primary', () => goToPlayoffs());
+            // addB('View Bracket', 'btn-primary', () => goToPlayoffs());
             if (playerWon) {
                 if (CURRENT_SERIES.round === 'ws') {
                     // Champion! +5 for WS appearance + +10 for winning = +15 total
