@@ -348,9 +348,17 @@ Give tiebreak to make playoffs to the player managers team when same record in l
 ______________
 
 
+2 things
 
-FINALE DOESNT SIM THE CHAMPION ROUND BC I RUINED IT
+Can you center the options in the choose your team page. Like the two leagues. Currently its off to the left
 
+Also, at the moment the sim the championship doesnt work. Yes its commented out but that section results in an error about accessing
+'champion' that doesnt exist. Can you fix the code such that a champion is assigned, or a team is moved to play the player team in the championship
+even if the player missed the playoffs entirely.
+
+Should work for all three cases. We missed the playoffs. We made the playoffs but didnt make the finals. We won the finals and are the champions.
+
+LEAVE OTHER THINGS THE SAME 
 _______________
 Quality of life checks
 - some button hover styles
