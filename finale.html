@@ -2387,7 +2387,14 @@
         function recoverPitchersBetweenSeries() {
             // Recover 20% stamina between series (not full reset)
             if (G.you && G.you.pitchers) {
-                G.you.pitchers.forEach(p => { p.stamina = Math.min(100, p.stamina + 40); p.usedThisGame = false; p.currentPitcher = false; p.active = false; });
+                G.you.pitchers.forEach(p => { p.stamina = Math.min(100, p.stamina + 20); p.usedThisGame = false; p.currentPitcher = false; p.active = false; });
+            }
+        }
+
+        function recoverPitchersBetweenGames() {
+            // Recover 8% stamina for SP and 18% stamina for RP between games (not full reset)
+            if (G.you && G.you.pitchers) {
+                G.you.pitchers.forEach(p => { { p.isStarter ? p.stamina = Math.min(100, p.stamina + 8) : p.stamina = Math.min(100, p.stamina + 18) }; p.usedThisGame = false; p.currentPitcher = false; p.active = false; });
             }
         }
 
@@ -2768,14 +2775,14 @@
                 const sp = starters[0] || G.you.pitchers.filter(p => !p.usedThisGame)[0];
                 if (sp) {
                     const inningsPitched = rndI(4, 7);
-                    const drain = inningsPitched * sp.drainPerPitch * rndI(2, 3);
+                    const drain = inningsPitched * sp.drainPerPitch * rndI(1, 1);
                     sp.stamina = Math.max(0, sp.stamina - drain);
                     sp.usedThisGame = true;
                     if (inningsPitched < 7) {
                         const rps = G.you.pitchers.filter(p => !p.isStarter && !p.usedThisGame && p.stamina > 20);
                         if (rps.length) {
                             const rp = rps[Math.floor(Math.random() * Math.min(rps.length, 2))];
-                            rp.stamina = Math.max(0, rp.stamina - (9 - inningsPitched) * rp.drainPerPitch * rndI(2, 3));
+                            rp.stamina = Math.max(0, rp.stamina - (9 - inningsPitched) * rp.drainPerPitch * rndI(1, 1));
                             rp.usedThisGame = true;
                         }
                     }
@@ -3189,6 +3196,8 @@
             document.getElementById('stamina-report').textContent = rpt ? 'Your pitcher stamina: ' + rpt : '';
             const btnRow = document.getElementById('go-btn-row'); btnRow.innerHTML = '';
             const addB = (t, cls, fn) => { const b = document.createElement('button'); b.className = cls; b.textContent = t; b.onclick = fn; btnRow.appendChild(b); };
+            recoverPitchersBetweenGames();
+
             if (CURRENT_GAME_SERIES && CURRENT_GAME_SERIES.series.done) {
                 // Series over - sync CURRENT_SERIES to CURRENT_GAME_SERIES before completing
                 addB('Series Result', 'btn-primary', () => { if (CURRENT_GAME_SERIES) CURRENT_SERIES = CURRENT_GAME_SERIES; onSeriesComplete(); });

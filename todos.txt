@@ -345,7 +345,11 @@ Currently the sim 10 games and go to end of season buttons are open but would al
 
 WHO MAKES PLAYOFFS WHEN SAME RECORD:
 Give tiebreak to make playoffs to the player managers team when same record in leauge
+______________
 
+
+
+FINALE DOESNT SIM THE CHAMPION ROUND BC I RUINED IT
 
 _______________
 Quality of life checks
