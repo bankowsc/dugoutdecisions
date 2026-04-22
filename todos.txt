@@ -327,9 +327,24 @@ Have a "Retire" button that resets prestige back to 10 and all badges and badge 
 
 _________
 
+TODOs
 
-I probably killed the make new winner thing whoops... TODO get that back
-Pretty much - sim the "view bracket end" button without showing the page unless called upon
+4 FIXES:
+
+SERIES RESULT:
+'Series Result' button only works after first series result but not second for some reason
+For playoff runs that extend multiple games clicking this button does nothing for some reason
+
+PREVIOUS YEAR CHAMP:
+A champion is not picked out from the previous season when the team that the player is managing doesnt make the playoffs
+Can you assign the previous season a champion even in this scenario. It usually just keeps the old champ.
+
+REGULAR SEASON BUTTONS
+Can you also show the ,anager move option immediatly even before clicking sim season button
+Currently the sim 10 games and go to end of season buttons are open but would also like that button available.
+
+WHO MAKES PLAYOFFS WHEN SAME RECORD:
+Give tiebreak to make playoffs to the player managers team when same record in leauge
 
 
 _______________
