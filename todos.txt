@@ -382,6 +382,15 @@ New row of Badges for Manager acheivements. Also Replace Comeback kids with Riva
 "Trash Can" - Sucessfully pull off 'Steal the Signs' manager move
 "HOF Manager" - Become the manager of a 90+ rated team
 
+________________________
+
+
+IS THERE AN ERROR WITH WHIP? like overflow and its now like 9 or something.
+My Franchise RP is getting hit around
+
+Error with OPS at .1 insteal of 1. ??
+
+still 5 starters for a team**
 
 
 Quality of life checks

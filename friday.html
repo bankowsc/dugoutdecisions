@@ -2393,7 +2393,14 @@
     function recoverPitchersBetweenSeries() {
       // Recover 20% stamina between series (not full reset)
       if (G.you && G.you.pitchers) {
-        G.you.pitchers.forEach(p => { p.stamina = Math.min(100, p.stamina + 40); p.usedThisGame = false; p.currentPitcher = false; p.active = false; });
+        G.you.pitchers.forEach(p => { p.stamina = Math.min(100, p.stamina + 20); p.usedThisGame = false; p.currentPitcher = false; p.active = false; });
+      }
+    }
+
+    function recoverPitchersBetweenGames() {
+      // Recover 8% stamina for SP and 18% stamina for RP between games (not full reset) 
+      if (G.you && G.you.pitchers) {
+        G.you.pitchers.forEach(p => { { p.isStarter ? p.stamina = Math.min(100, p.stamina + 8) : p.stamina = Math.min(100, p.stamina + 18) }; p.usedThisGame = false; p.currentPitcher = false; p.active = false; });
       }
     }
 
@@ -2721,7 +2728,7 @@
       if (s.done) {
         renderSeriesResult();
       } else {
-        ga.innerHTML = `<div class="card"><div style="font-size:14px;font-weight:500;margin-bottom:8px">Game ${myWins + oppWins + 1} of up to ${s.format}</div><div style="font-size:12px;color:var(--tx2);margin-bottom:12px">${isHome ? 'Home' : 'Away'} at ${opp.name}</div><div class="btn-row"><button class="btn-primary" onclick="launchSeriesGame()">Set lineup &amp; Play</button></div></div>`;
+        ga.innerHTML = `<div class="card"><div style="font-size:14px;font-weight:500;margin-bottom:8px">Game ${myWins + oppWins + 1} of up to ${s.format}</div><div style="font-size:12px;color:var(--tx2);margin-bottom:12px">${isHome ? 'Home' : 'Away'} at ${opp.name}</div><div class="btn-row"><button class="btn-primary" onclick="launchSeriesGame()">Set lineup &amp; Play</button><button class="" onclick="goToPlayoffs()">View Bracket</button></div></div>`;
       }
     }
 
@@ -2826,7 +2833,7 @@
       const btns = document.getElementById('sop-btns');
       btns.innerHTML = '';
       const addB = (t, cls, fn) => { const b = document.createElement('button'); b.className = cls; b.textContent = t; b.onclick = fn; btns.appendChild(b); };
-      addB('View Bracket', 'btn-primary', () => goToPlayoffs());
+      // addB('View Bracket', 'btn-primary', () => goToPlayoffs());
       // Check rival winner: player won series against same-division team
       if (playerWon && CURRENT_SERIES.round !== 'ws') {
         const myDiv = TEAM_META[SEASON.playerTeam]?.division;
@@ -2919,7 +2926,7 @@
       // 'Westgate Firespitters': { name: 'C. Okafor', pos: '1B', hand: 'R', spd: 50, avg: 0.315, ops: 0.970, bbRate: 0.13, kRate: 0.21, isFP: true, isStarter: false, isPitcher: false },
       'Summit Phantoms': { name: 'N. Shade', hand: 'R', num: 97, pos: 'CF', spd: 92, avg: 0.315, ops: 0.920, bbRate: 0.18, kRate: 0.18, isFP: true, isStarter: false, isPitcher: false },
       // 'Seaport Ironclads': { name: 'F. Blackwood', pos: 'DH', hand: 'R', spd: 35, avg: 0.360, ops: 1.150, bbRate: 0.17, kRate: 0.20, isFP: true, isStarter: false, isPitcher: false },
-      'Washborough Ostrich Riders': { name: 'P. Stride', hand: 'L', num: 38, pos: 'CF', spd: 105, avg: 0.285, ops: 0.603, bbRate: 0.18, kRate: 0.16, isFP: true, isStarter: false, isPitcher: false },
+      'Washborough Ostrich Riders': { name: 'P. Stride', hand: 'L', num: 38, pos: 'CF', spd: 115, avg: 0.285, ops: 0.603, bbRate: 0.18, kRate: 0.16, isFP: true, isStarter: false, isPitcher: false },
 
       // ── Fantasy League ──
 
@@ -2952,7 +2959,7 @@
         id: slotId,
         name: fp.name,
         hand: fp.hand,
-        num: 99,
+        num: fp.num,
         pos: fp.pos,
         spd: fp.spd,
         bbRate: fp.bbRate,
@@ -2963,6 +2970,58 @@
         stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 },
         avg: fp.avg,
         ops: fp.ops,
+      };
+    }
+
+    const FRANCHISE_PITCHERS = {
+      // ── Realistic League ──
+      // RL East 3 5
+      'Riverdale Redbirds': { name: 'R. Warbler', hand: 'R', num: 18, isStarter: true, role: 'SP', era: 2.79, whip: 0.95, kRate: 0.29, bbRate: 0.15, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.4, pitchesThisGame: 0, isFP: true, isPitcher: true },
+      'Eastville Barracudas': { name: 'E. Fisher', hand: 'L', num: 16, isStarter: true, role: 'SP', era: 2.67, whip: 0.87, kRate: 0.34, bbRate: 0.05, stamina: 110, maxStamina: 110, recoverRate: 9, drainPerPitch: 1.4, pitchesThisGame: 0, isFP: true, isPitcher: true },
+
+      // RL Central 4
+      'Hendersonville Seals': { name: 'B. Harbor', hand: 'L', num: 47, isStarter: false, role: 'RP', era: 3.47, whip: 0.61, kRate: 0.36, bbRate: 0.09, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 4.9, pitchesThisGame: 0, isFP: true, isPitcher: true },
+
+      // RL West 2 4
+      'Westgate Firespitters': { name: 'D. Blaze', hand: 'R', num: 90, isStarter: false, role: 'RP', era: 3.88, whip: 0.91, kRate: 0.41, bbRate: 0.14, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 4.9, pitchesThisGame: 0, isFP: true, isPitcher: true },
+      'Westgate Firespitters': { name: 'H. Steel', hand: 'R', num: 74, isStarter: true, role: 'SP', era: 2.98, whip: 0.96, kRate: 0.31, bbRate: 0.04, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 4.9, pitchesThisGame: 0, isFP: true, isPitcher: true },
+
+      // ── Fantasy League ──
+      // FL East 1 5
+      'Quartz Hollow Craftsmen': { name: 'E. Chisel', hand: 'L', num: 2, isStarter: true, role: 'SP', era: 3.35, whip: 1.15, kRate: 0.31, bbRate: 0.07, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.5, pitchesThisGame: 0, isFP: true, isPitcher: true },
+      'Stonefall Fairies': { name: 'F. Dust', hand: 'R', num: 33, isStarter: false, role: 'RP', era: 2.12, whip: 0.75, kRate: 0.48, bbRate: 0.25, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 5.1, pitchesThisGame: 0, isFP: true, isPitcher: true },
+
+      // FL Central 3
+      'Frostford Freeze': { name: 'I. Ice', hand: 'R', num: 13, isStarter: true, role: 'RP', era: 2.85, whip: 1.08, kRate: 0.33, bbRate: 0.06, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 5.3, pitchesThisGame: 0, isFP: true, isPitcher: true },
+
+      // FL West 1 2
+      'Zandria Gladiators': { name: 'R. Valor', hand: 'R', num: 10, isStarter: false, role: 'RP', era: 3.13, whip: 1.25, kRate: 0.33, bbRate: 0.14, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 4.8, pitchesThisGame: 0, isFP: true, isPitcher: true },
+      'Brickmoor Serpents': { name: 'S. Coil', hand: 'L', num: 66, isStarter: true, role: 'SP', era: 3.01, whip: 0.98, kRate: 0.30, bbRate: 0.09, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.2, pitchesThisGame: 0, isFP: true, isPitcher: true },
+    };
+
+    function getFranchisePitcher(teamName, slotId) {
+      const fp = FRANCHISE_PITCHERS[teamName];
+      if (!fp) return null;
+      return {
+        id: slotId,
+        name: fp.name,
+        hand: fp.hand,
+        num: fp.num,
+        isStarter: fp.isStarter,
+        role: fp.role,
+        kRate: fp.kRate,
+        bbRate: fp.bbRate,
+        whip: fp.whip,
+        era: fp.era,
+        stamina: fp.stamina,
+        maxStamina: fp.maxStamina,
+        recoverRate: fp.recoverRate,
+        drainPerPitch: fp.drainPerPitch,
+        pitchesThisGame: 0,
+        usedThisGame: false,
+        active: false,
+        currentPitcher: false
+        // isFP: true,
       };
     }
 
@@ -2991,7 +3050,14 @@
         if (i === 3 && fp) return fp; // slot 3 = franchise player
         return genH(i, ai);
       });
-      return { name, hitters, pitchers: Array.from({ length: 13 }, (_, i) => genP(i)), score: {}, runs: 0 };
+
+      const pitchers = Array.from({ length: 13 }, (_, i) => {
+        const fp = getFranchisePitcher(name, i);
+        if (i === 1 && fp) return fp; // slot 1 = franchise player
+        return genP(i, ai);
+      });
+
+      return { name, hitters, pitchers, score: {}, runs: 0 };
     }
 
     function setupMatchForSeries() {
@@ -3279,6 +3345,8 @@
       document.getElementById('stamina-report').textContent = rpt ? 'Your pitcher stamina: ' + rpt : '';
       const btnRow = document.getElementById('go-btn-row'); btnRow.innerHTML = '';
       const addB = (t, cls, fn) => { const b = document.createElement('button'); b.className = cls; b.textContent = t; b.onclick = fn; btnRow.appendChild(b); };
+      recoverPitchersBetweenGames();
+
       if (CURRENT_GAME_SERIES && CURRENT_GAME_SERIES.series.done) {
         // Series over - sync CURRENT_SERIES to CURRENT_GAME_SERIES before completing
         addB('Series Result', 'btn-primary', () => { if (CURRENT_GAME_SERIES) CURRENT_SERIES = CURRENT_GAME_SERIES; onSeriesComplete(); });
