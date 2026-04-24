@@ -362,18 +362,30 @@ LEAVE OTHER THINGS THE SAME
 _______________
 
 
-TODO
+TODOw
 
-Quality of life checks
-- some button hover styles
-- ordering of some run stats or visuals
+Manage game:
+Play each game during the season of 162 as well
 
-Back button centered on Choose Your Team Page
+TODOs
 
+BUTTON:
+Center the back button on the Choose Your Team Page
+
+
+BADGES:
 New row of Badges for Manager acheivements. Also Replace Comeback kids with Rival Winner - Win a series against a team from your division!
 
 "Good Call" - Make a sucessfull Manager move
 "Lucky Skipper" - Make 10 sucessfull Manager moves in the same season
 "Moneyball" - Pinch hit for a player during a playoff game 
-"Trash Can" - Sucessfully pull of 'Steal the Signs'
+"Trash Can" - Sucessfully pull off 'Steal the Signs' manager move
 "HOF Manager" - Become the manager of a 90+ rated team
+
+
+
+Quality of life checks
+- some button hover styles
+- ordering of some run stats or visuals
+
+

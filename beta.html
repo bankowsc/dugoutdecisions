@@ -1817,7 +1817,7 @@
             'Fantasy League': {
                 'FL East': ['Quartz Hollow Craftsmen', 'Crestmere Firehawks', 'Mystridge Princes', 'Norwyn Bay Seacats', 'Stonefall Fairies'],
                 'FL Central': ['Silverkeep Doves', 'Ashbourne Wizards', 'Frostford Freeze', 'Mooncliff Dreamers', 'Stormhaven Igniters'],
-                'FL West': ['Zandria Gladiators', 'Brickmoor Serpents', 'Atlantica Hammerheads', 'Farlands Keeperss', 'Portaltown Tungsten Cubes'],
+                'FL West': ['Zandria Gladiators', 'Brickmoor Serpents', 'Atlantica Hammerheads', 'Farlands Keepers', 'Portaltown Tungsten Cubes'],
             }
         };
         // Flatten all teams
@@ -2900,6 +2900,171 @@
             const sp = i < 5, hand = Math.random() > 0.3 ? 'R' : 'L', num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES);
             return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? .14 : .22, sp ? .24 : .27)), bbRate: r2(rnd(.06, .20)), whip: r2(rnd(sp ? 1.3 : .9, sp ? 1.8 : 1.35)), era: r2(rnd(sp ? 2.9 : 3.3, sp ? 6.5 : 5.0)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
         }
+
+        function pickFranchisePlayer(teamname, i, ai) {
+            const players = {
+                'Lakewood Pilgrims': { // 1
+                    name: 'J. Pilgrim', hand: 'R', num: 99, pos: 'C',
+                    spd: 80, bbRate: 0.07, kRate: 0.14, avg: 0.320, ops: 0.910
+                },
+                'Springfield Crabs': { // 2
+                    name: 'T. Crabman', hand: 'L', num: 45, pos: 'SS',
+                    spd: 85, bbRate: 0.10, kRate: 0.18, avg: 0.290, ops: 0.870
+                },
+                // 'Riverdale Redbirds': {
+                //     name: 'R. Warbler', hand: 'S', num: 81, pos: 'RF',
+                //     spd: 95, bbRate: 0.04, kRate: 0.14, avg: 0.301, ops: 0.880
+                // },
+                'Oakburg Beavers': { // 4
+                    name: 'D. Bober', hand: 'L', num: 67, pos: 'LF',
+                    spd: 29, bbRate: 0.32, kRate: 0.04, avg: 0.349, ops: 0.870
+                },
+                // 'Eastville Barracudas': {
+                //     name: 'E. Fisher', hand: 'R', num: 21, pos: 'SS',
+                //     spd: 71, bbRate: 0.14, kRate: 0.27, avg: 0.231, ops: 1.270
+                // },
+                'Millard Pioneers': { // 1
+                    name: 'C. Trail', hand: 'R', num: 14, pos: '2B',
+                    spd: 92, bbRate: 0.11, kRate: 0.20, avg: 0.265, ops: 0.805
+                },
+                'Millport Machines': { // 2
+                    name: 'S. Torque', hand: 'R', num: 88, pos: 'DH',
+                    spd: 40, bbRate: 0.13, kRate: 0.24, avg: 0.240, ops: 1.120
+                },
+                'Centertown Blizzard': { // 3
+                    name: 'F. Chill', hand: 'L', num: 31, pos: 'CF',
+                    spd: 95, bbRate: 0.10, kRate: 0.18, avg: 0.295, ops: 0.810
+                },
+                // 'Hendersonville Seals': {
+                //     name: 'B. Harbor', hand: 'S', num: 22, pos: 'C',
+                //     spd: 75, bbRate: 0.29, kRate: 0.06, avg: 0.291, ops: 0.865
+                // },
+                'Lemonte Bolts': { // 5
+                    name: 'V. Sparks', hand: 'R', num: 9, pos: 'SS',
+                    spd: 88, bbRate: 0.11, kRate: 0.29, avg: 0.352, ops: 0.705
+                },
+                'Sunnydale Herons': { // 1
+                    name: 'A. Wing', hand: 'L', num: 3, pos: 'RF',
+                    spd: 72, bbRate: 0.19, kRate: 0.17, avg: 0.315, ops: 0.990
+                },
+                // 'Westgate Firespitters': { 
+                //     name: 'D. Blaze', hand: 'R', num: 77, pos: 'LF',
+                //     spd: 98, bbRate: 0.12, kRate: 0.26, avg: 0.220, ops: 1.280
+                // },
+                'Summit Phantoms': { // 3
+                    name: 'N. Shade', hand: 'S', num: 11, pos: 'SS',
+                    spd: 99, bbRate: 0.18, kRate: 0.15, avg: 0.215, ops: 1.840
+                },
+                // 'Seaport Ironclads': {
+                //     name: 'H. Steel', hand: 'R', num: 55, pos: '1B',
+                //     spd: 35, bbRate: 0.20, kRate: 0.22, avg: 0.255, ops: 0.910
+                // },
+                'Washborough Ostrich Riders': { // 5
+                    name: 'P. Stride', hand: 'L', num: 6, pos: 'CF',
+                    spd: 115, bbRate: 0.08, kRate: 0.19, avg: 0.288, ops: 0.790
+                },
+                // 'Quartz Hollow Craftsmen': {
+                //     name: 'E. Chisel', hand: 'R', num: 44, pos: '3B',
+                //     spd: 60, bbRate: 0.14, kRate: 0.12, avg: 0.330, ops: 0.880
+                // },
+                'Crestmere Firehawks': { // 2
+                    name: 'E. Fuego', hand: 'R', num: 99, pos: 'RF',
+                    spd: 89, bbRate: 0.20, kRate: 0.15, avg: 0.335, ops: 0.760
+                },
+                'Mystridge Princes': { // 3
+                    name: 'L. Crown', hand: 'S', num: 18, pos: 'SS',
+                    spd: 72, bbRate: 0.41, kRate: 0.04, avg: 0.275, ops: 0.970
+                },
+                'Norwyn Bay Seacats': { // 4
+                    name: 'T. Tide', hand: 'L', num: 27, pos: 'CF',
+                    spd: 46, bbRate: 0.85, kRate: 0.08, avg: 0.212, ops: 0.620
+                },
+                // 'Stonefall Fairies': {
+                //     name: 'M. Glint', hand: 'R', num: 2, pos: '2B',
+                //     spd: 68, bbRate: 0.26, kRate: 0.13, avg: 0.320, ops: 0.760
+                // },
+                'Silverkeep Doves': { // 1
+                    name: 'S. Peace', hand: 'L', num: 7, pos: 'LF',
+                    spd: 54, bbRate: 0.27, kRate: 0.05, avg: 0.290, ops: 0.980
+                },
+                'Ashbourne Wizards': { // 2
+                    name: 'Z. Hex', hand: 'S', num: 66, pos: 'SS',
+                    spd: 74, bbRate: 0.45, kRate: 0.35, avg: 0.320, ops: 0.920
+                },
+                // 'Frostford Freeze': { 
+                //     name: 'I. Ice', hand: 'R', num: 13, pos: '1B',
+                //     spd: 96, bbRate: 0.17, kRate: 0.17, avg: 0.240, ops: 1.330
+                // },
+                'Mooncliff Dreamers': { // 4
+                    name: 'D. Lune', hand: 'L', num: 29, pos: 'CF',
+                    spd: 21, bbRate: 0.20, kRate: 0.04, avg: 0.276, ops: 1.110
+                },
+                'Stormhaven Igniters': { // 5
+                    name: 'K. Surge', hand: 'R', num: 91, pos: 'RF',
+                    spd: 64, bbRate: 0.11, kRate: 0.20, avg: 0.298, ops: 0.970
+                },
+                // 'Zandria Gladiators': {
+                //     name: 'R. Valor', hand: 'R', num: 10, pos: '3B',
+                //     spd: 78, bbRate: 0.19, kRate: 0.14, avg: 0.310, ops: 0.780
+                // },
+                // 'Brickmoor Serpents': { // 2
+                //     name: 'S. Coil', hand: 'S', num: 33, pos: 'SS',
+                //     spd: 81, bbRate: 0.20, kRate: 0.18, avg: 0.385, ops: 0.460
+                // },
+                'Atlantica Hammerheads': { // 3
+                    name: 'B. Crush', hand: 'L', num: 52, pos: '1B',
+                    spd: 50, bbRate: 0.12, kRate: 0.24, avg: 0.192, ops: 1.890
+                },
+                'Farlands Keepers': { // 4
+                    name: 'G. Watchman', hand: 'R', num: 5, pos: 'CF',
+                    spd: 91, bbRate: 0.13, kRate: 0.18, avg: 0.288, ops: 0.910
+                },
+                'Portaltown Tungsten Cubes': { // 5
+                    name: 'Q. Cubert', hand: 'R', num: 67, pos: 'DH',
+                    spd: 4, bbRate: 0.99, kRate: 0.02, avg: 0.151, ops: 0.350
+                }
+
+                // Remaining 25 teams 
+                // 'Lakewood Pilgrims', 'Springfield Crabs', 3, 'Oakburg Beavers', 5
+                // 'Millard Pioneers', 'Millport Machines', 'Centertown Blizzard', 4, 'Lemonte Bolts'
+                // 'Sunnydale Herons', 2, 'Summit Phantoms', 4, 'Washborough Ostrich Riders'
+                // 1, 'Crestmere Firehawks', 'Mystridge Princes', 'Norwyn Bay Seacats', 5
+                // 'Silverkeep Doves', 'Ashbourne Wizards', 3, 'Mooncliff Dreamers', 'Stormhaven Igniters'
+                // 1, 2, 'Atlantica Hammerheads', 'Farlands Keepers', 'Portaltown Tungsten Cubes'
+
+                // add the rest...
+                // 3 'Riverdale Redbirds' 5 'Eastville Barracudas'
+                // 4 'Hendersonville Seals'
+                // 2 'Westgate Firespitters' 4 'Seaport Ironclads'
+                // 1 'Quartz Hollow Craftsmen'  5 'Stonefall Fairies'
+                // 3 'Frostford Freeze',
+                // 1 'Zandria Gladiators', 2 'Brickmoor Serpents'
+            };
+
+            const fp = players[teamname];
+            if (!fp) {
+                return null;
+            }
+
+            return {
+                id: i,
+                name: fp.name,
+                hand: fp.hand,
+                num: fp.num,
+                pos: fp.pos,
+                spd: fp.spd,
+                bbRate: fp.bbRate,
+                kRate: fp.kRate,
+                avg: fp.avg,
+                ops: fp.ops,
+                active: true,
+                inGame: true, // first batter is always in lineup
+                franchise: true,
+                stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }
+            };
+        }
+
+
         function genTeam(name, reuse, ai) {
             if (reuse) {
                 // Reset stats; inGame will be set properly by setupMatchForSeries using savedLineup
@@ -2908,7 +3073,16 @@
                 return { name, hitters: h, pitchers: pi, score: {}, runs: 0 };
             }
             // Fresh generation: 13 hitters (9 starters + 4 bench), 13 pitchers
-            return { name, hitters: Array.from({ length: 13 }, (_, i) => genH(i, ai)), pitchers: Array.from({ length: 13 }, (_, i) => genP(i)), score: {}, runs: 0 };
+
+            let hitters = Array.from({ length: 13 }, (_, i) => genH(i, ai));
+            // 🔑 overwrite first hitter with franchise player
+            const franchise = pickFranchisePlayer(name, 0, ai);
+            if (franchise) {
+                hitters[0] = franchise;
+            }
+
+
+            return { name, hitters, pitchers: Array.from({ length: 13 }, (_, i) => genP(i)), score: {}, runs: 0 };
         }
 
         function setupMatchForSeries() {
