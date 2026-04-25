@@ -1863,7 +1863,7 @@
             { id: 'onpatrol', icon: '🔄', label: 'On Patrol', desc: 'Turn a double play', cat: 'Play' },
             { id: 'tagged', icon: '🏃', label: 'Tagged', desc: 'Score a run by tagging up', cat: 'Play' },
             { id: 'goodcall', icon: '📣', label: 'Good Call', desc: 'Make a successful manager move', cat: 'Manager' },
-            { id: 'luckyskipper', icon: '🍀', label: 'Lucky Skipper', desc: 'Make 10 successful manager moves in one season', cat: 'Manager' },
+            { id: 'luckyskipper', icon: '🍀', label: 'Lucky Skipper', desc: 'Make 7 successful manager moves in one season', cat: 'Manager' },
             { id: 'moneyball', icon: '💰', label: 'Moneyball', desc: 'Pinch hit for a player during a playoff game', cat: 'Manager' },
             { id: 'trashcan', icon: '🗑️', label: 'Trash Can', desc: "Successfully pull off 'Steal the Signs' manager move", cat: 'Manager' },
             { id: 'hofmanager', icon: '🎖️', label: 'HOF Manager', desc: 'Become the manager of a 90+ prestige team', cat: 'Manager' },
@@ -2109,30 +2109,52 @@
                 return;
             }
             const move = MANAGER_MOVES[Math.floor(Math.random() * MANAGER_MOVES.length)];
-            // Prestige boosts success chance: +0.1% per prestige point above 10, max 75%
             const prestigeBoost = Math.max(0, MANAGER_PRESTIGE - 10) * 0.001;
             const effectiveP = Math.min(0.75, move.p + prestigeBoost);
             const success = Math.random() < effectiveP;
+
+            // Base game result
             if (success) SEASON.records[SEASON.playerTeam].w++;
             else SEASON.records[SEASON.playerTeam].l++;
-            // Advance AI teams by one game so game counts stay even
             ALL_TEAMS_FLAT.forEach(t => {
                 if (t === SEASON.playerTeam) return;
                 const r = SEASON.records[t];
                 if (r.w + r.l < SEASON_TOTAL) { if (Math.random() < 0.5) r.w++; else r.l++; }
             });
             SEASON.gamesPlayed++;
-            if (SEASON.managerCooldown > 0) SEASON.managerCooldown--; // count this as a real game
             SEASON.managerCooldown = 10;
             SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result: success ? 'W' : 'L', managerMove: move.name, success });
+
+            // Win streak bonus: 30% chance on success, 1–3 extra wins
+            let streakLen = 0;
+            if (success && Math.random() < 0.30) {
+                streakLen = Math.floor(Math.random() * 3) + 1;
+                // Cap so we don't blow past 162
+                streakLen = Math.min(streakLen, SEASON_TOTAL - SEASON.gamesPlayed);
+                for (let i = 0; i < streakLen; i++) {
+                    SEASON.records[SEASON.playerTeam].w++;
+                    ALL_TEAMS_FLAT.forEach(t => {
+                        if (t === SEASON.playerTeam) return;
+                        const r = SEASON.records[t];
+                        if (r.w + r.l < SEASON_TOTAL) { if (Math.random() < 0.5) r.w++; else r.l++; }
+                    });
+                    SEASON.gamesPlayed++;
+                    SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result: 'W', managerMove: null, success: false, streakGame: true });
+                }
+            }
+
             if (success) {
                 SEASON.successfulMoves = (SEASON.successfulMoves || 0) + 1;
                 if (!BADGES.goodcall) { award('goodcall'); }
-                if (SEASON.successfulMoves >= 10 && !BADGES.luckyskipper) { award('luckyskipper'); }
+                if (SEASON.successfulMoves >= 7 && !BADGES.luckyskipper) { award('luckyskipper'); }
                 if (move.name === 'Steal the Signs' && !BADGES.trashcan) { award('trashcan'); }
             }
+
             const oddsPct = Math.round(effectiveP * 100);
-            logEl.innerHTML = `<div style="padding:6px 10px;border-radius:8px;background:${success ? 'var(--green2)' : 'var(--red2)'};color:${success ? 'var(--green0)' : 'var(--red0)'};border:.5px solid ${success ? 'var(--green3)' : 'var(--red3)'};font-size:12px;margin-top:4px"><strong>🧢 ${move.name}</strong> <span style="font-size:10px;opacity:.8">(${oddsPct}% odds)</span><br>${success ? move.good : move.bad}</div>`;
+            const streakMsg = streakLen > 0
+                ? `<div style="margin-top:5px;font-size:11px;font-weight:600;color:var(--green0)">🔥 Win streak! The momentum carried — ${streakLen} more W${streakLen > 1 ? 's' : ''} follow!</div>`
+                : '';
+            logEl.innerHTML = `<div style="padding:6px 10px;border-radius:8px;background:${success ? 'var(--green2)' : 'var(--red2)'};color:${success ? 'var(--green0)' : 'var(--red0)'};border:.5px solid ${success ? 'var(--green3)' : 'var(--red3)'};font-size:12px;margin-top:4px"><strong>🧢 ${move.name}</strong> <span style="font-size:10px;opacity:.8">(${oddsPct}% odds)</span><br>${success ? move.good : move.bad}${streakMsg}</div>`;
             updateSeasonUI();
             if (SEASON.gamesPlayed >= SEASON_TOTAL) { _contSimRunning = false; finishSeason(); }
         }
@@ -3051,12 +3073,12 @@
             const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
             const num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES), spd = rndI(15, 98), pos = POSITIONS[i] || pick(POSITIONS);
             const b = { id: i, name: fn[0] + '. ' + ln, hand, num, pos, spd, bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .30)), active: true, inGame: i < 9, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } };
-            if (ai) { b.avg = r3(rnd(.230, .335)); b.ops = r3(rnd(.720, .999)); } else { b.avg = r3(rnd(.215, .325)); b.ops = r3(rnd(.640, .980)); }
+            if (ai) { b.avg = r3(rnd(.230, .335)); b.ops = r3(rnd(.620, .999)); } else { b.avg = r3(rnd(.215, .325)); b.ops = r3(rnd(.640, .980)); }
             return b;
         }
         function genP(i) {
             const sp = i < 5, hand = Math.random() > 0.3 ? 'R' : 'L', num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES);
-            return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? .14 : .22, sp ? .24 : .27)), bbRate: r2(rnd(.06, .20)), whip: r2(rnd(sp ? 1.3 : .9, sp ? 1.8 : 1.35)), era: r2(rnd(sp ? 2.9 : 3.3, sp ? 6.5 : 5.0)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
+            return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? .12 : .26, sp ? .24 : .27)), bbRate: r2(rnd(.06, .20)), whip: r2(rnd(sp ? .9 : .9, sp ? 1.8 : 1.3)), era: r2(rnd(sp ? 2.9 : 2.8, sp ? 5.5 : 5.0)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
         }
         function genTeam(name, reuse, ai) {
             if (reuse) {
@@ -3154,7 +3176,7 @@
             const cp = curPit(G.opp);
             document.getElementById('opp-lineup-display').innerHTML =
                 `<div style="padding:6px 8px;border-radius:8px;background:var(--amber2);border:.5px solid var(--amber3);margin-bottom:6px;font-size:12px"><strong>SP:</strong> ${cp.name} | ERA ${cp.era} | WHIP ${cp.whip} | <span class="chip chip-amber" style="font-size:10px">${cp.hand}HP</span>${cp.isFP ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}</div>` +
-                G.opp.hitters.slice(0, 9).map((h, i) => `<div style="display:flex;gap:4px;align-items:center;padding:2px 0"><span style="width:14px;color:var(--tx3);font-size:11px">${i + 1}</span><span style="font-size:10px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${h.pos}</span><span style="flex:1;font-weight:500;font-size:12px">${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:10px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:10px">OPS ${h.ops}</span><span class="chip chip-blue" style="font-size:10px">${h.hand}</span><span class="chip ${spdChip(h.spd)}" style="font-size:10px">${h.spd}spd</span></div>`).join('');
+                G.opp.hitters.slice(0, 9).map((h, i) => `<div style="display:flex;gap:4px;align-items:center;padding:2px 0"><span style="width:14px;color:var(--tx3);font-size:11px">${i + 1}</span><span style="font-size:10px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${h.pos}</span><span style="flex:1;font-weight:500;font-size:12px">${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:10px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:10px">OPS ${h.ops > 0.999 ? Math.round(h.ops) : ''}.${Math.round(h.ops * 1000)}</span><span class="chip chip-blue" style="font-size:10px">${h.hand}</span><span class="chip ${spdChip(h.spd)}" style="font-size:10px">${h.spd}spd</span></div>`).join('');
         }
 
         function startGame() {
@@ -3518,7 +3540,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 6}" font-size="10" fill="#e6f1fb"
                     const h = team.hitters[lu[i]], at = active && i === ci % 9, deck = active && i === (ci + 1) % 9, due = !active && i === ci % 9;
                     const cls = at ? 'active-batter' : deck ? 'on-deck' : due ? 'due-up-row' : '';
                     const badge = at ? '<span class="chip chip-green" style="font-size:9px">AB</span>' : deck ? '<span class="chip chip-blue" style="font-size:9px">Deck</span>' : due ? '<span class="chip chip-amber" style="font-size:9px">Due</span>' : '';
-                    return `<div class="order-row ${cls}"><span class="ord-num">${i + 1}</span><span class="ord-pos">${h.pos}</span><span class="ord-name">${h.name}</span>${badge}<span class="chip chip-blue" style="font-size:9px">${h.hand}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS .${Math.round(h.ops * 1000)}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span style="font-size:10px;color:var(--tx2)">${h.stats.h}-${h.stats.ab}</span><span style="font-size:10px;color:var(--blue0);font-weight:500">${h.stats.r}R</span></div>`;
+                    return `<div class="order-row ${cls}"><span class="ord-num">${i + 1}</span><span class="ord-pos">${h.pos}</span><span class="ord-name">${h.name}</span>${badge}<span class="chip chip-blue" style="font-size:9px">${h.hand}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${h.ops > 0.999 ? Math.round(h.ops) : ''}.${Math.round(h.ops * 1000)}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span style="font-size:10px;color:var(--tx2)">${h.stats.h}-${h.stats.ab}</span><span style="font-size:10px;color:var(--blue0);font-weight:500">${h.stats.r}R</span></div>`;
                 }).join('');
             }
             const yb = G.half === 'bottom', ob = G.half === 'top';
@@ -3558,7 +3580,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 6}" font-size="10" fill="#e6f1fb"
             const bon = handBonus(hb, op), adj = Math.round((hb.avg + bon) * 1000);
             const ac = hb.avg >= .290 ? 'chip-green' : hb.avg >= .250 ? 'chip-gray' : 'chip-amber';
             const oc = hb.ops >= .900 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
-            el.innerHTML = `<div style="padding:6px 8px;border-radius:8px;background:var(--bg2);border:.5px solid var(--bdr);font-size:12px"><div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:3px"><span style="font-weight:500">${hb.name}</span><span class="chip chip-blue" style="font-size:10px">${hb.hand}</span><span class="chip ${ac}" style="font-size:10px">.${Math.round(hb.avg * 1000)}${bon > 0 ? ` → <strong>.${adj}★</strong>` : ''}</span><span class="chip ${oc}" style="font-size:10px">OPS ${hb.ops}</span><span class="chip ${spdChip(hb.spd)}" style="font-size:10px">${hb.spd}spd</span></div>${bon > 0 ? `<div style="font-size:10px;color:var(--green1);font-weight:500">★ +${bon} AVG bonus vs ${op.name} (${op.hand}HP)</div>` : '<div style="font-size:10px;color:var(--tx3)">Same handedness — no bonus</div>'}</div>`;
+            el.innerHTML = `<div style="padding:6px 8px;border-radius:8px;background:var(--bg2);border:.5px solid var(--bdr);font-size:12px"><div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:3px"><span style="font-weight:500">OPS ${hb.ops > 0.999 ? Math.round(hb.ops) : ''}.${Math.round(hb.ops * 1000)}</span><span class="chip chip-blue" style="font-size:10px">${hb.hand}</span><span class="chip ${ac}" style="font-size:10px">.${Math.round(hb.avg * 1000)}${bon > 0 ? ` → <strong>.${adj}★</strong>` : ''}</span><span class="chip ${oc}" style="font-size:10px">OPS ${hb.ops > 0.999 ? Math.round(hb.ops) : ''}.${Math.round(hb.ops * 1000)}</span><span class="chip ${spdChip(hb.spd)}" style="font-size:10px">${hb.spd}spd</span></div>${bon > 0 ? `<div style="font-size:10px;color:var(--green1);font-weight:500">★ +${bon} AVG bonus vs ${op.name} (${op.hand}HP)</div>` : '<div style="font-size:10px;color:var(--tx3)">Same handedness — no bonus</div>'}</div>`;
         }
         function makeSub() {
             const os = +document.getElementById('sub-out').value, ii = +document.getElementById('sub-in').value;
