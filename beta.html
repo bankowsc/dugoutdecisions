@@ -3233,7 +3233,13 @@
         // ── STEALS ──
         function steal(bi) {
             const runner = G.bases[bi]; if (!runner || G.bases[bi + 1]) return;
-            const ch = (bi === 1 ? 0.75 : 1.0) * (0.45 + (runner.spd / 100) * 0.45);
+
+            // const ch = (bi === 1 ? 0.75 : 1.0) * (0.45 + (runner.spd / 100) * 0.45);
+            const t = Math.max(-1, Math.min(4, (runner.spd - 30) / 40));
+            const base = 0.45 + t * 0.30;
+            const ch = (bi === 1 ? 0.75 : 1.0) * base;
+
+
             if (Math.random() < ch) { G.bases[bi + 1] = runner; G.bases[bi] = null; G.log.unshift({ msg: `STEAL! ${runner.name} swipes ${bi === 0 ? '2nd' : '3rd'}!`, isSteal: true }); }
             else { G.bases[bi] = null; G.outs++; G.log.unshift({ msg: `${runner.name} caught stealing.`, isSteal: true }); if (G.outs >= 3) { endHalf(); renderGame(); return; } }
             renderGame();
