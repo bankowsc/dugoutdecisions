@@ -413,3 +413,45 @@ towards a player stats. Like if they are 0-0 and get a walk or error its still 0
 
 While youre here...
 Go nuts with the themes light and dark and add some colors or transitions or animations make it look good, no mistakes.
+________________________
+
+
+TODOs
+
+DOUBLE PLAYS
+Fix double plays such that they can only happen when a runner is on first.
+The runner on first and the batter are out BUT any runners on 3rd or Home could advance.
+If the inning doesnt end from the double play, the run counts. But if it does the run does not count.
+
+
+REGULAR SEASON
+Ability to PICK manager move out of the 10. Manager move button now just expands to show the 10 options and collapses them if clicked again.
+Each of the ten option cells shows the odds of success as well as the title of the move.
+The buttons should be gray during the 10 game wait period. 
+
+Also in regular season, add a Sim +1 game button.
+When all 162 games are played the Pause/Play button goes away. Make the +10 games, +1 game, Skip to End, and Manager move button + section now do the same when the season is over.
+
+
+MY STATS sections
+Change to "My Advanced Stats"
+Advanced analytics show player's Krate and BBrate now as well.
+You can replace the hits rbis and runs this game stats shown in this section to make space. Those are already shown elsewhere
+Do the same for "Opp" and make that section "Opp Advanced Stats"
+
+
+_________
+
+TODOs
+
+MANAGER MOVE
+Currently the manager move button never gets reset to be clicked again.
+Even after 10 games pass the manager move cant be used again.
+Can you make it so that the moves that have lower odds to success also have higher odds to result in one of the win streaks
+
+
+MANAGER_PRESTIGE
+Can you remove the gradient on the bubble that shows a player the manager prestige. Its hard to read. Just do a normal background
+Also make it so that 150 is the maximum manager prestige not 99 anymore
+
+

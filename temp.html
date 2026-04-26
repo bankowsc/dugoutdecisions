@@ -1776,10 +1776,9 @@
             letter-spacing: 1.5px;
             padding: 5px 14px;
             border-radius: 20px;
-            /* background: linear-gradient(135deg, var(--amber2), var(--amber0)); */
+            background: var(--amber2);
             color: var(--amber0);
-            border: 1px solid var(--amber3);
-            box-shadow: 0 2px 8px rgba(139, 74, 0, .2)
+            border: 1px solid var(--amber3)
         }
 
         /* ── CHANGELOG BUTTON ── */
@@ -1982,6 +1981,69 @@
             transform: translateX(100%)
         }
 
+        #btn-manager-move.season-done,
+        #btn-sim-10.season-done,
+        #btn-sim-1.season-done,
+        #btn-skip-season.season-done {
+            display: none !important
+        }
+
+        /* ── MANAGER MOVES GRID ── */
+        .mgr-moves-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px
+        }
+
+        .mgr-move-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--bdr);
+            background: var(--bg1);
+            cursor: pointer;
+            transition: all .15s;
+            text-align: left
+        }
+
+        .mgr-move-cell:hover:not(.cooldown) {
+            background: var(--amber2);
+            border-color: var(--amber3);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(139, 74, 0, .15)
+        }
+
+        .mgr-move-cell.cooldown {
+            opacity: .5;
+            cursor: not-allowed;
+            background: var(--bg2)
+        }
+
+        .mgr-move-cell .move-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--tx0);
+            font-family: 'DM Mono', monospace;
+            line-height: 1.3
+        }
+
+        .mgr-move-cell.cooldown .move-name {
+            color: var(--tx3)
+        }
+
+        .mgr-move-cell .move-odds {
+            font-size: 10px;
+            color: var(--amber0);
+            font-family: 'DM Mono', monospace;
+            font-weight: 500
+        }
+
+        .mgr-move-cell.cooldown .move-odds {
+            color: var(--tx3)
+        }
+
         /* ── SEASON LOG ── */
         #season-log {
             max-height: 320px;
@@ -2095,9 +2157,15 @@
                                 <button class="btn-primary" id="btn-play-cont" onclick="toggleContSim()"
                                     style="display:none">⏸ Pause</button>
                                 <button class="btn-green" id="btn-sim-10" onclick="simNGames(10)">+10 Games</button>
+                                <button class="btn-green" id="btn-sim-1" onclick="simNGames(1)">+1 Game</button>
                                 <button id="btn-skip-season" onclick="skipToEnd()">Skip to End</button>
-                                <button id="btn-manager-move" onclick="doManagerMove()"
-                                    title="Bold manager decision!">🧢 Manager Move</button>
+                                <button id="btn-manager-move" onclick="toggleManagerMoves()"
+                                    title="Pick a bold manager decision!">🧢 Manager Move ▾</button>
+                            </div>
+                            <div id="manager-moves-panel"
+                                style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--bdr)">
+                                <div class="section-label" style="margin-bottom:8px">Choose your move</div>
+                                <div id="manager-moves-grid"></div>
                             </div>
                         </div>
                         <div class="card" id="season-standing-card" style="display:none">
@@ -2306,8 +2374,8 @@
                             <div class="tab-row">
                                 <button class="tab active" id="tab-sub" onclick="showTab('sub')">Subs</button>
                                 <button class="tab" id="tab-pitch" onclick="showTab('pitch')">Bullpen</button>
-                                <button class="tab" id="tab-stats" onclick="showTab('stats')">My Stats</button>
-                                <button class="tab" id="tab-opp" onclick="showTab('opp')">Opp</button>
+                                <button class="tab" id="tab-stats" onclick="showTab('stats')">My Adv. Stats</button>
+                                <button class="tab" id="tab-opp" onclick="showTab('opp')">Opp Adv. Stats</button>
                             </div>
                             <div id="mgr-sub"></div>
                             <div id="mgr-pitch" style="display:none"></div>
@@ -2569,6 +2637,13 @@
             document.getElementById('season-standing-card').style.display = 'none';
             _contSimRunning = false; document.getElementById('btn-play-cont').style.display = 'none';
             document.getElementById('btn-sim-season').style.display = '';
+            document.getElementById('btn-sim-10').style.display = '';
+            document.getElementById('btn-sim-1').style.display = '';
+            document.getElementById('btn-skip-season').style.display = '';
+            document.getElementById('btn-manager-move').style.display = '';
+            document.getElementById('btn-manager-move').innerHTML = '🧢 Manager Move ▾';
+            document.getElementById('manager-moves-panel').style.display = 'none';
+            _managerMovesOpen = false;
             SEASON.gamesPlayed = 0; SEASON.seasonLog = []; SEASON.managerCooldown = 0; SEASON.successfulMoves = 0;
             if (document.getElementById('manager-move-log')) document.getElementById('manager-move-log').textContent = '';
             ALL_TEAMS_FLAT.forEach(t => SEASON.records[t] = { w: 0, l: 0 });
@@ -2602,11 +2677,54 @@
             { name: 'Steal the Signs', good: 'Reading their signals all game — 3-run inning!', bad: 'Got caught — the other dugout was watching.', p: 0.42 },
         ];
 
-        function doManagerMove() {
+        let _managerMovesOpen = false;
+        function toggleManagerMoves() {
             if (SEASON.gamesPlayed >= SEASON_TOTAL) return;
-            const logEl = document.getElementById('manager-move-log');
-            if (SEASON.managerCooldown > 0) { logEl.innerHTML = `<span style="color:var(--amber0);font-weight:500">🧢 Next move available in ${SEASON.managerCooldown} game${SEASON.managerCooldown !== 1 ? 's' : ''}.`; return; }
-            const move = MANAGER_MOVES[Math.floor(Math.random() * MANAGER_MOVES.length)];
+            _managerMovesOpen = !_managerMovesOpen;
+            const panel = document.getElementById('manager-moves-panel');
+            const btn = document.getElementById('btn-manager-move');
+            if (_managerMovesOpen) {
+                panel.style.display = 'block';
+                renderManagerMovesGrid();
+                btn.innerHTML = '🧢 Manager Move ▴';
+            } else {
+                panel.style.display = 'none';
+                btn.innerHTML = '🧢 Manager Move ▾';
+            }
+        }
+
+        function renderManagerMovesGrid() {
+            const prestigeBoost = Math.max(0, MANAGER_PRESTIGE - 10) * 0.001;
+            const onCooldown = SEASON.managerCooldown > 0;
+            const grid = document.getElementById('manager-moves-grid');
+            let h = `<div class="mgr-moves-grid">`;
+            if (onCooldown) {
+                h += `<div style="grid-column:1/-1;font-size:11px;color:var(--amber0);font-family:'DM Mono',monospace;padding:6px 2px;font-weight:500">⏳ Next move available in ${SEASON.managerCooldown} game${SEASON.managerCooldown !== 1 ? 's' : ''}.</div>`;
+            }
+            MANAGER_MOVES.forEach((move, idx) => {
+                const effectiveP = Math.min(0.75, move.p + prestigeBoost);
+                const oddsPct = Math.round(effectiveP * 100);
+                const streakChance = Math.max(0.20, Math.min(0.65, 0.90 - move.p));
+                const streakPct = Math.round(streakChance * 100);
+                const cls = onCooldown ? 'mgr-move-cell cooldown' : 'mgr-move-cell';
+                const onclick = onCooldown ? '' : `onclick="executeManagerMove(${idx})"`;
+                h += `<div class="${cls}" ${onclick}>
+      <span class="move-name">${move.name}</span>
+      <span class="move-odds">${onCooldown ? '—' : `${oddsPct}% success · 🔥${streakPct}% streak`}</span>
+    </div>`;
+            });
+            h += `</div>`;
+            grid.innerHTML = h;
+        }
+
+        function executeManagerMove(moveIdx) {
+            if (SEASON.gamesPlayed >= SEASON_TOTAL || SEASON.managerCooldown > 0) return;
+            // Close the panel
+            _managerMovesOpen = false;
+            document.getElementById('manager-moves-panel').style.display = 'none';
+            document.getElementById('btn-manager-move').innerHTML = '🧢 Manager Move ▾';
+
+            const move = MANAGER_MOVES[moveIdx];
             const prestigeBoost = Math.max(0, MANAGER_PRESTIGE - 10) * 0.001;
             const effectiveP = Math.min(0.75, move.p + prestigeBoost);
             const success = Math.random() < effectiveP;
@@ -2614,15 +2732,17 @@
             ALL_TEAMS_FLAT.forEach(t => { if (t === SEASON.playerTeam) return; const r = SEASON.records[t]; if (r.w + r.l < SEASON_TOTAL) { if (Math.random() < 0.5) r.w++; else r.l++; } });
             SEASON.gamesPlayed++; SEASON.managerCooldown = 10;
             SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result: success ? 'W' : 'L', managerMove: move.name, success });
-            let streakLen = 0;
-            if (success && Math.random() < 0.30) {
-                streakLen = Math.min(Math.floor(Math.random() * 3) + 1, SEASON_TOTAL - SEASON.gamesPlayed);
-                for (let i = 0; i < streakLen; i++) { SEASON.records[SEASON.playerTeam].w++; ALL_TEAMS_FLAT.forEach(t => { if (t === SEASON.playerTeam) return; const r = SEASON.records[t]; if (r.w + r.l < SEASON_TOTAL) { if (Math.random() < 0.5) r.w++; else r.l++; } }); SEASON.gamesPlayed++; SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result: 'W', streakGame: true }); }
-            }
             if (success) { SEASON.successfulMoves = (SEASON.successfulMoves || 0) + 1; if (!BADGES.goodcall) award('goodcall'); if (SEASON.successfulMoves >= 7 && !BADGES.luckyskipper) award('luckyskipper'); if (move.name === 'Steal the Signs' && !BADGES.trashcan) award('trashcan'); }
             const oddsPct = Math.round(effectiveP * 100);
+            // Streak chance is INVERSELY proportional to base success odds:
+            // lower base odds move = higher risk/reward = bigger streak potential
+            // Maps p=0.40 → ~55% streak chance, p=0.50 → ~35% streak chance
+            const streakChance = Math.max(0.20, Math.min(0.65, 0.90 - move.p));
+            const streakLen = success && Math.random() < streakChance ? Math.min(Math.floor(Math.random() * 3) + 1, SEASON_TOTAL - SEASON.gamesPlayed) : 0;
+            for (let i = 0; i < streakLen; i++) { SEASON.records[SEASON.playerTeam].w++; ALL_TEAMS_FLAT.forEach(t => { if (t === SEASON.playerTeam) return; const r = SEASON.records[t]; if (r.w + r.l < SEASON_TOTAL) { if (Math.random() < 0.5) r.w++; else r.l++; } }); SEASON.gamesPlayed++; SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result: 'W', streakGame: true }); }
             const streakMsg = streakLen > 0 ? `<div style="margin-top:5px;font-size:11px;font-weight:600;color:var(--green0)">🔥 Win streak! ${streakLen} more W${streakLen > 1 ? 's' : ''} follow!</div>` : '';
-            logEl.innerHTML = `<div style="padding:7px 12px;border-radius:var(--radius-sm);background:${success ? 'var(--green2)' : 'var(--red2)'};color:${success ? 'var(--green0)' : 'var(--red0)'};border:1px solid ${success ? 'var(--green3)' : 'var(--red3)'};font-size:12px;margin-top:4px"><strong>🧢 ${move.name}</strong> <span style="font-size:10px;opacity:.7">(${oddsPct}% odds)</span><br>${success ? move.good : move.bad}${streakMsg}</div>`;
+            const logEl = document.getElementById('manager-move-log');
+            logEl.innerHTML = `<div style="padding:7px 12px;border-radius:var(--radius-sm);background:${success ? 'var(--green2)' : 'var(--red2)'};color:${success ? 'var(--green0)' : 'var(--red0)'};border:1px solid ${success ? 'var(--green3)' : 'var(--red3)'};font-size:12px;margin-top:4px"><strong>🧢 ${move.name}</strong> <span style="font-size:10px;opacity:.7">(${oddsPct}% success · ${Math.round(streakChance * 100)}% streak)</span><br>${success ? move.good : move.bad}${streakMsg}</div>`;
             updateSeasonUI();
             if (SEASON.gamesPlayed >= SEASON_TOTAL) { _contSimRunning = false; finishSeason(); }
         }
@@ -2651,10 +2771,13 @@
             document.getElementById('season-record').textContent = `${r.w}-${r.l}`;
             document.getElementById('season-bar').style.width = pct + '%';
             document.getElementById('season-game-count').textContent = `Game ${SEASON.gamesPlayed} of ${SEASON_TOTAL}`;
-            const last10 = SEASON.seasonLog.slice(0, 10);
-            document.getElementById('season-last-results').innerHTML = last10.length ? '<span style="font-size:10px;color:var(--tx3);font-family:\'DM Mono\',monospace">Last:</span> ' + last10.map(g => `<span style="display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:5px;font-size:11px;font-weight:700;background:${g.result === 'W' ? 'var(--green2)' : 'var(--red2)'};color:${g.result === 'W' ? 'var(--green0)' : 'var(--red0)'}">${g.result}</span>`).join(' ') : '';
+            const last5 = SEASON.seasonLog.slice(0, 5);
+            document.getElementById('season-last-results').innerHTML = last5.length ? '<span style="font-size:10px;color:var(--tx3);font-family:\'DM Mono\',monospace">Last:</span> ' + last5.map(g => `<span style="display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:5px;font-size:11px;font-weight:700;background:${g.result === 'W' ? 'var(--green2)' : 'var(--red2)'};color:${g.result === 'W' ? 'var(--green0)' : 'var(--red0)'}">${g.result}</span>`).join(' ') : '';
             const logEl = document.getElementById('season-log');
-            logEl.innerHTML = SEASON.seasonLog.slice(0, 163).map(g => { const mgr = g.managerMove ? `<span style="font-size:9px;color:${g.success ? 'var(--green0)' : 'var(--red0)'};background:${g.success ? 'var(--green2)' : 'var(--red2)'};padding:1px 4px;border-radius:3px">🧢</span>` : ''; return `<div style="padding:2px 0;border-bottom:.5px solid var(--bdr);display:flex;gap:8px;align-items:center;font-family:'DM Mono',monospace"><span style="color:var(--tx3);font-size:10px">G${g.g}</span><span style="font-size:11px;font-weight:700;color:${g.result === 'W' ? 'var(--green1)' : 'var(--red1)'}">${g.result}</span>${mgr}</div>`; }).join('');
+            logEl.innerHTML = SEASON.seasonLog.slice(0, 30).map(g => { const mgr = g.managerMove ? `<span style="font-size:9px;color:${g.success ? 'var(--green0)' : 'var(--red0)'};background:${g.success ? 'var(--green2)' : 'var(--red2)'};padding:1px 4px;border-radius:3px">🧢</span>` : ''; return `<div style="padding:2px 0;border-bottom:.5px solid var(--bdr);display:flex;gap:8px;align-items:center;font-family:'DM Mono',monospace"><span style="color:var(--tx3);font-size:10px">G${g.g}</span><span style="font-size:11px;font-weight:700;color:${g.result === 'W' ? 'var(--green1)' : 'var(--red1)'}">${g.result}</span>${mgr}</div>`; }).join('');
+            // FIX: If the manager moves panel is open, re-render it so cooldown count updates live
+            // and cells re-enable the moment cooldown hits 0
+            if (_managerMovesOpen) renderManagerMovesGrid();
             updateDivMini();
         }
         function updateDivMini() {
@@ -2671,7 +2794,11 @@
             document.getElementById('season-end-panel').style.display = 'block';
             const r = SEASON.records[SEASON.playerTeam];
             document.getElementById('season-end-msg').textContent = `Season Complete: ${r.w}-${r.l}`;
-            _contSimRunning = false; document.getElementById('btn-play-cont').style.display = 'none';
+            _contSimRunning = false;
+            // Hide all season action buttons once season is over
+            ['btn-play-cont', 'btn-sim-season', 'btn-sim-10', 'btn-sim-1', 'btn-skip-season', 'btn-manager-move'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+            document.getElementById('manager-moves-panel').style.display = 'none';
+            _managerMovesOpen = false;
             if (inPlayoffs) {
                 LAST_MANAGED_MADE_PLAYOFFS = true;
                 const teamP2 = TEAM_PRESTIGE[SEASON.playerTeam] || 1;
@@ -3337,10 +3464,23 @@
             pit.stamina = clamp(pit.stamina - pit.drainPerPitch, 0, pit.maxStamina); pit.pitchesThisGame++;
             let msg = '', isRun = false, isE = false, isDP = false;
             G.lastFlyOut = false; G.tagState = null; G.tagPending = [false, false, false];
-            const dpOk = (res === 'GO') && (G.bases[0] || G.bases[1]) && G.outs < 2 && Math.random() < 0.15;
+            // DP only possible with runner on 1st and fewer than 2 outs
+            const dpOk = (res === 'GO') && !!G.bases[0] && G.outs < 2 && Math.random() < 0.15;
             if (res === 'K') { G.outs++; msg = bat.name + ' strikes out.'; }
             else if (res === 'GO') {
-                if (dpOk) { isDP = true; G.outs += 2; let dpR = null, dpB = -1; for (let i = 2; i >= 0; i--) { if (G.bases[i]) { dpR = G.bases[i]; dpB = i; break; } } if (dpR) G.bases[dpB] = null; if (!iy) award('onpatrol'); msg = `${bat.name} grounds into a double play!${dpR ? ' ' + dpR.name + ' and' : ''} batter out.`; }
+                if (dpOk) {
+                    isDP = true;
+                    const r1 = G.bases[0]; G.bases[0] = null; G.outs += 2;
+                    // Runner on 3rd scores only if inning hasn't ended (outs<3)
+                    let r3scored = false;
+                    if (G.bases[2]) {
+                        if (G.outs < 3) { G.bases[2].stats.r++; addScore(iy, 1, bat, true); G.bases[2] = null; r3scored = true; }
+                        else { G.bases[2] = null; }// 3rd out — run does not count
+                    }
+                    if (!iy) award('onpatrol');
+                    msg = `${bat.name} grounds into a double play! ${r1.name} and batter are out.${r3scored ? ' Run scores!' : ''}`;
+                    if (r3scored) isRun = true;
+                }
                 else { G.outs++; msg = bat.name + ' grounds out.'; }
             }
             else if (res === 'FO') { G.outs++; G.lastFlyOut = true; msg = bat.name + ' flies out.'; if (iy && (G.bases[0] || G.bases[1] || G.bases[2])) { G.tagState = 'pending'; G.tagPending = [!!G.bases[0], !!G.bases[1], !!G.bases[2]]; } }
@@ -3643,14 +3783,28 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
         }
 
         function renderStatsP() {
-            const pit = curPit(G.opp); let h = `<div class="section-label" style="margin-bottom:6px">Your lineup — vs ${pit.name} (${pit.hand}HP)</div>`;
+            const pit = curPit(G.opp);
+            let h = `<div class="section-label" style="margin-bottom:6px">My Advanced Stats — vs ${pit.name} (${pit.hand}HP)</div>`;
+            h += `<div style="display:grid;grid-template-columns:auto 1fr auto auto auto auto auto;gap:2px 6px;align-items:center;margin-bottom:4px;padding:0 0 4px;border-bottom:1px solid var(--bdr)"><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace">#</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace">Player</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:right">AVG</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:right">OPS</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:right">K%</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:right">BB%</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:right">spd</span></div>`;
             G.yourLineup.forEach((hi, s) => {
                 const hb = G.you.hitters[hi], bon = handBonus(hb, pit), adj = Math.round((hb.avg + bon) * 1000);
-                const ac = hb.avg >= .290 ? 'chip-green' : hb.avg >= .250 ? 'chip-gray' : 'chip-amber', oc = hb.ops >= .900 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
-                const bbNote = hb.stats.bb > 0 ? `<span style="font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace">${hb.stats.bb}BB</span>` : '';
-                h += `<div class="stat-row"><span style="width:13px;color:var(--tx3);font-size:10px;flex-shrink:0;font-family:'DM Mono',monospace">${s + 1}</span><span style="flex:1;font-weight:500;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">${hb.name}</span><span class="chip chip-blue" style="font-size:9px">${hb.pos}</span><span class="chip chip-blue" style="font-size:9px">${hb.hand}</span>${bon > 0 ? `<span class="chip chip-green" style="font-size:9px">.${adj}★</span>` : `<span class="chip ${ac}" style="font-size:9px">.${Math.round(hb.avg * 1000)}</span>`}<span class="chip ${oc}" style="font-size:9px">OPS ${hb.ops}</span><span style="font-size:10px;color:var(--tx2);white-space:nowrap;font-family:'DM Mono',monospace">${hb.stats.h}-${hb.stats.ab}</span>${bbNote}<span style="font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace">${hb.stats.rbi}RBI</span><span style="font-size:10px;color:var(--blue0);font-weight:500;font-family:'DM Mono',monospace">${hb.stats.r}R</span></div>`;
+                const kPct = Math.round(hb.kRate * 100), bbPct = Math.round(hb.bbRate * 100);
+                const avgDisp = bon > 0 ? `<span style="color:var(--green0);font-weight:600">.${adj}★</span>` : `<span style="color:${hb.avg >= .290 ? 'var(--green0)' : hb.avg >= .250 ? 'var(--tx0)' : 'var(--amber0)'}">.${Math.round(hb.avg * 1000)}</span>`;
+                const opsCol = hb.ops >= .900 ? 'var(--green0)' : hb.ops >= .720 ? 'var(--tx0)' : 'var(--amber0)';
+                const kCol = hb.kRate >= .25 ? 'var(--red0)' : hb.kRate <= .16 ? 'var(--green0)' : 'var(--tx0)';
+                const bbCol = hb.bbRate >= .14 ? 'var(--green0)' : hb.bbRate <= .08 ? 'var(--amber0)' : 'var(--tx0)';
+                h += `<div style="display:grid;grid-template-columns:auto 1fr auto auto auto auto auto;gap:2px 6px;align-items:center;padding:4px 0;border-bottom:.5px solid var(--bdr);font-size:11px;font-family:'DM Mono',monospace">
+      <span style="color:var(--tx3);font-size:10px">${s + 1}</span>
+      <span style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;color:${hb.isFP ? 'var(--purple0)' : 'var(--tx0)'}">${hb.isFP ? '★' : hb.hand} ${hb.name}</span>
+      <span style="text-align:right;font-size:11px">${avgDisp}</span>
+      <span style="text-align:right;font-size:11px;color:${opsCol}">${hb.ops}</span>
+      <span style="text-align:right;font-size:11px;color:${kCol}">${kPct}%</span>
+      <span style="text-align:right;font-size:11px;color:${bbCol}">${bbPct}%</span>
+      <span style="text-align:right;font-size:11px;color:var(--tx2)">${hb.spd}</span>
+    </div>`;
             });
-            document.getElementById('mgr-stats').innerHTML = h + '<div style="font-size:10px;color:var(--tx3);margin-top:4px;font-family:\'DM Mono\',monospace">★ adj. avg vs current opp pitcher · H-AB (walks shown separately)</div>';
+            h += `<div style="font-size:10px;color:var(--tx3);margin-top:6px;font-family:'DM Mono',monospace;line-height:1.6">★ AVG adjusted for handedness matchup<br>K% = strikeout rate · BB% = walk rate · lower K% and higher BB% = better discipline<br>spd = baserunning speed</div>`;
+            document.getElementById('mgr-stats').innerHTML = h;
         }
 
         function renderOppP() {
@@ -3663,14 +3817,28 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
                 const used = G.opp.pitchers.filter(p => p.usedThisGame && !p.currentPitcher);
                 if (used.length) h += `<div style="font-size:10px;color:var(--tx3);margin-top:4px;font-family:'DM Mono',monospace">Used: ${used.map(p => p.name).join(', ')}</div>`;
             }
-            h += `<div class="section-label" style="margin-bottom:6px;margin-top:10px">Opp lineup — vs ${mp.name} (${mp.hand}HP)</div>`;
+            h += `<div class="section-label" style="margin-bottom:6px;margin-top:10px">Opp Advanced Stats — vs ${mp.name} (${mp.hand}HP)</div>`;
+            h += `<div style="display:grid;grid-template-columns:auto 1fr auto auto auto auto auto;gap:2px 6px;align-items:center;margin-bottom:4px;padding:0 0 4px;border-bottom:1px solid var(--bdr)"><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace">#</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace">Player</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:right">AVG</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:right">OPS</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:right">K%</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:right">BB%</span><span style="font-size:9px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:right">spd</span></div>`;
             G.oppLineup.forEach((hi, s) => {
-                const hb = G.opp.hitters[hi], bon = handBonus(hb, mp);
-                const ac = hb.avg >= .290 ? 'chip-green' : hb.avg >= .250 ? 'chip-gray' : 'chip-amber', oc = hb.ops >= .900 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
-                const ad = bon > 0 ? `<span class="chip chip-red" style="font-size:9px">.${Math.round((hb.avg + bon) * 1000)}★</span>` : `<span class="chip ${ac}" style="font-size:9px">.${Math.round(hb.avg * 1000)}</span>`;
-                h += `<div class="stat-row"><span style="width:13px;color:var(--tx3);font-size:10px;flex-shrink:0;font-family:'DM Mono',monospace">${s + 1}</span><span style="flex:1;font-weight:500;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">${hb.name}</span><span class="chip chip-blue" style="font-size:9px">${hb.hand}</span>${ad}<span class="chip ${oc}" style="font-size:9px">OPS ${hb.ops}</span><span style="font-size:10px;color:var(--tx2);white-space:nowrap;font-family:'DM Mono',monospace">${hb.stats.h}-${hb.stats.ab}</span><span style="font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace">${hb.stats.rbi}RBI</span><span style="font-size:10px;color:var(--blue0);font-weight:500;font-family:'DM Mono',monospace">${hb.stats.r}R</span><span class="chip ${spdChip(hb.spd)}" style="font-size:9px">${hb.spd}spd</span></div>`;
+                const hb = G.opp.hitters[hi], bon = handBonus(hb, mp), adj = Math.round((hb.avg + bon) * 1000);
+                const kPct = Math.round(hb.kRate * 100), bbPct = Math.round(hb.bbRate * 100);
+                // Handedness bonus shown as threat (red = higher adjusted avg = harder to get out)
+                const avgDisp = bon > 0 ? `<span style="color:var(--red0);font-weight:600">.${adj}★</span>` : `<span style="color:${hb.avg >= .290 ? 'var(--red0)' : hb.avg >= .250 ? 'var(--tx0)' : 'var(--green0)'}">.${Math.round(hb.avg * 1000)}</span>`;
+                const opsCol = hb.ops >= .900 ? 'var(--red0)' : hb.ops >= .720 ? 'var(--tx0)' : 'var(--green0)';
+                const kCol = hb.kRate >= .25 ? 'var(--green0)' : hb.kRate <= .16 ? 'var(--red0)' : 'var(--tx0)';
+                const bbCol = hb.bbRate >= .14 ? 'var(--red0)' : hb.bbRate <= .08 ? 'var(--green0)' : 'var(--tx0)';
+                h += `<div style="display:grid;grid-template-columns:auto 1fr auto auto auto auto auto;gap:2px 6px;align-items:center;padding:4px 0;border-bottom:.5px solid var(--bdr);font-size:11px;font-family:'DM Mono',monospace">
+      <span style="color:var(--tx3);font-size:10px">${s + 1}</span>
+      <span style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;color:${hb.isFP ? 'var(--purple0)' : 'var(--tx0)'}">${hb.isFP ? '★' : hb.hand} ${hb.name}</span>
+      <span style="text-align:right;font-size:11px">${avgDisp}</span>
+      <span style="text-align:right;font-size:11px;color:${opsCol}">${hb.ops}</span>
+      <span style="text-align:right;font-size:11px;color:${kCol}">${kPct}%</span>
+      <span style="text-align:right;font-size:11px;color:${bbCol}">${bbPct}%</span>
+      <span style="text-align:right;font-size:11px;color:var(--tx2)">${hb.spd}</span>
+    </div>`;
             });
-            document.getElementById('mgr-opp').innerHTML = h + '<div style="font-size:10px;color:var(--tx3);margin-top:4px;font-family:\'DM Mono\',monospace">★ adj. avg vs your current pitcher</div>';
+            h += `<div style="font-size:10px;color:var(--tx3);margin-top:6px;font-family:'DM Mono',monospace;line-height:1.6">★ AVG adjusted for handedness matchup (red = threat to you)<br>K% = strikeout rate (green = easy K) · BB% = walk rate (red = patient)</div>`;
+            document.getElementById('mgr-opp').innerHTML = h;
         }
 
         function showScreen(n) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('screen-' + n).classList.add('active'); }
