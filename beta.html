@@ -1782,6 +1782,134 @@
             box-shadow: 0 2px 8px rgba(139, 74, 0, .2)
         }
 
+        /* ── CHANGELOG BUTTON ── */
+        .btn-changelog {
+            border-color: var(--teal3);
+            color: var(--teal0);
+            background: var(--teal2)
+        }
+
+        .btn-changelog:hover {
+            border-color: var(--teal0);
+            box-shadow: 0 4px 14px rgba(93, 202, 165, .3)
+        }
+
+        .changelog-i {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--teal0);
+            color: var(--teal2);
+            font-size: 10px;
+            font-weight: 700;
+            font-family: 'DM Mono', monospace;
+            margin-right: 4px;
+            line-height: 1;
+            font-style: normal;
+            transition: transform .2s
+        }
+
+        .btn-changelog:hover .changelog-i {
+            transform: scale(1.15) rotate(15deg)
+        }
+
+        /* ── CHANGELOG PANEL ── */
+        .changelog-version {
+            margin-bottom: 22px
+        }
+
+        .changelog-vtag {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 16px;
+            letter-spacing: 1.5px;
+            background: var(--teal2);
+            color: var(--teal0);
+            border: 1px solid var(--teal3);
+            padding: 3px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-right: 8px
+        }
+
+        .changelog-latest .changelog-vtag {
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            color: #1a1510;
+            border-color: var(--gold)
+        }
+
+        .changelog-date {
+            font-size: 10px;
+            color: var(--tx3);
+            font-family: 'DM Mono', monospace;
+            letter-spacing: .5px
+        }
+
+        .changelog-latest .changelog-date::before {
+            content: 'LATEST · ';
+            color: var(--gold);
+            font-weight: 700
+        }
+
+        .changelog-entry {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            padding: 5px 0;
+            border-bottom: .5px solid var(--bdr);
+            font-size: 12px;
+            line-height: 1.5;
+            font-family: 'DM Mono', monospace
+        }
+
+        .changelog-entry:last-child {
+            border-bottom: none
+        }
+
+        .changelog-tag {
+            flex-shrink: 0;
+            font-size: 9px;
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-weight: 600;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            margin-top: 2px;
+            white-space: nowrap
+        }
+
+        .tag-fix {
+            background: var(--red2);
+            color: var(--red0);
+            border: .5px solid var(--red3)
+        }
+
+        .tag-new {
+            background: var(--green2);
+            color: var(--green0);
+            border: .5px solid var(--green3)
+        }
+
+        .tag-change {
+            background: var(--blue2);
+            color: var(--blue0);
+            border: .5px solid var(--blue3)
+        }
+
+        .tag-visual {
+            background: var(--purple2);
+            color: var(--purple0);
+            border: .5px solid var(--purple3)
+        }
+
+        .tag-balance {
+            background: var(--amber2);
+            color: var(--amber0);
+            border: .5px solid var(--amber3)
+        }
+
         /* ── SCROLLBARS ── */
         ::-webkit-scrollbar {
             width: 6px;
@@ -1891,10 +2019,16 @@
                             onclick="startNewFranchise()">▶ New Franchise</button>
                         <button onclick="toggleHelp()" id="btn-help" style="font-size:13px;padding:10px 20px">📖 How to
                             Play</button>
+                        <button onclick="toggleChangelog()" id="btn-changelog" class="btn-changelog"
+                            style="font-size:13px;padding:10px 20px" title="Update Log &amp; Version History"><span
+                                class="changelog-i">ℹ</span> Update Log</button>
                         <button class="btn-red" onclick="retireManager()" style="font-size:13px;padding:10px 20px"
                             title="Reset everything">🏳️ Retire</button>
                     </div>
                     <div id="help-panel"
+                        style="display:none;text-align:left;margin-top:24px;padding-top:18px;border-top:1px solid var(--bdr)">
+                    </div>
+                    <div id="changelog-panel"
                         style="display:none;text-align:left;margin-top:24px;padding-top:18px;border-top:1px solid var(--bdr)">
                     </div>
                 </div>
@@ -3560,9 +3694,68 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
 
         let _helpOpen = false;
         function toggleHelp() {
-            _helpOpen = !_helpOpen; const p = document.getElementById('help-panel'), b = document.getElementById('btn-help');
+            _helpOpen = !_helpOpen;
+            if (_helpOpen && _changelogOpen) { _changelogOpen = false; document.getElementById('changelog-panel').style.display = 'none'; document.getElementById('btn-changelog').textContent = ''; document.getElementById('btn-changelog').innerHTML = '<span class="changelog-i">ℹ</span> Update Log'; }
+            const p = document.getElementById('help-panel'), b = document.getElementById('btn-help');
             if (_helpOpen) { p.style.display = 'block'; p.innerHTML = HELP_HTML; b.textContent = '✕ Close'; }
             else { p.style.display = 'none'; b.textContent = '📖 How to Play'; }
+        }
+
+        const CHANGELOG_HTML = `<div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--tx1)">
+<div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--tx0);margin-bottom:4px">ℹ Update Log</div>
+<div style="font-size:11px;color:var(--tx3);margin-bottom:18px;font-family:'DM Mono',monospace">Version history &amp; patch notes for Dugout Decisions</div>
+
+<div class="changelog-version changelog-latest">
+  <div style="margin-bottom:8px"><span class="changelog-vtag">v1.3</span><span class="changelog-date">April 2026</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-fix">Fix</span><span>Walks (BB) and errors (E) no longer count as official at-bats. Stats panel now shows BB separately from H-AB.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-fix">Fix</span><span>Opponent bullpen pitchers now persist across series games — they accumulate fatigue just like your staff and must be managed accordingly.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-fix">Fix</span><span>Player and opponent hitter stats now correctly reset between each game in a series (was carrying over from previous games).</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-balance">Balance</span><span>Stamina recovery between series now grants bonus rest days based on games not played. Win a series in 2 of 3? Get an extra day of recovery per skipped game (8% SP / 18% RP per day).</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-visual">Visual</span><span>Full visual redesign: Bebas Neue display font, DM Mono stats font, Fraunces serif flavor text, animated topbar shimmer, glowing out dots, pulsing active batter row, animated walkoff text, SVG base glow effects, shimmer season progress bar.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>This Update Log panel — version history and patch notes accessible from the home screen.</span></div>
+</div>
+
+<div class="changelog-version">
+  <div style="margin-bottom:8px"><span class="changelog-vtag">v1.2</span><span class="changelog-date">April 2026</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Franchise Players: Each team has a unique star player with hand-crafted stats (e.g. T. Crabman, V. Sparks, Q. Cubert). Marked with ★FP chip in lineup.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Franchise Pitchers: Select teams also have a signature pitcher (SP or RP) with tuned ERA/WHIP/stamina stats.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Tag-up mechanic: After a fly out, manage runners to tag and advance base-by-base based on their speed rating.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Double steal option: Attempt to advance both baserunners simultaneously when on 1st and 2nd.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Manager Move: A bold in-season call with a cooldown, win streak chance, and prestige-scaled odds (max 75%).</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-balance">Balance</span><span>Steal odds now scale more sharply with speed — elite speedsters (90+) have a real advantage; slow runners are punished for attempting.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-change">Change</span><span>Pitcher auto-sub during sim now prefers relievers over starters and triggers at 50% stamina (SP) / 60% (RP).</span></div>
+</div>
+
+<div class="changelog-version">
+  <div style="margin-bottom:8px"><span class="changelog-vtag">v1.1</span><span class="changelog-date">April 2026</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>12-team playoff bracket with full visual bracket display. Seeds 1–2 receive first-round byes.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Wild Card (Bo3) → Division Series (Bo5) → LCS (Bo7) → World Series (Bo7) playoff structure.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Manager Prestige system: unlock higher-tier teams over multiple seasons. Playoff success earns prestige; missing playoffs costs it.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Return exception: You can always re-manage a team you took to the playoffs last season, even if prestige has dropped below the requirement.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>20 achievements / badges across Series, Game, Play, and Manager categories — persisted to browser storage.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>All-time championship counter. Back-to-Back and Dynasty badges for sustained excellence.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-change">Change</span><span>Stamina now drains based on pitcher role — starters drain ~1–4% per pitch, relievers drain ~5–6%. Tired pitchers give batters an effective AVG bonus.</span></div>
+</div>
+
+<div class="changelog-version">
+  <div style="margin-bottom:8px"><span class="changelog-vtag">v1.0</span><span class="changelog-date">April 2026</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Initial release. 162-game season simulation with two 15-team leagues (Realistic &amp; Fantasy) across 6 divisions.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Full at-bat engine: singles, doubles, triples, HRs, walks, strikeouts, ground outs, fly outs, errors, double plays.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Baserunning logic with speed-based extra base advancement.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Lineup editor with drag-to-reorder and bench swap. Starting pitcher selection with stamina display.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>In-game management: pinch hitting, manual pitching changes, steal attempts.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Scoreboard, diamond visualization, play log, batting order panels, opponent scouting tab.</span></div>
+  <div class="changelog-entry"><span class="changelog-tag tag-new">New</span><span>Dark mode with browser preference persistence.</span></div>
+</div>
+</div>`;
+
+        let _changelogOpen = false;
+        function toggleChangelog() {
+            _changelogOpen = !_changelogOpen;
+            if (_changelogOpen && _helpOpen) { _helpOpen = false; document.getElementById('help-panel').style.display = 'none'; document.getElementById('btn-help').textContent = '📖 How to Play'; }
+            const p = document.getElementById('changelog-panel'), b = document.getElementById('btn-changelog');
+            if (_changelogOpen) { p.style.display = 'block'; p.innerHTML = CHANGELOG_HTML; b.innerHTML = '✕ Close'; }
+            else { p.style.display = 'none'; b.innerHTML = '<span class="changelog-i">ℹ</span> Update Log'; }
         }
 
         function retireManager() {
@@ -3572,6 +3765,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
             saveBadges(BADGES); saveHistory(HISTORY); saveChamps(TOTAL_CHAMPS); savePrestige();
             renderBadges('setup-badges'); renderChampCounter('champ-counter-setup');
             const b = document.getElementById('btn-help'); if (_helpOpen) { _helpOpen = false; document.getElementById('help-panel').style.display = 'none'; if (b) b.textContent = '📖 How to Play'; }
+            if (_changelogOpen) { _changelogOpen = false; document.getElementById('changelog-panel').style.display = 'none'; document.getElementById('btn-changelog').innerHTML = '<span class="changelog-i">ℹ</span> Update Log'; }
         }
 
         // Init
