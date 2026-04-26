@@ -1724,18 +1724,67 @@
             border-radius: var(--radius);
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 0;
         }
 
-        .hero-card::before {
-            content: '⚾';
-            position: absolute;
-            font-size: 200px;
-            opacity: .04;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: spin 30s linear infinite;
+        .hero-baseball {
+            flex-shrink: 0;
+            width: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             pointer-events: none;
+            user-select: none;
+            font-size: 190px;
+            opacity: .5;
+            transition: opacity .4s;
+        }
+
+        .hero-card:hover .hero-baseball {
+            opacity: .5;
+        }
+
+        .hero-baseball.left {
+            animation: spinL 28s linear infinite;
+            display: inline-block;
+        }
+
+        .hero-baseball.right {
+            animation: spinR 22s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spinL {
+            from {
+                transform: rotate(0deg)
+            }
+
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        @keyframes spinR {
+            from {
+                transform: rotate(0deg)
+            }
+
+            to {
+                transform: rotate(-360deg)
+            }
+        }
+
+        .hero-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media(max-width:640px) {
+            .hero-baseball {
+                display: none;
+            }
         }
 
         @keyframes spin {
@@ -2073,26 +2122,33 @@
             </div>
             <div class="body-area">
                 <div class="hero-card">
-                    <div class="hero-title">Dugout Decisions</div>
-                    <div class="hero-sub">Build your franchise. Survive 162 games. Battle through the playoffs. Win the
-                        World Series.</div>
-                    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center">
-                        <button class="btn-gold" style="font-size:16px;padding:12px 36px"
-                            onclick="startNewFranchise()">▶ New Franchise</button>
-                        <button onclick="toggleHelp()" id="btn-help" style="font-size:13px;padding:10px 20px">📖 How to
-                            Play</button>
-                        <button onclick="toggleChangelog()" id="btn-changelog" class="btn-changelog"
-                            style="font-size:13px;padding:10px 20px" title="Update Log &amp; Version History"><span
-                                class="changelog-i">ℹ</span> Update Log</button>
-                        <button class="btn-red" onclick="retireManager()" style="font-size:13px;padding:10px 20px"
-                            title="Reset everything">🏳️ Retire</button>
+                    <!-- Left baseball -->
+                    <div class="hero-baseball left">⚾</div>
+                    <!-- Center content -->
+                    <div class="hero-content">
+                        <div class="hero-title">Dugout Decisions</div>
+                        <div class="hero-sub">Build your franchise. Survive 162 games. Battle through the playoffs. Win
+                            the World Series.</div>
+                        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center">
+                            <button class="btn-gold" style="font-size:16px;padding:12px 36px"
+                                onclick="startNewFranchise()">▶ New Franchise</button>
+                            <button onclick="toggleHelp()" id="btn-help" style="font-size:13px;padding:10px 20px">📖 How
+                                to Play</button>
+                            <button onclick="toggleChangelog()" id="btn-changelog" class="btn-changelog"
+                                style="font-size:13px;padding:10px 20px" title="Update Log &amp; Version History"><span
+                                    class="changelog-i">ℹ</span> Update Log</button>
+                            <button class="btn-red" onclick="retireManager()" style="font-size:13px;padding:10px 20px"
+                                title="Reset everything">🏳️ Retire</button>
+                        </div>
+                        <div id="help-panel"
+                            style="display:none;text-align:left;margin-top:24px;padding-top:18px;border-top:1px solid var(--bdr)">
+                        </div>
+                        <div id="changelog-panel"
+                            style="display:none;text-align:left;margin-top:24px;padding-top:18px;border-top:1px solid var(--bdr)">
+                        </div>
                     </div>
-                    <div id="help-panel"
-                        style="display:none;text-align:left;margin-top:24px;padding-top:18px;border-top:1px solid var(--bdr)">
-                    </div>
-                    <div id="changelog-panel"
-                        style="display:none;text-align:left;margin-top:24px;padding-top:18px;border-top:1px solid var(--bdr)">
-                    </div>
+                    <!-- Right baseball -->
+                    <div class="hero-baseball right">⚾</div>
                 </div>
                 <div class="card" style="margin-top:12px">
                     <div id="champ-counter-setup"></div>
@@ -3252,11 +3308,11 @@
             const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
             const num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES), spd = rndI(15, 98), pos = POSITIONS[i] || pick(POSITIONS);
             const b = { id: i, name: fn[0] + '. ' + ln, hand, num, pos, spd, bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .30)), active: true, inGame: i < 9, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } };
-            if (ai) { b.avg = r3(rnd(.230, .320)); b.ops = r3(rnd(.620, .990)); } else { b.avg = r3(rnd(.220, .315)); b.ops = r3(rnd(.615, .980)); }
+            if (ai) { b.avg = r3(rnd(.230, .335)); b.ops = r3(rnd(.620, .999)); } else { b.avg = r3(rnd(.215, .325)); b.ops = r3(rnd(.640, .980)); }
             return b;
         }
         function genP(i) {
-            const sp = i < 5, hand = Math.random() > 0.35 ? 'R' : 'L', num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES);
+            const sp = i < 5, hand = Math.random() > 0.3 ? 'R' : 'L', num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES);
             return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? .12 : .26, sp ? .24 : .27)), bbRate: r2(rnd(.06, .20)), whip: r2(rnd(sp ? .9 : .9, sp ? 1.8 : 1.3)), era: r2(rnd(sp ? 2.9 : 2.7, sp ? 5.9 : 5.4)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
         }
         function genTeam(name, reuse, ai) {
