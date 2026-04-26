@@ -385,16 +385,31 @@ New row of Badges for Manager acheivements. Also Replace Comeback kids with Riva
 ________________________
 
 
-IS THERE AN ERROR WITH WHIP? like overflow and its now like 9 or something.
-My Franchise RP is getting hit around
-
-Error with OPS at .1 insteal of 1. ??
-
-still 5 starters for a team**
-
-
 Quality of life checks
 - some button hover styles
 - ordering of some run stats or visuals
 
 
+_________
+2 ISSUES
+
+STAT RESET
+in between series the stats for players dont reset. 
+There is probably a reset stats fucntion that doesnt get called because its at the end of games and end of "series" got treated differently.
+
+OPPONENT BULLPEN
+When i look and see the opponents bullpen during a game all their players are at 100% stamnia even if they pitched the day before
+DO they jsut get new players between games accidentaly. Can you make it so that they have the same pitchers all series
+and need to also deal with them getting tired and needing to be used later.
+
+Additions-
+Get back an extra days worth of stamina for each game that was still left to win in the series.
+So like the usual 1 PLUS an extra PLUS the series WIN recovery if you win in 2 games in a 3 win series
+
+STATS-
+Currently a walk counts as a failed AB but in the real world it doesnt count as one. For stats can you make walks and errors not contribute
+towards a player stats. Like if they are 0-0 and get a walk or error its still 0-0
+
+
+While youre here...
+Go nuts with the themes light and dark and add some colors or transitions or animations make it look good, no mistakes.
