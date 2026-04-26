@@ -2719,10 +2719,8 @@
 
         function executeManagerMove(moveIdx) {
             if (SEASON.gamesPlayed >= SEASON_TOTAL || SEASON.managerCooldown > 0) return;
-            // Close the panel
-            _managerMovesOpen = false;
-            document.getElementById('manager-moves-panel').style.display = 'none';
-            document.getElementById('btn-manager-move').innerHTML = '🧢 Manager Move ▾';
+            // Keep panel open — just update the button arrow state
+            // (panel stays visible showing cooldown after move executes)
 
             const move = MANAGER_MOVES[moveIdx];
             const prestigeBoost = Math.max(0, MANAGER_PRESTIGE - 10) * 0.001;
@@ -3254,7 +3252,7 @@
             const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
             const num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES), spd = rndI(15, 98), pos = POSITIONS[i] || pick(POSITIONS);
             const b = { id: i, name: fn[0] + '. ' + ln, hand, num, pos, spd, bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .30)), active: true, inGame: i < 9, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } };
-            if (ai) { b.avg = r3(rnd(.230, .325)); b.ops = r3(rnd(.620, .990)); } else { b.avg = r3(rnd(.215, .320)); b.ops = r3(rnd(.615, .980)); }
+            if (ai) { b.avg = r3(rnd(.230, .320)); b.ops = r3(rnd(.620, .990)); } else { b.avg = r3(rnd(.220, .315)); b.ops = r3(rnd(.615, .980)); }
             return b;
         }
         function genP(i) {
