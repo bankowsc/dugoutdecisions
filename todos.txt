@@ -457,4 +457,51 @@ Also make it so that 150 is the maximum manager prestige not 99 anymore
 
 ______________
 
-Division standings when same record?
+TODOs
+
+STANDINGS TIED RECORD
+Fix Division standings when same record
+Currently the players team makes the playoffs over another team when they have the same record but that isnt shown in the standings
+Can you make it such that if the human players team has a tied record with another team the human team is ahead in the shown standings
+
+
+PLAYOFF HOMEGAMES
+Change the gameplay such that the human player isnt always the home team ever game always
+This also means the play bottom of the 9th inning and walkoff conditions may need to be edited
+The better seed should start with home games. For each round...
+WILD CARD - 3 home games for better ranked team
+DIVISION - 2 home games for better ranked team - then 2 home games for worse ranked team - then 1 home game for better ranked team
+League CS - 2 home games for better ranked team - then 3 home games for worse ranked team - then 2 home games for better ranked team
+World Series - 2 home games for better ranked team - then 3 home games for worse ranked team - then 2 home games for better ranked team
+
+
+'Steal the Signs'
+Can you make the 'Steal the Signs' button result in a POSTSEASON BAN IF CAUGHT.
+Even if the team has a good enough record for the playoffs they will be left out and the next best team from the standings will get in.
+There will be NO go to playoffs button it will just be like the team got eliminated. A yellow Warning triangle with an exclaimation point should appear on the cell
+A note should be in the cell indicating that a postseason ban will be assessed if caught. The ban is lifted after the season.
+To offset the risk - increase the odds of success for the sign steal and raise the minimum added win streak
+The player will still lose the appropriate manager prestige as if they missed the playoffs even if they had a sufficent record for the playoffs.
+
+
+
+SPINNING BASEBALLS ON MOBILE HOME SCREEN
+Currently the baseballs pinch the home screen on mobile such that the buttons are forced to the middle
+Can you fix this such that the balls are in the background or that the buttons can be in their normal position when in portait mode on a device
+
+
+UPDATESEASON UI Small change
+Change last5 to show last 10
+Change to show all games logEl.innerHTML = SEASON.seasonLog.slice(0, 162)
+
+__________________________________________________________
+
+
+...
+Ability to manage regular season games straight up
+
+Reorder achivements based on difficulty in section
+
+
+....
+ADD Leaderboards and databases
