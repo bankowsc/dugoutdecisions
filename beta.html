@@ -1743,17 +1743,17 @@
         }
 
         .hero-card:hover .hero-baseball {
-            opacity: .5;
+            opacity: .2;
         }
 
         .hero-baseball.left {
-            animation: spinL 15s linear infinite;
-            display: inline-block;
+            animation: spinL 28s linear infinite;
+            display: flex;
         }
 
         .hero-baseball.right {
-            animation: spinR 15s linear infinite;
-            display: inline-block;
+            animation: spinR 22s linear infinite;
+            display: flex;
         }
 
         @keyframes spinL {
@@ -1779,11 +1779,38 @@
         .hero-content {
             flex: 1;
             min-width: 0;
+            position: relative;
+            z-index: 1;
         }
 
+        /* On narrow screens: detach baseballs from flex flow, place them behind content */
         @media(max-width:640px) {
+            .hero-card {
+                display: block;
+                padding: 40px 20px;
+            }
+
             .hero-baseball {
-                display: none;
+                position: absolute;
+                top: 50%;
+                width: auto;
+                font-size: 110px;
+                opacity: .07;
+                display: flex !important;
+            }
+
+            .hero-baseball.left {
+                left: -20px;
+                transform: translateY(-50%);
+            }
+
+            .hero-baseball.right {
+                right: -20px;
+                transform: translateY(-50%);
+            }
+
+            .hero-card:hover .hero-baseball {
+                opacity: .12;
             }
         }
 
@@ -2091,6 +2118,41 @@
 
         .mgr-move-cell.cooldown .move-odds {
             color: var(--tx3)
+        }
+
+        .move-stats-row {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 4px
+        }
+
+        .move-stat-chip {
+            font-size: 9px;
+            padding: 1px 5px;
+            border-radius: 8px;
+            font-family: 'DM Mono', monospace;
+            font-weight: 600;
+            white-space: nowrap;
+            border: .5px solid transparent
+        }
+
+        .stat-success {
+            background: var(--green2);
+            color: var(--green0);
+            border-color: var(--green3)
+        }
+
+        .stat-streak {
+            background: var(--amber2);
+            color: var(--amber0);
+            border-color: var(--amber3)
+        }
+
+        .stat-max {
+            background: var(--blue2);
+            color: var(--blue0);
+            border-color: var(--blue3)
         }
 
         /* ── SEASON LOG ── */
@@ -2520,7 +2582,6 @@
 
     </div>
     <script>
-        'use strict';
         // ══════════════════════════════════════════════════════════════════════════
         // DARK MODE
         // ══════════════════════════════════════════════════════════════════════════
@@ -2720,17 +2781,20 @@
             SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result }); return { playerWin, w: r.w, l: r.l };
         }
 
+        // Each move: p=base success, pStreak=streak chance (conditional on success), maxStreak=max bonus wins (uniform 1..max)
+        // EU = p + p*pStreak*E[streak] increases gently as success odds fall (risk/reward tradeoff)
+        // Move 1 (safest):  EU≈0.77 | Move 10 (riskiest): EU≈1.30
         const MANAGER_MOVES = [
-            { name: 'Sacrifice Bunt Strategy', good: 'The squeeze play worked! Rally extended.', bad: 'Bunt into a double play. Momentum killed.', p: 0.45 },
-            { name: 'Shift the Lineup', good: 'New lineup order sparks the offense!', bad: 'Lineup shake-up throws batters off rhythm.', p: 0.45 },
-            { name: 'Go to the Bullpen Early', good: 'Fresh arm shut them down — smart move!', bad: 'Reliever blew up. Should have stayed with the starter.', p: 0.40 },
-            { name: 'Aggressive Baserunning', good: 'Daring baserunning created two extra runs!', bad: 'Runner thrown out at the plate. Inning over.', p: 0.45 },
-            { name: 'Platoon Advantage', good: 'Matchup advantage pays off — batter crushes it!', bad: 'The lefty-righty move backfired badly.', p: 0.50 },
-            { name: 'Call Time on a Hot Pitcher', good: 'Breaking the rhythm rattled their ace!', bad: 'The crowd jeered — momentum shifted to them.', p: 0.40 },
-            { name: 'Intentional Walk to Set Up DP', good: 'Exactly as planned — 5-4-3 double play!', bad: 'The force play fell apart. Bases loaded.', p: 0.45 },
-            { name: 'Rain Delay Gamble', good: 'Delay disrupted their starting pitcher!', bad: 'Your starter lost his rhythm in the delay.', p: 0.45 },
-            { name: 'Hit and Run', good: 'Hit and run worked — runners in motion!', bad: 'Hit into a double play on the hit and run.', p: 0.45 },
-            { name: 'Steal the Signs', good: 'Reading their signals all game — 3-run inning!', bad: 'Got caught — the other dugout was watching.', p: 0.42 },
+            { name: 'Platoon Advantage', good: 'Matchup advantage pays off — batter crushes it!', bad: 'The lefty-righty move backfired badly.', p: 0.70, pStreak: 0.10, maxStreak: 1 },
+            { name: 'Sacrifice Bunt Strategy', good: 'The squeeze play worked! Rally extended.', bad: 'Bunt into a double play. Momentum killed.', p: 0.64, pStreak: 0.19, maxStreak: 2 },
+            { name: 'Shift the Lineup', good: 'New lineup order sparks the offense!', bad: 'Lineup shake-up throws batters off rhythm.', p: 0.59, pStreak: 0.25, maxStreak: 3 },
+            { name: 'Intentional Walk / DP', good: 'Exactly as planned — 5-4-3 double play!', bad: 'The force play fell apart. Bases loaded.', p: 0.53, pStreak: 0.31, maxStreak: 4 },
+            { name: 'Hit and Run', good: 'Hit and run worked — runners in motion!', bad: 'Hit into a double play on the hit and run.', p: 0.48, pStreak: 0.37, maxStreak: 5 },
+            { name: 'Go to the Bullpen Early', good: 'Fresh arm shut them down — smart move!', bad: 'Reliever blew up. Should have stayed with the starter.', p: 0.42, pStreak: 0.43, maxStreak: 6 },
+            { name: 'Call Time on Hot Pitcher', good: 'Breaking the rhythm rattled their ace!', bad: 'The crowd jeered — momentum shifted to them.', p: 0.37, pStreak: 0.52, maxStreak: 7 },
+            { name: 'Aggressive Baserunning', good: 'Daring baserunning created two extra runs!', bad: 'Runner thrown out at the plate. Inning over.', p: 0.31, pStreak: 0.62, maxStreak: 8 },
+            { name: 'Rain Delay Gamble', good: 'Delay disrupted their starting pitcher — momentum!', bad: 'Your starter lost his rhythm in the delay.', p: 0.26, pStreak: 0.77, maxStreak: 9 },
+            { name: 'Steal the Signs', good: 'Reading their signals all game — 3-run inning!', bad: 'Got caught — the other dugout was watching.', p: 0.35, pStreak: 1.00, maxStreak: 10, minStreak: 3, postseasonBanIfCaught: true },
         ];
 
         let _managerMovesOpen = false;
@@ -2758,16 +2822,28 @@
                 h += `<div style="grid-column:1/-1;font-size:11px;color:var(--amber0);font-family:'DM Mono',monospace;padding:6px 2px;font-weight:500">⏳ Next move available in ${SEASON.managerCooldown} game${SEASON.managerCooldown !== 1 ? 's' : ''}.</div>`;
             }
             MANAGER_MOVES.forEach((move, idx) => {
-                const effectiveP = Math.min(0.75, move.p + prestigeBoost);
-                const oddsPct = Math.round(effectiveP * 100);
-                const streakChance = Math.max(0.20, Math.min(0.65, 0.90 - move.p));
-                const streakPct = Math.round(streakChance * 100);
+                const effectiveP = Math.min(0.80, move.p + prestigeBoost);
+                const successPct = Math.round(effectiveP * 100);
+                const streakPct = Math.round(move.pStreak * 100);
                 const cls = onCooldown ? 'mgr-move-cell cooldown' : 'mgr-move-cell';
                 const onclick = onCooldown ? '' : `onclick="executeManagerMove(${idx})"`;
-                h += `<div class="${cls}" ${onclick}>
-      <span class="move-name">${move.name}</span>
-      <span class="move-odds">${onCooldown ? '—' : `${oddsPct}% success · 🔥${streakPct}% streak`}</span>
-    </div>`;
+                if (onCooldown) {
+                    h += `<div class="${cls}">
+        <span class="move-name">${move.name}</span>
+        <span class="move-odds" style="color:var(--tx3)">— cooldown —</span>
+      </div>`;
+                } else {
+                    const banWarning = move.postseasonBanIfCaught ? `<span class="move-stat-chip" style="background:var(--red2);color:var(--red0);border:.5px solid var(--red3);font-size:9px">⚠️ Ban if caught</span>` : '';
+                    h += `<div class="${cls}" ${onclick}>
+        <span class="move-name">${move.name}${move.postseasonBanIfCaught ? ' ⚠️' : ''}</span>
+        <span class="move-stats-row">
+          <span class="move-stat-chip stat-success">${successPct}% win</span>
+          <span class="move-stat-chip stat-streak">🔥${streakPct}% streak</span>
+          <span class="move-stat-chip stat-max">+${move.minStreak || 1}–${move.maxStreak}</span>
+          ${banWarning}
+        </span>
+      </div>`;
+                }
             });
             h += `</div>`;
             grid.innerHTML = h;
@@ -2780,23 +2856,27 @@
 
             const move = MANAGER_MOVES[moveIdx];
             const prestigeBoost = Math.max(0, MANAGER_PRESTIGE - 10) * 0.001;
-            const effectiveP = Math.min(0.75, move.p + prestigeBoost);
+            const effectiveP = Math.min(0.80, move.p + prestigeBoost);
             const success = Math.random() < effectiveP;
             if (success) SEASON.records[SEASON.playerTeam].w++; else SEASON.records[SEASON.playerTeam].l++;
             ALL_TEAMS_FLAT.forEach(t => { if (t === SEASON.playerTeam) return; const r = SEASON.records[t]; if (r.w + r.l < SEASON_TOTAL) { if (Math.random() < 0.5) r.w++; else r.l++; } });
             SEASON.gamesPlayed++; SEASON.managerCooldown = 10;
             SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result: success ? 'W' : 'L', managerMove: move.name, success });
             if (success) { SEASON.successfulMoves = (SEASON.successfulMoves || 0) + 1; if (!BADGES.goodcall) award('goodcall'); if (SEASON.successfulMoves >= 7 && !BADGES.luckyskipper) award('luckyskipper'); if (move.name === 'Steal the Signs' && !BADGES.trashcan) award('trashcan'); }
-            const oddsPct = Math.round(effectiveP * 100);
-            // Streak chance is INVERSELY proportional to base success odds:
-            // lower base odds move = higher risk/reward = bigger streak potential
-            // Maps p=0.40 → ~55% streak chance, p=0.50 → ~35% streak chance
-            const streakChance = Math.max(0.20, Math.min(0.65, 0.90 - move.p));
-            const streakLen = success && Math.random() < streakChance ? Math.min(Math.floor(Math.random() * 3) + 1, SEASON_TOTAL - SEASON.gamesPlayed) : 0;
+            // Postseason ban if caught on Steal the Signs
+            if (!success && move.postseasonBanIfCaught) { SEASON.postseasonBanned = true; }
+            // Streak: uniform between minStreak (default 1) and maxStreak
+            const streakMin = move.minStreak || 1;
+            const streakRolled = success && Math.random() < move.pStreak;
+            const rawStreak = streakRolled ? streakMin + Math.floor(Math.random() * (move.maxStreak - streakMin + 1)) : 0;
+            const streakLen = Math.min(rawStreak, SEASON_TOTAL - SEASON.gamesPlayed);
             for (let i = 0; i < streakLen; i++) { SEASON.records[SEASON.playerTeam].w++; ALL_TEAMS_FLAT.forEach(t => { if (t === SEASON.playerTeam) return; const r = SEASON.records[t]; if (r.w + r.l < SEASON_TOTAL) { if (Math.random() < 0.5) r.w++; else r.l++; } }); SEASON.gamesPlayed++; SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result: 'W', streakGame: true }); }
+            const successPct = Math.round(effectiveP * 100);
+            const streakPct = Math.round(move.pStreak * 100);
             const streakMsg = streakLen > 0 ? `<div style="margin-top:5px;font-size:11px;font-weight:600;color:var(--green0)">🔥 Win streak! ${streakLen} more W${streakLen > 1 ? 's' : ''} follow!</div>` : '';
+            const banMsg = (!success && move.postseasonBanIfCaught) ? `<div style="margin-top:5px;font-size:11px;font-weight:700;color:var(--red0);background:var(--red2);border:.5px solid var(--red3);border-radius:4px;padding:3px 6px">⚠️ POSTSEASON BAN ISSUED — Your team is barred from the playoffs this season.</div>` : '';
             const logEl = document.getElementById('manager-move-log');
-            logEl.innerHTML = `<div style="padding:7px 12px;border-radius:var(--radius-sm);background:${success ? 'var(--green2)' : 'var(--red2)'};color:${success ? 'var(--green0)' : 'var(--red0)'};border:1px solid ${success ? 'var(--green3)' : 'var(--red3)'};font-size:12px;margin-top:4px"><strong>🧢 ${move.name}</strong> <span style="font-size:10px;opacity:.7">(${oddsPct}% success · ${Math.round(streakChance * 100)}% streak)</span><br>${success ? move.good : move.bad}${streakMsg}</div>`;
+            logEl.innerHTML = `<div style="padding:7px 12px;border-radius:var(--radius-sm);background:${success ? 'var(--green2)' : 'var(--red2)'};color:${success ? 'var(--green0)' : 'var(--red0)'};border:1px solid ${success ? 'var(--green3)' : 'var(--red3)'};font-size:12px;margin-top:4px"><strong>🧢 ${move.name}</strong> <span style="font-size:10px;opacity:.7">(${successPct}% win · 🔥${streakPct}% streak · max +${move.maxStreak})</span><br>${success ? move.good : move.bad}${streakMsg}${banMsg}</div>`;
             updateSeasonUI();
             if (SEASON.gamesPlayed >= SEASON_TOTAL) { _contSimRunning = false; finishSeason(); }
         }
@@ -2837,10 +2917,11 @@
         function updateDivMini() {
             const myDiv = TEAM_META[SEASON.playerTeam].division;
             const teamsInDiv = Object.keys(TEAM_META).filter(t => TEAM_META[t].division === myDiv);
-            teamsInDiv.sort((a, b) => seasonWinPct(b) - seasonWinPct(a));
+            const pTeam = SEASON.playerTeam;
+            teamsInDiv.sort((a, b) => { const diff = seasonWinPct(b) - seasonWinPct(a); if (Math.abs(diff) < 0.0001) { if (a === pTeam) return -1; if (b === pTeam) return 1; } return diff; });
             document.getElementById('season-standing-card').style.display = 'block';
             const lead = seasonWinPct(teamsInDiv[0]);
-            document.getElementById('season-div-mini').innerHTML = `<table class="standings-table" style="font-size:11px"><thead><tr><th class="team-th">Team</th><th class="num">W</th><th class="num">L</th><th class="num">GB</th></tr></thead><tbody>${teamsInDiv.map((t, i) => { const r = SEASON.records[t]; const gb = i === 0 ? '—' : (((lead - seasonWinPct(t)) * (r.w + r.l || 162)) / 2).toFixed(1); return `<tr${t === SEASON.playerTeam ? ' class="player-row"' : ''}><td>${t === SEASON.playerTeam ? '★ ' + t : t}</td><td class="num">${r.w}</td><td class="num">${r.l}</td><td class="num">${gb}</td></tr>`; }).join('')}</tbody></table>`;
+            document.getElementById('season-div-mini').innerHTML = `<table class="standings-table" style="font-size:11px"><thead><tr><th class="team-th">Team</th><th class="num">W</th><th class="num">L</th><th class="num">GB</th></tr></thead><tbody>${teamsInDiv.map((t, i) => { const r = SEASON.records[t]; const gb = i === 0 ? '—' : (((lead - seasonWinPct(t)) * (r.w + r.l || 162)) / 2).toFixed(1); const tied = i > 0 && Math.abs(seasonWinPct(t) - seasonWinPct(teamsInDiv[i - 1])) < 0.0001 && t !== pTeam ? '' : t === pTeam && i > 0 && Math.abs(seasonWinPct(t) - seasonWinPct(teamsInDiv[i + 1] || {})) < 0.0001 ? '*' : ''; return `<tr${t === pTeam ? ' class="player-row"' : ''}><td>${t === pTeam ? '★ ' + t : t}</td><td class="num">${r.w}</td><td class="num">${r.l}</td><td class="num">${gb}</td></tr>`; }).join('')}</tbody></table>`;
         }
         function finishSeason() {
             ALL_TEAMS_FLAT.forEach(t => { const r = SEASON.records[t]; const rem = SEASON_TOTAL - (r.w + r.l); for (let i = 0; i < rem; i++) { if (Math.random() < 0.5) r.w++; else r.l++; } });
@@ -2888,6 +2969,20 @@
             });
             return playoffTeams;
         }
+        // Home game patterns: true = series.home team is home, false = series.away team is home
+        // WC(3):  H H A           → [T,T,F]
+        // DIV(5): H H A A H       → [T,T,F,F,T]
+        // LCS(7): H H A A A H H   → [T,T,F,F,F,T,T]  (2-3-2)
+        // WS(7):  H H A A A H H   → [T,T,F,F,F,T,T]  (2-3-2)
+        const HOME_PATTERNS = {
+            wc: [true, true, true],
+            div: [true, true, false, false, true],
+            lcs: [true, true, false, false, false, true, true],
+            ws: [true, true, false, false, false, true, true],
+        };
+        function makeSeriesObj(home, away, format, round) {
+            return { home, away, wins: { home: 0, away: 0 }, done: false, winner: null, format, homePattern: HOME_PATTERNS[round] || HOME_PATTERNS.wc };
+        }
         function computePlayoffs() {
             const pt = getPlayoffTeams(); SEASON.playoffs = { pt, bracket: {} };
             Object.keys(LEAGUE_STRUCTURE).forEach(lg => {
@@ -2897,8 +2992,8 @@
                 SEASON.playoffs.bracket[lg] = { seeds, wcSeries: [], divSeries: [], lcs: null, champion: null };
                 const s = SEASON.playoffs.bracket[lg].seeds;
                 SEASON.playoffs.bracket[lg].wcSeries = [
-                    { home: s[0 + 2], away: s[5], wins: { home: 0, away: 0 }, done: false, winner: null, format: 3 },
-                    { home: s[1 + 2], away: s[4], wins: { home: 0, away: 0 }, done: false, winner: null, format: 3 },
+                    makeSeriesObj(s[2], s[5], 3, 'wc'),
+                    makeSeriesObj(s[3], s[4], 3, 'wc'),
                 ];
             });
         }
@@ -3078,19 +3173,19 @@
                 if (wcDone && (!lb.divSeries || !lb.divSeries.length)) {
                     const wcWinners = lb.wcSeries.map(s => { const found = lb.seeds.find(sd => sd.name === s.winner); return found ? { ...found } : { seed: 6, name: s.winner, record: seasonRecord(s.winner), bye: false }; }).sort((a, b) => a.seed - b.seed);
                     const byeTeams = lb.seeds.filter(s => s.bye).sort((a, b) => a.seed - b.seed);
-                    lb.divSeries = [{ home: byeTeams[0], away: wcWinners[1] || wcWinners[0], wins: { home: 0, away: 0 }, done: false, winner: null, format: 5 }, { home: byeTeams[1] || byeTeams[0], away: wcWinners[0], wins: { home: 0, away: 0 }, done: false, winner: null, format: 5 }];
+                    lb.divSeries = [makeSeriesObj(byeTeams[0], wcWinners[1] || wcWinners[0], 5, 'div'), makeSeriesObj(byeTeams[1] || byeTeams[0], wcWinners[0], 5, 'div')];
                 }
                 const divDone = lb.divSeries && lb.divSeries.length > 0 && lb.divSeries.every(s => s.done);
                 if (divDone && !lb.lcs) {
                     const dsWinners = lb.divSeries.map(s => { const found = lb.seeds.find(sd => sd.name === s.winner); return found ? { ...found } : { seed: '?', name: s.winner, record: seasonRecord(s.winner), bye: false }; });
-                    lb.lcs = { home: dsWinners[0], away: dsWinners[1], wins: { home: 0, away: 0 }, done: false, winner: null, format: 7 };
+                    lb.lcs = makeSeriesObj(dsWinners[0], dsWinners[1], 7, 'lcs');
                 }
                 if (lb.lcs && lb.lcs.done && !lb.champion) lb.champion = lb.lcs.winner;
             });
             const lgKeys = Object.keys(LEAGUE_STRUCTURE);
             if (lgKeys.every(lg => br[lg] && br[lg].champion) && !SEASON.playoffs.worldSeries) {
                 const champ0 = br[lgKeys[0]].champion; const champ1 = br[lgKeys[1]].champion;
-                SEASON.playoffs.worldSeries = { home: { name: champ0, seed: 1, record: seasonRecord(champ0) }, away: { name: champ1, seed: 1, record: seasonRecord(champ1) }, wins: { home: 0, away: 0 }, done: false, winner: null, format: 7 };
+                SEASON.playoffs.worldSeries = makeSeriesObj({ name: champ0, seed: 1, record: seasonRecord(champ0) }, { name: champ1, seed: 1, record: seasonRecord(champ1) }, 7, 'ws');
             }
             autoSimNonPlayerSeries();
             if (SEASON.playoffs && SEASON.playoffs.worldSeries && SEASON.playoffs.worldSeries.done && SEASON.playoffs.worldSeries.winner) LAST_CHAMP = SEASON.playoffs.worldSeries.winner;
@@ -3139,7 +3234,15 @@
             h += '</div></div>'; el.innerHTML = h;
             const ga = document.getElementById('series-game-area');
             if (s.done) { renderSeriesResult(); }
-            else { ga.innerHTML = `<div class="card"><div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-bottom:8px">Game ${myWins + oppWins + 1} of up to ${s.format}</div><div style="font-size:11px;color:var(--tx2);margin-bottom:14px;font-family:'DM Mono',monospace">${isHome ? 'Home' : 'Away'} at ${opp.name}</div><div class="btn-row"><button class="btn-primary" onclick="launchSeriesGame()">Set Lineup & Play</button><button onclick="goToPlayoffs()">View Bracket</button></div></div>`; }
+            else {
+                const gameIndex = myWins + oppWins;
+                const pattern = s.homePattern || [true, true, false, false, true];
+                const seriesHomeIsGameHome = pattern[gameIndex] !== undefined ? pattern[gameIndex] : true;
+                const playerIsSeriesHome = s.home.name === SEASON.playerTeam;
+                const playerIsHomeThisGame = playerIsSeriesHome ? seriesHomeIsGameHome : !seriesHomeIsGameHome;
+                const gameLabel = playerIsHomeThisGame ? `🏠 Home — Game ${myWins + oppWins + 1}` : `✈️ Away at ${opp.name} — Game ${myWins + oppWins + 1}`;
+                ga.innerHTML = `<div class="card"><div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-bottom:8px">${gameLabel}</div><div style="font-size:11px;color:var(--tx2);margin-bottom:14px;font-family:'DM Mono',monospace">Game ${myWins + oppWins + 1} of up to ${s.format}</div><div class="btn-row"><button class="btn-primary" onclick="launchSeriesGame()">Set Lineup &amp; Play</button><button onclick="goToPlayoffs()">View Bracket</button></div></div>`;
+            }
         }
 
         function renderSeriesResult() {
@@ -3151,18 +3254,24 @@
         function launchSeriesGame() {
             resetSimBtns();
             const s = CURRENT_SERIES.series;
-            const opp = s.home.name === SEASON.playerTeam ? s.away : s.home;
-            // FIX: Only generate fresh opp team on first game of series; reuse pitchers after that
+            const playerIsSeriesHome = s.home.name === SEASON.playerTeam;
+            const opp = playerIsSeriesHome ? s.away : s.home;
+            // Determine home/away for THIS specific game using homePattern
+            const gameIndex = s.wins.home + s.wins.away; // 0-based game number
+            const pattern = s.homePattern || [true, true, false, false, true]; // fallback
+            const seriesHomeIsGameHome = pattern[gameIndex] !== undefined ? pattern[gameIndex] : true;
+            // G.homeTeam tracks whether YOU (player) are home for this game
+            const playerIsHomeThisGame = playerIsSeriesHome ? seriesHomeIsGameHome : !seriesHomeIsGameHome;
+            G.homeTeam = playerIsHomeThisGame ? 'you' : 'opp';
+            // Only generate fresh opp team on first game of series; reuse pitchers after that
             if (!G.you || G.you.name !== SEASON.playerTeam) { G.you = genTeam(SEASON.playerTeam, null, false); }
-            // FIX: Persist opp team across series games; only create fresh on first game
-            if (!G.opp || G.opp.name !== opp.name || (!CURRENT_GAME_SERIES)) {
-                G.opp = genTeam(opp.name, null, true);
-            }
-            G.homeTeam = 'you'; CURRENT_GAME_SERIES = CURRENT_SERIES;
+            if (!G.opp || G.opp.name !== opp.name || (!CURRENT_GAME_SERIES)) { G.opp = genTeam(opp.name, null, true); }
+            CURRENT_GAME_SERIES = CURRENT_SERIES;
             document.getElementById('lup-your-name').textContent = SEASON.playerTeam;
             const rLabel = { wc: 'Wild Card', div: 'Div Series', lcs: 'LCS', ws: 'World Series' };
-            document.getElementById('lup-series').textContent = `${rLabel[CURRENT_SERIES.round] || 'Series'}: You ${s.home.name === SEASON.playerTeam ? s.wins.home : s.wins.away}–${s.home.name === SEASON.playerTeam ? s.wins.away : s.wins.home} ${opp.name}`;
-            document.getElementById('lup-vs').textContent = 'vs ' + opp.name;
+            const myW = playerIsSeriesHome ? s.wins.home : s.wins.away; const oppW = playerIsSeriesHome ? s.wins.away : s.wins.home;
+            document.getElementById('lup-series').textContent = `${rLabel[CURRENT_SERIES.round] || 'Series'}: You ${myW}–${oppW} ${opp.name}`;
+            document.getElementById('lup-vs').textContent = (playerIsHomeThisGame ? '🏠 Home vs ' : '✈️ Away @ ') + opp.name;
             setupMatchForSeries(); showScreen('lineup'); renderLineup();
         }
 
@@ -3332,7 +3441,6 @@
         function setupMatchForSeries() {
             G.inning = 1; G.half = 'top'; G.outs = 0; G.bases = [null, null, null];
             G.log = []; G.over = false; G.pendingEnd = false; G.biYou = 0; G.biOpp = 0;
-            // FIX: Reset per-game stats for BOTH teams' hitters
             G.you.hitters.forEach(h => { h.stats = { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }; });
             G.opp.hitters.forEach(h => { h.stats = { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }; });
             if (!G.savedLineup) { G.yourLineup = [0, 1, 2, 3, 4, 5, 6, 7, 8]; } else { G.yourLineup = G.savedLineup.slice(); }
@@ -3340,10 +3448,10 @@
             G.oppLineup = [0, 1, 2, 3, 4, 5, 6, 7, 8]; G.maxInning = 9;
             G.you.score = {}; G.you.runs = 0; G.opp.score = {}; G.opp.runs = 0;
             G.lastFlyOut = false; G.tagState = null; G.tagPending = [false, false, false]; G.gameMaxDef = 0;
+            if (!G.homeTeam) G.homeTeam = 'you'; // default: player is home
             const starters = G.you.pitchers.filter(p => p.isStarter); starters.sort((a, b) => b.stamina - a.stamina);
             const bestSP = starters[0]; G.you.pitchers.forEach(p => { p.currentPitcher = false; p.active = false; });
             bestSP.currentPitcher = true; bestSP.active = true;
-            // FIX: Also reset opp pitcher state for new game (stamina was already recovered in recoverPitchersBetweenGames)
             G.opp.pitchers.forEach(p => { p.pitchesThisGame = 0; p.usedThisGame = false; p.active = false; p.currentPitcher = false; });
             G.opp.pitchers[0].currentPitcher = true; G.opp.pitchers[0].active = true;
             SERIES = { youWins: 0, oppWins: 0, gameNum: 1, maxDeficit: 0, wasWalkoff: false, pitchChanges: 0 };
@@ -3474,7 +3582,7 @@
             const runner = G.bases[bi]; const ok = Math.random() < (runner.spd / 100) * 1.25;
             G.tagPending[bi] = false;
             if (ok) {
-                if (bi === 2) { const iy = G.half === 'bottom', k = G.inning + '_' + (iy ? 'you' : 'opp'), bt = iy ? G.you : G.opp; bt.score[k] = (bt.score[k] || 0) + 1; bt.runs += 1; runner.stats.r++; G.bases[2] = null; G.log.unshift({ msg: `Tag-up! ${runner.name} scores from 3rd! (spd ${runner.spd})`, isRun: true, isSteal: true }); award('tagged'); checkWalkoff(); }
+                if (bi === 2) { const iy = isYouBatting(), k = G.inning + '_' + (iy ? 'you' : 'opp'), bt = iy ? G.you : G.opp; bt.score[k] = (bt.score[k] || 0) + 1; bt.runs += 1; runner.stats.r++; G.bases[2] = null; G.log.unshift({ msg: `Tag-up! ${runner.name} scores from 3rd! (spd ${runner.spd})`, isRun: true, isSteal: true }); award('tagged'); checkWalkoff(); }
                 else { G.bases[bi + 1] = runner; G.bases[bi] = null; G.log.unshift({ msg: `Tag-up! ${runner.name} advances to ${bi === 0 ? '2nd' : '3rd'}. (spd ${runner.spd})`, isSteal: true }); }
             } else { G.bases[bi] = null; G.outs++; G.log.unshift({ msg: `${runner.name} thrown out tagging up.`, isSteal: true }); if (G.outs >= 3) { G.tagState = null; G.tagPending = [false, false, false]; endHalf(); renderGame(); return; } }
             if (!G.tagPending.some(x => x)) { G.tagState = 'declined'; G.lastFlyOut = false; }
@@ -3502,15 +3610,18 @@
         function dblStealOdds(r1, r2) { const p1 = 1.00 * (0.55 + (r2.spd / 100) * 0.45), p2 = 0.70 * (0.45 + (r1.spd / 100) * 0.45); return { both: Math.round(p1 * p2 * 100), r2: Math.round(p1 * 100), r1: Math.round(p2 * 100) }; }
 
         // ── AT-BAT ──
-        // FIX: BB and E do NOT count as AB
+        // BB and E do NOT count as AB
+        // isYouBatting: player bats in bottom when home, top when away
+        function isYouBatting() { return G.homeTeam === 'you' ? (G.half === 'bottom') : (G.half === 'top'); }
+        function isHomeTeamBatting() { return G.half === 'bottom'; } // the actual home team always bats bottom
+
         function doAtBat() {
             if (G.over || G.pendingEnd) return;
             if (G.tagState === 'pending') { G.tagState = 'declined'; G.lastFlyOut = false; G.tagPending = [false, false, false]; }
-            const iy = G.half === 'bottom', bt = iy ? G.you : G.opp, ft = iy ? G.opp : G.you;
+            const iy = isYouBatting(), bt = iy ? G.you : G.opp, ft = iy ? G.opp : G.you;
             if (!iy) oppAutoSub();
             const def = G.opp.runs - G.you.runs; if (def > G.gameMaxDef) G.gameMaxDef = def;
             const bat = curBat(iy), pit = curPit(ft), res = getRes(bat, pit);
-            // FIX: Only count AB for plate appearances that are official AB (not BB or E)
             const isOfficialAB = (res !== 'BB' && res !== 'E');
             if (isOfficialAB) bat.stats.ab++;
             if (res === 'K') bat.stats.k++;
@@ -3525,11 +3636,10 @@
                 if (dpOk) {
                     isDP = true;
                     const r1 = G.bases[0]; G.bases[0] = null; G.outs += 2;
-                    // Runner on 3rd scores only if inning hasn't ended (outs<3)
                     let r3scored = false;
                     if (G.bases[2]) {
                         if (G.outs < 3) { G.bases[2].stats.r++; addScore(iy, 1, bat, true); G.bases[2] = null; r3scored = true; }
-                        else { G.bases[2] = null; }// 3rd out — run does not count
+                        else { G.bases[2] = null; }
                     }
                     if (!iy) award('onpatrol');
                     msg = `${bat.name} grounds into a double play! ${r1.name} and batter are out.${r3scored ? ' Run scores!' : ''}`;
@@ -3552,14 +3662,39 @@
         }
 
         function checkWalkoff() {
-            if (G.over || G.pendingEnd) return; if (G.half !== 'bottom' || G.inning < 9) return;
-            if (G.you.runs > G.opp.runs) { G.log.unshift({ msg: `⚡ WALKOFF! ${G.you.name} wins it! ${G.you.runs}–${G.opp.runs}`, isRun: true, isWalkoff: true }); G.pendingEnd = true; SERIES.wasWalkoff = true; renderGame(); showConfirmBtn(true); }
+            if (G.over || G.pendingEnd) return;
+            // Walkoff: home team (batting in bottom) wins while it's their last at-bat
+            if (G.inning < 9) return;
+            const youAreHome = G.homeTeam === 'you';
+            // Walkoff happens when the home team is batting (bottom half) and takes the lead
+            if (G.half !== 'bottom') return;
+            const homeTeamRuns = youAreHome ? G.you.runs : G.opp.runs;
+            const awayTeamRuns = youAreHome ? G.opp.runs : G.you.runs;
+            if (homeTeamRuns > awayTeamRuns) {
+                if (youAreHome) {
+                    G.log.unshift({ msg: `⚡ WALKOFF! ${G.you.name} wins it! ${G.you.runs}–${G.opp.runs}`, isRun: true, isWalkoff: true });
+                    G.pendingEnd = true; SERIES.wasWalkoff = true; renderGame(); showConfirmBtn(true);
+                } else {
+                    // Opp is home and walked off on us — game ends, we lost
+                    G.pendingEnd = true; renderGame(); showConfirmBtn(false);
+                }
+            }
         }
 
         function endHalf() {
             G.outs = 0; G.bases = [null, null, null]; G.lastFlyOut = false; G.tagState = null; G.tagPending = [false, false, false];
-            if (G.half === 'top') { G.half = 'bottom'; if (G.inning >= G.maxInning && G.you.runs > G.opp.runs) { G.pendingEnd = true; renderGame(); showConfirmBtn(false); return; } }
+            const youAreHome = G.homeTeam === 'you';
+            if (G.half === 'top') {
+                G.half = 'bottom';
+                // After top of 9+: if home team already leads, they don't need to bat (skip bottom)
+                if (G.inning >= G.maxInning) {
+                    const homeRuns = youAreHome ? G.you.runs : G.opp.runs;
+                    const awayRuns = youAreHome ? G.opp.runs : G.you.runs;
+                    if (homeRuns > awayRuns) { G.pendingEnd = true; renderGame(); showConfirmBtn(false); return; }
+                }
+            }
             else {
+                // After bottom half: check if game is over
                 if (G.you.runs !== G.opp.runs && G.inning >= G.maxInning) { G.pendingEnd = true; renderGame(); showConfirmBtn(false); return; }
                 if (G.inning >= G.maxInning && G.you.runs === G.opp.runs) G.maxInning++;
                 G.inning++; G.half = 'top';
@@ -3650,7 +3785,8 @@
         function simulateAtBat() { if (G.over || G.pendingEnd) return; doAtBat(); renderGame(); }
 
         function playerAutoSubCheck() {
-            if (G.half !== 'top') return;
+            // Auto-sub your pitcher when OPPONENT is batting (you are pitching)
+            if (isYouBatting()) return;
             const cp = curPit(G.you);
             if ((cp.stamina < 50 && cp.isStarter) || (cp.stamina < 60 && !cp.isStarter)) {
                 const rps = G.you.pitchers.filter(p => !p.currentPitcher && !p.usedThisGame && !p.isStarter);
@@ -3674,7 +3810,7 @@
         // ── RENDER ──
         function renderGame() {
             if (G.over) return;
-            const iy = G.half === 'bottom', bat = curBat(iy), pit = curPit(iy ? G.opp : G.you), sc = Math.round(pit.stamina);
+            const iy = isYouBatting(), bat = curBat(iy), pit = curPit(iy ? G.opp : G.you), sc = Math.round(pit.stamina);
             document.getElementById('game-title-hdr').textContent = G.you.name + ' vs ' + G.opp.name;
             document.getElementById('game-score-pill').textContent = G.you.runs + ' – ' + G.opp.runs;
             document.getElementById('game-series-pill').textContent = seriesPillText();
@@ -3693,7 +3829,7 @@
         function renderActionPanel() {
             const el = document.getElementById('action-panel'); el.innerHTML = '';
             if (G.pendingEnd || G.over) { el.innerHTML = '<span style="font-size:11px;color:var(--tx3);font-family:\'DM Mono\',monospace">Game over.</span>'; return; }
-            const iy = G.half === 'bottom';
+            const iy = isYouBatting();
             if (G.tagState === 'pending' && iy) {
                 let any = false;
                 [2, 1, 0].forEach(bi => {
@@ -3722,13 +3858,25 @@
 
         function renderScoreboard() {
             const el = document.getElementById('score-strip-wrap'), maxI = Math.max(9, G.maxInning);
+            // Convention: away team always shown on top row, home team on bottom row
+            const youAreHome = G.homeTeam === 'you';
+            const topTeam = youAreHome ? G.opp : G.you;   // away team bats top
+            const botTeam = youAreHome ? G.you : G.opp;   // home team bats bottom
+            const topKey = youAreHome ? 'opp' : 'you';
+            const botKey = youAreHome ? 'you' : 'opp';
             let h = '<table class="scoreboard-table"><thead><tr><th class="team-th">Team</th>';
             for (let i = 1; i <= maxI; i++)h += `<th class="${i > 9 ? 'extra-th' : ''}">${i}</th>`;
             h += '<th>R</th></tr></thead><tbody>';
-            [G.opp, G.you].forEach((team, ti) => {
-                const iy = ti === 1, bat = iy ? (G.half === 'bottom') : (G.half === 'top');
-                h += `<tr><td class="team-td">${team.name.split(' ').slice(-1)[0]}<span class="batting-badge ${bat ? 'batting-now' : 'batting-next'}">${bat ? 'batting' : 'field'}</span></td>`;
-                for (let i = 1; i <= maxI; i++) { const k = i + '_' + (iy ? 'you' : 'opp'), v = team.score[k], cur = i === G.inning, ex = i > 9; const played = i < G.inning || (i === G.inning && !iy && G.half === 'bottom'); h += `<td class="${ex ? 'extra-inn' : cur ? 'cur-inn' : ''}">${v !== undefined ? v : played ? 0 : '.'}</td>`; }
+            [[topTeam, topKey, 'top'], [botTeam, botKey, 'bottom']].forEach(([team, key, halfFor]) => {
+                const batting = G.half === halfFor;
+                const isYouRow = key === 'you';
+                h += `<tr><td class="team-td">${team.name.split(' ').slice(-1)[0]}<span class="batting-badge ${batting ? 'batting-now' : 'batting-next'}">${batting ? 'batting' : 'field'}</span>${isYouRow ? '<span class="my-team-badge" style="margin-left:4px;font-size:8px">ME</span>' : ''}</td>`;
+                for (let i = 1; i <= maxI; i++) {
+                    const k = i + '_' + key, v = team.score[k], cur = i === G.inning, ex = i > 9;
+                    // Cell shows 0 if that half-inning has been completed
+                    const halfDone = i < G.inning || (i === G.inning && G.half === 'bottom' && halfFor === 'top');
+                    h += `<td class="${ex ? 'extra-inn' : cur ? 'cur-inn' : ''}">${v !== undefined ? v : halfDone ? 0 : '.'}</td>`;
+                }
                 h += `<td class="r-td">${team.runs}</td></tr>`;
             });
             h += '</tbody></table>'; el.innerHTML = h;
@@ -3767,8 +3915,9 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
                     return `<div class="order-row ${cls}"><span class="ord-num">${i + 1}</span><span class="ord-pos">${h.pos}</span><span class="ord-name">${h.name}</span>${badge}<span class="chip chip-blue" style="font-size:9px">${h.hand}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span style="font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace">${abLine}</span><span style="font-size:10px;color:var(--blue0);font-weight:500;font-family:'DM Mono',monospace">${h.stats.r}R</span></div>`;
                 }).join('');
             }
-            const yb = G.half === 'bottom', ob = G.half === 'top';
-            document.getElementById('you-order-label').innerHTML = G.you.name.split(' ').slice(-1)[0] + ` <span class="chip ${yb ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${yb ? 'Batting' : 'Field'}</span><span class="my-team-badge">ME</span>`;
+            const yb = isYouBatting(), ob = !yb;
+            const youHomeLabel = G.homeTeam === 'you' ? '🏠' : '✈️';
+            document.getElementById('you-order-label').innerHTML = G.you.name.split(' ').slice(-1)[0] + ` <span class="chip ${yb ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${yb ? 'Batting' : 'Field'}</span><span class="my-team-badge">${youHomeLabel} ME</span>`;
             document.getElementById('opp-order-label').innerHTML = G.opp.name.split(' ').slice(-1)[0] + ` <span class="chip ${ob ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${ob ? 'Batting' : 'Field'}</span><span class="ai-team-badge">AI</span>`;
             document.getElementById('you-order').innerHTML = oHTML(G.you, G.yourLineup, G.biYou, yb);
             document.getElementById('opp-order').innerHTML = oHTML(G.opp, G.oppLineup, G.biOpp, ob);
@@ -3783,7 +3932,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
 
         function renderSubP() {
             const el = document.getElementById('mgr-sub');
-            if (G.half !== 'bottom') { el.innerHTML = '<div style="font-size:12px;color:var(--tx2);font-family:\'DM Mono\',monospace">Available when your team bats.</div>'; return; }
+            if (!isYouBatting()) { el.innerHTML = '<div style="font-size:12px;color:var(--tx2);font-family:\'DM Mono\',monospace">Available when your team bats.</div>'; return; }
             const bench = G.benchIds.filter(bi => G.you.hitters[bi].active && !G.you.hitters[bi].inGame);
             if (!bench.length) { el.innerHTML = '<div class="alert-info">No bench players remaining.</div>'; return; }
             const op = curPit(G.opp);
