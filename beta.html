@@ -3905,7 +3905,25 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
             h += '<div class="section-label" style="margin-bottom:6px">Available arms</div>';
             av.sort((a, b) => b.stamina - a.stamina).forEach(p => {
                 const s2 = Math.round(p.stamina), p2 = stamPen(p);
-                h += `<div class="bench-row"><div style="flex:1;min-width:0"><div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center"><span style="font-weight:500;font-size:12px;font-family:'DM Mono',monospace">${p.name}</span><span class="chip ${p.role === 'SP' ? 'chip-amber' : 'chip-blue'}">${p.role}</span><span class="chip ${p.whip < 1 ? 'chip-green' : 'chip-gray'}">WHIP ${Number(p.whip).toFixed(2)}</span><span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}">ERA ${Number(p.era).toFixed(2)}</span><span class="chip chip-gray">${p.hand}HP</span>${p.isFP ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}${p2 > 0 ? `<span class="chip chip-red" style="font-size:10px">-${Math.round(p2 * 100)}%</span>` : ''}</div><div style="display:flex;align-items:center;gap:6px;margin-top:4px"><span style="font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace">Stam</span>${stamBar(s2)}</div></div><button class="btn-sm btn-green" style="flex-shrink:0;align-self:center;margin-left:6px" onclick="changePit(${p.id})">Bring in</button></div>`;
+                h += `<div class="bench-row" style="display:flex;justify-content:space-between;align-items:center">
+                    <div style="flex:1;min-width:0">
+                        <span style="font-weight:500;font-size:12px;font-family:'DM Mono',monospace">
+                            ${p.name}
+                        </span>
+                    </div>
+                    <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;justify-content:flex-end;text-align:right">
+                        <span class="chip ${p.role === 'SP' ? 'chip-amber' : 'chip-blue'}">${p.role}</span>
+                        <span class="chip ${p.whip < 1 ? 'chip-green' : 'chip-gray'}">WHIP ${Number(p.whip).toFixed(2)}</span>
+                        <span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}">ERA ${Number(p.era).toFixed(2)}</span>
+                        <span class="chip chip-gray">${p.hand}HP</span>
+                        ${p.isFP ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
+                        ${p2 > 0 ? `<span class="chip chip-red" style="font-size:10px">-${Math.round(p2 * 100)}%</span>` : ''}
+                    </div>
+                    <button class="btn-sm btn-green" style="margin-left:8px" onclick="changePit(${p.id})">
+                        Bring in
+                    </button>
+                </div>`;
+                // h += `<div class="bench-row"><div style="flex:1;min-width:0"><div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center"><span style="font-weight:500;font-size:12px;font-family:'DM Mono',monospace">${p.name}</span><span class="chip ${p.role === 'SP' ? 'chip-amber' : 'chip-blue'}">${p.role}</span><span class="chip ${p.whip < 1 ? 'chip-green' : 'chip-gray'}">WHIP ${Number(p.whip).toFixed(2)}</span><span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}">ERA ${Number(p.era).toFixed(2)}</span><span class="chip chip-gray">${p.hand}HP</span>${p.isFP ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}${p2 > 0 ? `<span class="chip chip-red" style="font-size:10px">-${Math.round(p2 * 100)}%</span>` : ''}</div><div style="display:flex;align-items:center;gap:6px;margin-top:4px"><span style="font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace">Stam</span>${stamBar(s2)}</div></div><button class="btn-sm btn-green" style="flex-shrink:0;align-self:center;margin-left:6px" onclick="changePit(${p.id})">Bring in</button></div>`;
             });
             el.innerHTML = h;
         }
@@ -3948,7 +3966,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
         }
 
         function renderOppP() {
-            const cp = curPit(G.opp), sc = Math.round(cp.stamina), mp = curPit(G.you);               
+            const cp = curPit(G.opp), sc = Math.round(cp.stamina), mp = curPit(G.you);
             let h = `<div style="margin-bottom:10px"><div class="section-label">Current opp pitcher</div><div class="bench-row"><div style="flex:1"><div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center"><span style="font-weight:500;font-size:13px;font-family:'DM Mono',monospace">${cp.name}</span>${cp.isFP ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}<span class="chip chip-amber">${cp.hand}HP</span><span class="chip chip-gray">WHIP ${Number(cp.whip).toFixed(2)}</span><span class="chip chip-gray">ERA ${Number(cp.era).toFixed(2)}</span><span class="chip ${stamCC(sc)}">${stamLbl(sc)}</span></div><div style="display:flex;align-items:center;gap:6px;margin-top:5px"><span style="font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace">Stamina</span>${stamBar(sc)}</div></div></div></div>`;
             const bp = G.opp.pitchers.filter(p => !p.currentPitcher && !p.usedThisGame);
             if (bp.length) {
