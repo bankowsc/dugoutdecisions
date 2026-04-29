@@ -457,7 +457,24 @@ Also make it so that 150 is the maximum manager prestige not 99 anymore
 
 ______________
 
-Doesnt actually do the home games correct
+TODOs
 
-Doesnt actually block from playoffs
+HOME TEAM NOT FLIPPING MID SERIES
+Make home games actually flip when necessary according to order.
+It properly sets the home/away teams but doesnt change mid series if necessary.
 
+
+NEXT TEAM UP FOR PLAYOFFS SHADED
+For the specific case where the player's team is in a playoff spot but has a postseason ban.
+Make a new team shaded yellow/green on the show standings graphic in place of banned team.
+If we were division winner but banned next best team is division winner. Next best team should be shaded yellow for now making wild card.
+
+
+DIFFICULTY
+Can you make a difficulty slider button
+this will affect SEASON.difficulty
+Dont make any content changes about difficulty just have that slider at the top of the team select page.
+_________
+
+Finish above -> says you even is road in series count
+Force balance hitting and slim pitching diff
