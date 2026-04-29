@@ -478,3 +478,5 @@ _________
 
 Finish above -> says you even is road in series count
 Force balance hitting and slim pitching diff
+
+The other teams auto sub goes to SP not just RP 
