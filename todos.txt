@@ -457,4 +457,7 @@ Also make it so that 150 is the maximum manager prestige not 99 anymore
 
 ______________
 
-Division standings when same record?
+Doesnt actually do the home games correct
+
+Doesnt actually block from playoffs
+

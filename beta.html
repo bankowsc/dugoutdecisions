@@ -2678,7 +2678,7 @@
 
         const TEAM_PRESTIGE = {};
         function generateTeamPrestige(isInit) {
-            const PRESTIGE_TIERS = [1, 18, 40, 65, 88];
+            const PRESTIGE_TIERS = [1, 18, 47, 68, 91];
             Object.entries(LEAGUE_STRUCTURE).forEach(([lg, divs]) => {
                 Object.entries(divs).forEach(([div, teams]) => {
                     teams.forEach((t, i) => {
@@ -2833,7 +2833,7 @@
         <span class="move-odds" style="color:var(--tx3)">— cooldown —</span>
       </div>`;
                 } else {
-                    const banWarning = move.postseasonBanIfCaught ? `<span class="move-stat-chip" style="background:var(--red2);color:var(--red0);border:.5px solid var(--red3);font-size:9px">⚠️ Ban if caught</span>` : '';
+                    const banWarning = move.postseasonBanIfCaught ? `<span class="move-stat-chip" style="background:var(--red2);color:var(--red0);border:.5px solid var(--red3);font-size:9px">⚠️ Postseason ban if caught</span>` : '';
                     h += `<div class="${cls}" ${onclick}>
         <span class="move-name">${move.name}${move.postseasonBanIfCaught ? ' ⚠️' : ''}</span>
         <span class="move-stats-row">
@@ -2863,9 +2863,15 @@
             SEASON.gamesPlayed++; SEASON.managerCooldown = 10;
             SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result: success ? 'W' : 'L', managerMove: move.name, success });
             if (success) { SEASON.successfulMoves = (SEASON.successfulMoves || 0) + 1; if (!BADGES.goodcall) award('goodcall'); if (SEASON.successfulMoves >= 7 && !BADGES.luckyskipper) award('luckyskipper'); if (move.name === 'Steal the Signs' && !BADGES.trashcan) award('trashcan'); }
+
             // Postseason ban if caught on Steal the Signs
-            if (!success && move.postseasonBanIfCaught) { SEASON.postseasonBanned = true; }
-            // Streak: uniform between minStreak (default 1) and maxStreak
+            if (!success && move.postseasonBanIfCaught) {
+                if (!SEASON.postseasonBannedTeams) {
+                    SEASON.postseasonBannedTeams = new Set();
+                }
+                SEASON.postseasonBannedTeams.add(SEASON.playerTeam);
+            }   // Streak: uniform between minStreak (default 1) and maxStreak
+
             const streakMin = move.minStreak || 1;
             const streakRolled = success && Math.random() < move.pStreak;
             const rawStreak = streakRolled ? streakMin + Math.floor(Math.random() * (move.maxStreak - streakMin + 1)) : 0;
@@ -2958,15 +2964,85 @@
         // ══════════════════════════════════════════════════════════════════════════
         function getPlayoffTeams() {
             const pTeam = SEASON.playerTeam;
-            const tieSort = (a, b) => { const diff = seasonWinPct(b) - seasonWinPct(a); if (Math.abs(diff) < 0.0001) { if (a === pTeam) return -1; if (b === pTeam) return 1; } return diff; };
-            const tieSortObj = (a, b) => { const diff = b.pct - a.pct; if (Math.abs(diff) < 0.0001) { if (a.name === pTeam) return -1; if (b.name === pTeam) return 1; } return diff; };
+            const isBanned = (team) => SEASON.postseasonBannedTeams?.has(team);
+
+            const tieSort = (a, b) => {
+                const diff = seasonWinPct(b) - seasonWinPct(a);
+                if (Math.abs(diff) < 0.0001) {
+                    if (a === pTeam) return -1;
+                    if (b === pTeam) return 1;
+                }
+                return diff;
+            };
+
+            const tieSortObj = (a, b) => {
+                const diff = b.pct - a.pct;
+                if (Math.abs(diff) < 0.0001) {
+                    if (a.name === pTeam) return -1;
+                    if (b.name === pTeam) return 1;
+                }
+                return diff;
+            };
+
             const playoffTeams = {};
+
             Object.entries(LEAGUE_STRUCTURE).forEach(([lg, divs]) => {
-                const divWinners = []; const wildCandidates = [];
-                Object.entries(divs).forEach(([div, teams]) => { const sorted = [...teams].sort(tieSort); divWinners.push({ name: sorted[0], div, lg, w: SEASON.records[sorted[0]].w }); sorted.slice(1).forEach(t => wildCandidates.push({ name: t, div, lg, w: SEASON.records[t].w, pct: seasonWinPct(t) })); });
-                wildCandidates.sort(tieSortObj); const wildcards = wildCandidates.slice(0, 3);
-                playoffTeams[lg] = { divWinners: divWinners.sort((a, b) => { const d = b.w - a.w; if (d === 0) { if (a.name === pTeam) return -1; if (b.name === pTeam) return 1; } return d; }), wildcards: wildcards.map((wc, i) => ({ ...wc, wcSeed: i + 1 })) };
+                const divWinners = [];
+                const wildCandidates = [];
+
+                Object.entries(divs).forEach(([div, teams]) => {
+                    // Remove banned teams before sorting
+                    const eligibleTeams = teams.filter(t => !isBanned(t));
+                    const sorted = [...eligibleTeams].sort(tieSort);
+
+                    if (sorted.length > 0) {
+                        // Division winner (top eligible team)
+                        divWinners.push({
+                            name: sorted[0],
+                            div,
+                            lg,
+                            w: SEASON.records[sorted[0]].w
+                        });
+
+                        // other teams → wildcard pool
+                        sorted.slice(1).forEach(t =>
+                            wildCandidates.push({
+                                name: t,
+                                div,
+                                lg,
+                                w: SEASON.records[t].w,
+                                pct: seasonWinPct(t)
+                            })
+                        );
+                    }
+                });
+
+                // Sort wildcard candidates (already excludes banned)
+                wildCandidates.sort(tieSortObj);
+
+                // Take top 3 → automatically fills gaps from banned teams
+                const wildcards = wildCandidates.slice(0, 3);
+
+                playoffTeams[lg] = {
+                    divWinners: divWinners.sort((a, b) => {
+                        const d = b.w - a.w;
+                        if (d === 0) {
+                            if (a.name === pTeam) return -1;
+                            if (b.name === pTeam) return 1;
+                        }
+                        return d;
+                    }),
+                    wildcards: wildcards.map((wc, i) => ({
+                        ...wc,
+                        wcSeed: i + 1
+                    }))
+                };
             });
+
+            if (SEASON.postseasonBannedTeams) {
+                SEASON.postseasonBannedTeams.clear();
+                //For next year
+            }
             return playoffTeams;
         }
         // Home game patterns: true = series.home team is home, false = series.away team is home
