@@ -773,12 +773,18 @@
             font-family: 'DM Mono', monospace
         }
 
-        .scoreboard-table td.team-td {
+        /* .scoreboard-table td.team-td {
             text-align: left;
             font-weight: 500;
             font-size: 11px;
             padding-left: 6px;
             white-space: nowrap
+        } */
+        .scoreboard-table td.team-td {
+            white-space: nowrap;
+            max-width: 110px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .scoreboard-table td.r-td {
@@ -2783,14 +2789,14 @@
 
         const MANAGER_MOVES = [
             { name: 'Platoon Advantage', good: 'Matchup advantage pays off — batter crushes it!', bad: 'The lefty-righty move backfired badly.', p: 0.70, pStreak: 0.10, maxStreak: 1 },
-            { name: 'Sacrifice Bunt Strategy', good: 'The squeeze play worked! Rally extended.', bad: 'Bunt into a double play. Momentum killed.', p: 0.64, pStreak: 0.19, maxStreak: 2 },
-            { name: 'Shift the Lineup', good: 'New lineup order sparks the offense!', bad: 'Lineup shake-up throws batters off rhythm.', p: 0.59, pStreak: 0.25, maxStreak: 3 },
-            { name: 'Intentional Walk / DP', good: 'Exactly as planned — 5-4-3 double play!', bad: 'The force play fell apart. Bases loaded.', p: 0.53, pStreak: 0.31, maxStreak: 4 },
-            { name: 'Hit and Run', good: 'Hit and run worked — runners in motion!', bad: 'Hit into a double play on the hit and run.', p: 0.48, pStreak: 0.37, maxStreak: 5 },
-            { name: 'Go to the Bullpen Early', good: 'Fresh arm shut them down — smart move!', bad: 'Reliever blew up. Should have stayed with the starter.', p: 0.42, pStreak: 0.43, maxStreak: 6 },
-            { name: 'Call Time on Hot Pitcher', good: 'Breaking the rhythm rattled their ace!', bad: 'The crowd jeered — momentum shifted to them.', p: 0.37, pStreak: 0.52, maxStreak: 7 },
-            { name: 'Aggressive Baserunning', good: 'Daring baserunning created two extra runs!', bad: 'Runner thrown out at the plate. Inning over.', p: 0.31, pStreak: 0.62, maxStreak: 8 },
-            { name: 'Rain Delay Gamble', good: 'Delay disrupted their starting pitcher — momentum!', bad: 'Your starter lost his rhythm in the delay.', p: 0.26, pStreak: 0.77, maxStreak: 9 },
+            { name: 'Sacrifice Bunt Strategy', good: 'The squeeze play worked! Rally extended.', bad: 'Bunt into a double play. Momentum killed.', p: 0.64, pStreak: 0.18, maxStreak: 2 },
+            { name: 'Shift the Lineup', good: 'New lineup order sparks the offense!', bad: 'Lineup shake-up throws batters off rhythm.', p: 0.59, pStreak: 0.26, maxStreak: 3 },
+            { name: 'Intentional Walk / DP', good: 'Exactly as planned — 5-4-3 double play!', bad: 'The force play fell apart. Bases loaded.', p: 0.53, pStreak: 0.34, maxStreak: 4 },
+            { name: 'Hit and Run', good: 'Hit and run worked — runners in motion!', bad: 'Hit into a double play on the hit and run.', p: 0.48, pStreak: 0.42, maxStreak: 5 },
+            { name: 'Go to the Bullpen Early', good: 'Fresh arm shut them down — smart move!', bad: 'Reliever blew up. Should have stayed with the starter.', p: 0.42, pStreak: 0.50, maxStreak: 6 },
+            { name: 'Call Time on Hot Pitcher', good: 'Breaking the rhythm rattled their ace!', bad: 'The crowd jeered — momentum shifted to them.', p: 0.36, pStreak: 0.58, maxStreak: 7 },
+            { name: 'Aggressive Baserunning', good: 'Daring baserunning created two extra runs!', bad: 'Runner thrown out at the plate. Inning over.', p: 0.29, pStreak: 0.66, maxStreak: 8 },
+            { name: 'Rain Delay Gamble', good: 'Delay disrupted their starting pitcher — momentum!', bad: 'Your starter lost his rhythm in the delay.', p: 0.23, pStreak: 0.74, maxStreak: 9 },
             { name: 'Steal the Signs', good: 'Reading their signals all game — 3-run inning!', bad: 'Got caught — the other dugout was watching.', p: 0.35, pStreak: 1.00, maxStreak: 10, minStreak: 3, postseasonBanIfCaught: true },
         ];
 
