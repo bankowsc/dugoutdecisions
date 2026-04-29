@@ -3494,38 +3494,38 @@
             const num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES), spd = rndI(15, 98), pos = POSITIONS[i] || pick(POSITIONS);
             const b = { id: i, name: fn[0] + '. ' + ln, hand, num, pos, spd, bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .30)), active: true, inGame: i < 9, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } };
             if (SEASON.difficulty == 'Easy') {
-                if (ai) { 
-                    b.avg = r3(rnd(.210, .320)); b.ops = r3(rnd(.615, .970)); 
-                } 
-                else { 
-                    b.avg = r3(rnd(.215, .325)); b.ops = r3(rnd(.640, .980)); 
+                if (ai) {
+                    b.avg = r3(rnd(.210, .320)); b.ops = r3(rnd(.615, .970));
+                }
+                else {
+                    b.avg = r3(rnd(.215, .325)); b.ops = r3(rnd(.640, .980));
                 }
             }
             else if (SEASON.difficulty == 'Normal') {
-                if (ai) { 
-                    b.avg = r3(rnd(.225, .330)); b.ops = r3(rnd(.630, .985)); 
-                } 
-                else { 
-                    b.avg = r3(rnd(.225, .330)); b.ops = r3(rnd(.630, .985)); 
+                if (ai) {
+                    b.avg = r3(rnd(.225, .330)); b.ops = r3(rnd(.630, .985));
+                }
+                else {
+                    b.avg = r3(rnd(.225, .330)); b.ops = r3(rnd(.630, .985));
                 }
             }
             else if (SEASON.difficulty == 'Hard') {
-                if (ai) { 
-                    b.avg = r3(rnd(.235, .335)); b.ops = r3(rnd(.635, .990)); 
-                } 
-                else { 
-                    b.avg = r3(rnd(.220, .320)); b.ops = r3(rnd(.620, .975)); 
+                if (ai) {
+                    b.avg = r3(rnd(.235, .335)); b.ops = r3(rnd(.635, .990));
+                }
+                else {
+                    b.avg = r3(rnd(.220, .320)); b.ops = r3(rnd(.620, .975));
                 }
             }
-            else{
-                if (ai) { 
-                    b.avg = r3(rnd(.240, .335)); b.ops = r3(rnd(.640, .995)); 
-                } 
-                else { 
-                    b.avg = r3(rnd(.215, .315)); b.ops = r3(rnd(.615, .970)); 
+            else {
+                if (ai) {
+                    b.avg = r3(rnd(.240, .335)); b.ops = r3(rnd(.640, .995));
+                }
+                else {
+                    b.avg = r3(rnd(.215, .315)); b.ops = r3(rnd(.615, .970));
                 }
             }
- 
+
             return b;
         }
         function genP(i, ai) { // FLAG BALANCE THIS MORE BC GENH TOO

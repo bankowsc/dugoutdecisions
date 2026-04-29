@@ -3229,7 +3229,7 @@
             const myW = playerIsSeriesHome ? s.wins.home : s.wins.away; const oppW = playerIsSeriesHome ? s.wins.away : s.wins.home;
             document.getElementById('lup-series').textContent = `${rLabel[CURRENT_SERIES.round] || 'Series'}: You ${myW}–${oppW} ${opp.name}`;
             document.getElementById('lup-vs').textContent = (playerIsHomeThisGame ? '🏠 Home vs ' : '✈️ Away @ ') + opp.name;
-            setupMatchForSeries(); showScreen('lineup'); renderLineup();
+            c(); showScreen('lineup'); renderLineup();
         }
 
         let CURRENT_GAME_SERIES = null;
