@@ -3876,7 +3876,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
             let h = '<div class="section-label" style="margin-bottom:6px">Pinch hit</div>';
             h += '<div style="margin-bottom:8px"><label style="font-size:11px;color:var(--tx2);font-family:\'DM Mono\',monospace">Replace: </label><select id="sub-out">';
             G.yourLineup.forEach((hi, s) => { const hb = G.you.hitters[hi]; h += `<option value="${s}">${s + 1}. ${hb.name} (${hb.pos})</option>`; });
-            h += '</select></div><div style="margin-bottom:10px"><label style="font-size:11px;color:var(--tx2);font-family:\'DM Mono\',monospace">Bring in: </label><select id="sub-in">';
+            h += '</select></div><div style="margin-bottom:10px"><label style="font-size:11px;color:var(--tx2);font-family:\'DM Mono\'">Bring in: </label><select id="sub-in">';
             bench.forEach(bi => { const hb = G.you.hitters[bi]; const bon = handBonus(hb, op); const adj = Math.round((hb.avg + bon) * 1000); const bn = bon > 0 ? ` ★.${adj}` : ''; h += `<option value="${bi}">${hb.name} | ${hb.hand} | .${Math.round(hb.avg * 1000)}${bn} | OPS ${hb.ops} | ${hb.spd}spd</option>`; });
             h += '</select></div><div id="sub-preview" style="margin-bottom:10px"></div>';
             h += `<button class="btn-primary" onclick="makeSub()">Confirm Pinch Hit</button>`;
