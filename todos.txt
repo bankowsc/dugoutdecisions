@@ -495,6 +495,8 @@ PICK 3 batters and 3 pitchers to protect for free agency for next year - FP auto
 
 ________________________________________
 SHOW ALL 13 NOT JUST 9
+Deadline only shows some pitchers too deadline
+
 
 SUPER WEIGHT Fantasy pitchers
 
@@ -503,3 +505,8 @@ Rescale bar chart
 Current pitcher K% BB%
 
 Win circles in stoplight mode but were good on original
+
+Check walks
+
+Dark mode cell gradient
+

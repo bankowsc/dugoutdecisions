@@ -2735,10 +2735,10 @@
                         const returnBadge = returnException && MANAGER_PRESTIGE < tp ? `<span class="chip chip-teal" style="font-size:9px">↩ Return</span>` : '';
                         // Show resign badge if returning to same team with retained players
                         const hasRetained = retained && retained.teamName === t && retained.players && retained.players.length > 0;
-                        const resignBadge = hasRetained && canManage ? `<span class="chip chip-green" style="font-size:9px">📋 ${retained.players.length} resign${retained.players.length > 1 ? 's' : ''}</span>` : '';
+                        const resignBadge = hasRetained && canManage ? `<span class="chip chip-green" style="font-size:9px">📋 ${getResignSlots()} resignable</span>` : '';
                         const btn = canManage ? `<button class="btn-sm btn-primary" onclick="selectTeam('${t.replace(/'/g, "\\'")}')">Manage</button>` : `<span style="font-size:10px;padding:2px 7px;border-radius:6px;background:var(--bg3);color:var(--tx3);border:.5px solid var(--bdr)">Req. ${tp}</span>`;
                         const prestigeChip = `<span class="chip ${canManage ? 'chip-blue' : 'chip-gray'}" style="font-size:10px">${tp}</span>`;
-                        h += `<div style="display:flex;align-items:center;gap:6px;padding:6px 4px;border-bottom:.5px solid var(--bdr)${style}"><span style="flex:1;font-size:12px;font-weight:${isC ? '700' : '500'};color:${nameColor};font-family:'DM Mono',monospace">${isC ? '🏆 ' : ''}${t}</span>${prestigeChip}${returnBadge}${resignBadge}${btn}</div>`;
+                        h += `<div style="display:flex;align-items:center;gap:6px;padding:6px 4px;border-bottom:.5px solid var(--bdr)${style}"><span style="flex:1;font-size:12px;font-weight:${isC ? '700' : '500'};color:${nameColor};font-family:'DM Mono',monospace">${isC ? '🏆 ' : ''}${t}</span>${resignBadge}${returnBadge}${prestigeChip}${btn}</div>`;
                     });
                     h += '</div>';
                 });
