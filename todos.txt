@@ -476,7 +476,30 @@ this will affect SEASON.difficulty
 Dont make any content changes about difficulty just have that slider at the top of the team select page.
 _________
 
+TIER 1
+
+Make the stats shown and accross all pages
+
 Finish above -> says you even is road in series count
-Force balance hitting and slim pitching diff
+Something gets messed up by backing out to see standings
+
+Show K and BB cells
 
 The other teams auto sub goes to SP not just RP 
+
+
+Show 
+PICK 3 batters and 3 pitchers to protect for free agency for next year - FP auto protected
+
+
+
+________________________________________
+SHOW ALL 13 NOT JUST 9
+
+SUPER WEIGHT Fantasy pitchers
+
+Rescale bar chart
+
+Current pitcher K% BB%
+
+Win circles in stoplight mode but were good on original

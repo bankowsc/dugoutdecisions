@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang=" en">
 
 <head>
     <meta charset="UTF-8">
@@ -2106,7 +2106,6 @@
             font-family: 'Fraunces', serif
         }
 
-        /* ── DIFFICULTY BUTTON STYLES ── */
         .diff-btn-active-easy {
             background: var(--green1) !important;
             color: #fff !important;
@@ -2133,6 +2132,186 @@
             color: #fff !important;
             border-color: var(--red1) !important;
             font-weight: 700 !important;
+        }
+
+        /* ── ACQUISITION SYSTEM STYLES ── */
+        .acq-topbar-gold {
+            background: linear-gradient(135deg, #1a1000, #2a1a00);
+            border-bottom: 2px solid var(--gold);
+        }
+
+        html.dark .acq-topbar-gold {
+            background: linear-gradient(135deg, #0a0800, #150e00);
+        }
+
+        .budget-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, var(--amber2), #fff8e8);
+            border: 1.5px solid var(--gold);
+            border-radius: var(--radius);
+            margin-bottom: 14px;
+        }
+
+        html.dark .budget-display {
+            background: linear-gradient(135deg, var(--amber2), #1a1000);
+        }
+
+        .budget-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 32px;
+            letter-spacing: 2px;
+            color: var(--amber0);
+        }
+
+        .budget-spent {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            color: var(--tx3);
+        }
+
+        .budget-remaining {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            color: var(--green0);
+        }
+
+        .acq-player-card {
+            border: 1px solid var(--bdr);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            background: var(--bg1);
+            transition: all .2s;
+        }
+
+        .acq-player-card:hover {
+            border-color: var(--amber3);
+            box-shadow: 0 2px 12px rgba(212, 147, 10, .15);
+        }
+
+        .acq-player-card.acquired {
+            background: var(--green2);
+            border-color: var(--green3);
+            opacity: .7;
+        }
+
+        .acq-player-card.too-expensive {
+            opacity: .5;
+        }
+
+        .strength-bar {
+            height: 12px;
+            border-radius: 6px;
+            background: var(--bg3);
+            overflow: hidden;
+            border: .5px solid var(--bdr);
+            margin-top: 3px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width .5s ease;
+        }
+
+        .grade-badge {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 2px;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .txn-log {
+            max-height: 160px;
+            overflow-y: auto;
+            font-size: 11px;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .txn-entry {
+            padding: 4px 6px;
+            border-radius: 5px;
+            margin-bottom: 3px;
+            font-size: 11px;
+        }
+
+        .txn-entry.good {
+            background: var(--green2);
+            color: var(--green0);
+            border: .5px solid var(--green3);
+        }
+
+        .txn-entry.info {
+            background: var(--blue2);
+            color: var(--blue0);
+            border: .5px solid var(--blue3);
+        }
+
+        .acq-pool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 8px;
+        }
+
+        .deadline-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .6);
+            z-index: 1000;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .deadline-modal {
+            background: var(--bg1);
+            border: 2px solid var(--amber3);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, .5);
+            overflow: hidden;
+            animation: fadeUp .3s ease;
+        }
+
+        .deadline-header {
+            background: linear-gradient(135deg, var(--amber1), var(--amber0));
+            color: var(--amber2);
+            padding: 14px 20px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 26px;
+            letter-spacing: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .weakness-alert {
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            background: var(--amber2);
+            border: 1px solid var(--amber3);
+            color: var(--amber0);
+            font-size: 11px;
+            margin-bottom: 4px;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .weakness-alert.red {
+            background: var(--red2);
+            border-color: var(--red3);
+            color: var(--red0);
         }
     </style>
 </head>
@@ -2196,7 +2375,6 @@
                 </div>
             </div>
             <div class="body-area">
-                <!-- PATCH: difficulty + prestige row -->
                 <div
                     style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
                     <p style="font-size:12px;color:var(--tx2)">Select the team you want to manage this season.</p>
@@ -2222,6 +2400,54 @@
                 <div id="team-select-grid"></div>
                 <div class="btn-row" style="margin-top:16px;justify-content:center"><button
                         onclick="showScreen('setup')">← Back</button></div>
+            </div>
+        </div>
+
+        <!-- ══ OFFSEASON ACQUISITIONS ══════════════════════════════════════ -->
+        <div id="screen-offseason" class="screen">
+            <div class="topbar acq-topbar-gold">
+                <h1 style="color:var(--gold)">🏢 FRONT OFFICE — <span id="offseason-team-name"
+                        style="color:var(--topbar-tx)">Team</span></h1>
+                <span class="series-pill" id="offseason-year-pill"></span>
+                <div class="topbar-controls">
+                    <span class="dm-label">DARK</span>
+                    <label class="dm-toggle"><input type="checkbox" id="dm-toggle-os" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label>
+                </div>
+            </div>
+            <div class="body-area">
+                <div id="offseason-budget-bar"></div>
+                <div class="two-col">
+                    <div>
+                        <div id="offseason-strength-card"></div>
+                        <div class="card">
+                            <div class="section-label" style="margin-bottom:8px">Your Current Roster</div>
+                            <div id="offseason-roster"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card">
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                                <div
+                                    style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--amber0)">
+                                    Available Players</div>
+                                <span class="chip chip-amber" style="font-size:10px">Offseason Window</span>
+                            </div>
+                            <div id="offseason-pool"></div>
+                        </div>
+                        <div class="card">
+                            <div class="section-label">Transaction Log</div>
+                            <div class="txn-log" id="offseason-txn-log">
+                                <div style="color:var(--tx3);font-size:11px;font-family:'DM Mono',monospace">No
+                                    transactions yet.</div>
+                            </div>
+                        </div>
+                        <div class="btn-row">
+                            <button class="btn-gold" style="font-size:15px;padding:11px 28px"
+                                onclick="finishOffseason()">▶ Start Season</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -2299,6 +2525,17 @@
             </div>
         </div>
 
+        <!-- Trade Deadline Overlay (rendered dynamically) -->
+        <div id="deadline-overlay" class="deadline-overlay" style="display:none">
+            <div class="deadline-modal">
+                <div class="deadline-header">
+                    <span>📅 Trade Deadline</span>
+                    <span id="deadline-budget-hdr" style="font-size:16px;opacity:.9"></span>
+                </div>
+                <div style="padding:16px" id="deadline-content"></div>
+            </div>
+        </div>
+
         <!-- ══ STANDINGS ══════════════════════════════════════════════════ -->
         <div id="screen-standings" class="screen">
             <div class="topbar">
@@ -2323,9 +2560,6 @@
                         <span style="display:inline-flex;align-items:center;gap:4px"><span
                                 style="width:10px;height:10px;border-radius:2px;background:var(--blue2);border:.5px solid var(--blue3);display:inline-block"></span>Your
                             team</span>
-                        <span style="display:inline-flex;align-items:center;gap:4px"><span
-                                style="width:10px;height:10px;border-radius:2px;background:var(--amber2);border:.5px solid var(--amber3);display:inline-block"></span>↑
-                            Replaces banned team</span>
                     </div>
                 </div>
                 <div class="two-col" id="standings-grid"></div>
@@ -2648,7 +2882,10 @@
         }
 
         // ══ SEASON STATE ═══════════════════════════════════════════════════════════
-        let SEASON = { year: 2025, playerTeam: null, records: {}, playoffs: null, simRunning: false, gamesPlayed: 0, seasonLog: [], managerCooldown: 0, successfulMoves: 0, difficulty: 'All-Star' };
+        let SEASON = {
+            year: 2025, playerTeam: null, records: {}, playoffs: null, simRunning: false, gamesPlayed: 0, seasonLog: [], managerCooldown: 0, successfulMoves: 0, difficulty: 'All-Star',
+            acquisitionBudget: 10, budgetSpent: 0, offseasonLog: [], pendingRoster: null, deadlineTriggered: false
+        };
         let SERIES_STATE = null; let CURRENT_PLAYOFF_ROUND = null; let LAST_CHAMP = null;
         const _sp = loadPrestige(); let MANAGER_PRESTIGE = _sp.p; let LAST_MANAGED_TEAM = _sp.team; let LAST_MANAGED_MADE_PLAYOFFS = _sp.playoffs;
 
@@ -2670,29 +2907,15 @@
         function seasonRecord(name) { const r = SEASON.records[name] || { w: 0, l: 0 }; return `${r.w}-${r.l}`; }
 
         // ══ DIFFICULTY ═════════════════════════════════════════════════════════════
-        function setDifficulty(d) {
-            SEASON.difficulty = d;
-            updateDiffButtons();
-        }
+        function setDifficulty(d) { SEASON.difficulty = d; updateDiffButtons(); }
         function updateDiffButtons() {
             const d = SEASON.difficulty || 'All-Star';
             const ids = { Easy: 'diff-easy', Normal: 'diff-normal', Hard: 'diff-hard', 'All-Star': 'diff-allstar' };
             const colors = { Easy: 'var(--green1)', Normal: 'var(--blue1)', Hard: 'var(--amber1)', 'All-Star': 'var(--red1)' };
             Object.entries(ids).forEach(([k, id]) => {
                 const el = document.getElementById(id); if (!el) return;
-                if (k === d) {
-                    el.style.background = colors[d];
-                    el.style.color = '#fff';
-                    el.style.borderColor = colors[d];
-                    el.style.fontWeight = '700';
-                    el.style.boxShadow = `0 2px 8px ${colors[d].replace('var(', '').replace(')', '') === d ? '' : ''}rgba(0,0,0,.2)`;
-                } else {
-                    el.style.background = '';
-                    el.style.color = '';
-                    el.style.borderColor = '';
-                    el.style.fontWeight = '';
-                    el.style.boxShadow = '';
-                }
+                if (k === d) { el.style.background = colors[d]; el.style.color = '#fff'; el.style.borderColor = colors[d]; el.style.fontWeight = '700'; }
+                else { el.style.background = ''; el.style.color = ''; el.style.borderColor = ''; el.style.fontWeight = ''; }
             });
         }
 
@@ -2703,6 +2926,7 @@
             SEASON.records = {}; ALL_TEAMS_FLAT.forEach(t => SEASON.records[t] = { w: 0, l: 0 });
             SEASON.playoffs = null; SEASON.gamesPlayed = 0; SEASON.seasonLog = []; SEASON.simRunning = false; SEASON.managerCooldown = 0;
             SEASON.postseasonBannedTeams = null;
+            SEASON.acquisitionBudget = MANAGER_PRESTIGE; SEASON.budgetSpent = 0; SEASON.offseasonLog = []; SEASON.pendingRoster = null; SEASON.deadlineTriggered = false;
             generateTeamPrestige(false);
             G = {}; CURRENT_SERIES = null; CURRENT_GAME_SERIES = null; _contSimRunning = false; _playoffsStarted = false;
             renderTeamSelect(); showScreen('teamselect'); renderBadges('setup-badges'); renderChampCounter('champ-counter-setup');
@@ -2744,9 +2968,332 @@
         function selectTeam(name) {
             SEASON.playerTeam = name; LAST_MANAGED_MADE_PLAYOFFS = false;
             if ((TEAM_PRESTIGE[name] || 1) >= 90) { G = {}; if (!BADGES.hofmanager) award('hofmanager'); }
-            document.getElementById('season-title').textContent = name + ' – ' + SEASON.year;
+            // Reset budget for this franchise season
+            SEASON.acquisitionBudget = MANAGER_PRESTIGE; SEASON.budgetSpent = 0; SEASON.offseasonLog = []; SEASON.pendingRoster = null; SEASON.deadlineTriggered = false;
+            // Generate team early for offseason
+            G.you = genTeam(name, null, false);
+            // Show offseason screen
+            showOffseason();
+        }
+
+        // ══ OFFSEASON / ACQUISITION SYSTEM ══════════════════════════════════════════
+
+        // Generate an acquisition pool player
+        function genAcqHitter(tier) {
+            // tier: 'elite','solid','depth'
+            const tiers = {
+                elite: { avgMin: .310, avgMax: .345, opsMin: .950, opsMax: 1.100, spdMin: 70, spdMax: 98, costMin: 40, costMax: 55 },
+                solid: { avgMin: .275, avgMax: .309, opsMin: .800, opsMax: .949, spdMin: 45, spdMax: 89, costMin: 20, costMax: 35 },
+                depth: { avgMin: .240, avgMax: .274, opsMin: .680, opsMax: .799, spdMin: 25, spdMax: 75, costMin: 8, costMax: 18 },
+            };
+            const t = tiers[tier];
+            const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
+            const pos = pick(POSITIONS);
+            const fn = pick(NF), ln = pick(NL_NAMES);
+            return {
+                id: Math.floor(Math.random() * 90000) + 10000,
+                name: fn[0] + '. ' + ln, hand, num: rndI(1, 99), pos,
+                spd: rndI(t.spdMin, t.spdMax),
+                bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .28)),
+                avg: r3(rnd(t.avgMin, t.avgMax)),
+                ops: r3(rnd(t.opsMin, t.opsMax)),
+                active: true, inGame: false, isFP: false,
+                stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 },
+                _acqTier: tier, _acqCost: rndI(t.costMin, t.costMax), _acqType: 'hitter'
+            };
+        }
+
+        function genAcqPitcher(tier) {
+            const tiers = {
+                aceSP: { eraMin: 2.3, eraMax: 3.0, whipMin: .80, whipMax: 1.00, kMin: .28, kMax: .34, bbMin: .05, bbMax: .10, costMin: 45, costMax: 60, sp: true },
+                midSP: { eraMin: 3.1, eraMax: 4.2, whipMin: 1.00, whipMax: 1.20, kMin: .18, kMax: .26, bbMin: .06, bbMax: .16, costMin: 20, costMax: 35, sp: true },
+                qualRP: { eraMin: 2.5, eraMax: 3.5, whipMin: .75, whipMax: 1.05, kMin: .30, kMax: .42, bbMin: .07, bbMax: .15, costMin: 18, costMax: 28, sp: false },
+                depthRP: { eraMin: 3.6, eraMax: 5.0, whipMin: 1.10, whipMax: 1.40, kMin: .18, kMax: .28, bbMin: .09, bbMax: .22, costMin: 6, costMax: 15, sp: false },
+            };
+            const t = tiers[tier];
+            const hand = Math.random() > 0.3 ? 'R' : 'L';
+            const fn = pick(NF), ln = pick(NL_NAMES);
+            return {
+                id: Math.floor(Math.random() * 90000) + 10000,
+                name: fn[0] + '. ' + ln, hand, num: rndI(1, 99),
+                isStarter: t.sp, role: t.sp ? 'SP' : 'RP',
+                era: r2(rnd(t.eraMin, t.eraMax)), whip: r2(rnd(t.whipMin, t.whipMax)),
+                kRate: r2(rnd(t.kMin, t.kMax)), bbRate: r2(rnd(t.bbMin, t.bbMax)),
+                stamina: 100, maxStamina: 100, recoverRate: t.sp ? 8 : 18,
+                drainPerPitch: t.sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)),
+                pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false,
+                isFP: false, _acqTier: tier, _acqCost: rndI(t.costMin, t.costMax), _acqType: 'pitcher'
+            };
+        }
+
+        function genAcqPool(isDeadline) {
+            const pool = [];
+            if (!isDeadline) {
+                // Offseason: balanced pool of 8-12
+                const hitterTiers = ['elite', 'solid', 'solid', 'depth', 'depth'];
+                const pitcherTiers = ['aceSP', 'midSP', 'midSP', 'qualRP', 'qualRP', 'depthRP'];
+                const numH = rndI(4, 6), numP = rndI(4, 6);
+                for (let i = 0; i < numH; i++) pool.push(genAcqHitter(pick(hitterTiers)));
+                for (let i = 0; i < numP; i++) pool.push(genAcqPitcher(pick(pitcherTiers)));
+            } else {
+                // Deadline: skew toward relievers and solid hitters
+                const hitterTiers = ['solid', 'solid', 'depth', 'depth'];
+                const pitcherTiers = ['qualRP', 'qualRP', 'depthRP', 'depthRP', 'midSP'];
+                const numH = rndI(2, 4), numP = rndI(4, 6);
+                for (let i = 0; i < numH; i++) pool.push(genAcqHitter(pick(hitterTiers)));
+                for (let i = 0; i < numP; i++) pool.push(genAcqPitcher(pick(pitcherTiers)));
+            }
+            return pool;
+        }
+
+        let _acqPool = [];
+        let _acqDeadlinePool = [];
+
+        function getBudgetRemaining() { return Math.max(0, SEASON.acquisitionBudget - SEASON.budgetSpent); }
+
+        // ── Team Strength Assessment ──
+        function assessTeamStrength(team) {
+            const lu = team.hitters.slice(0, 9);
+            const sps = team.pitchers.filter(p => p.isStarter);
+            const rps = team.pitchers.filter(p => !p.isStarter);
+            const offenseOPS = lu.reduce((a, h) => a + (h.ops || 0), 0) / lu.length;
+            const spERA = sps.length ? sps.reduce((a, p) => a + (p.era || 4.5), 0) / sps.length : 5.0;
+            const rpERA = rps.length ? rps.reduce((a, p) => a + (p.era || 4.5), 0) / rps.length : 5.0;
+            const rpK = rps.length ? rps.reduce((a, p) => a + (p.kRate || 0.2), 0) / rps.length : 0.2;
+            const avgSpd = lu.reduce((a, h) => a + (h.spd || 50), 0) / lu.length;
+            // Score 0-100 each
+            const offScore = Math.round(clamp((offenseOPS - 0.600) / 0.500 * 100, 0, 100));
+            const rotScore = Math.round(clamp((7.0 - spERA) / 5.0 * 100, 0, 100));
+            const bullScore = Math.round(clamp(((5.5 - rpERA) / 4.0 * 70 + rpK * 100 * 0.3), 0, 100));
+            const spdScore = Math.round(clamp((avgSpd - 20) / 80 * 100, 0, 100));
+            const composite = Math.round((offScore * 0.35 + rotScore * 0.30 + bullScore * 0.25 + spdScore * 0.10));
+            let grade = 'D';
+            if (composite >= 80) grade = 'A';
+            else if (composite >= 72) grade = 'B+';
+            else if (composite >= 62) grade = 'B';
+            else if (composite >= 52) grade = 'C+';
+            else if (composite >= 42) grade = 'C';
+            const weaknesses = [];
+            if (offScore < 40) weaknesses.push({ msg: `Weak offense — avg OPS ${offenseOPS.toFixed(3)}`, severe: offScore < 25 });
+            if (rotScore < 40) weaknesses.push({ msg: `Weak rotation — avg SP ERA ${spERA.toFixed(2)}`, severe: rotScore < 25 });
+            if (bullScore < 40) weaknesses.push({ msg: `Weak bullpen — avg RP ERA ${rpERA.toFixed(2)}`, severe: bullScore < 25 });
+            if (spdScore < 30) weaknesses.push({ msg: `Slow lineup — avg spd ${Math.round(avgSpd)}`, severe: false });
+            return { offScore, rotScore, bullScore, spdScore, composite, grade, weaknesses, offenseOPS, spERA, rpERA, rpK, avgSpd };
+        }
+
+        function renderStrengthCard(team) {
+            const s = assessTeamStrength(team);
+            const gradeColors = { 'A': '#1a4a1a', 'B+': '#0a3a5c', 'B': '#2056a0', 'C+': '#5a2e00', 'C': '#8b4a00', 'D': '#5c1a1a' };
+            const gradeBGs = { 'A': 'var(--green2)', 'B+': 'var(--blue2)', 'B': 'var(--blue2)', 'C+': 'var(--amber2)', 'C': 'var(--amber2)', 'D': 'var(--red2)' };
+            const gc = gradeColors[s.grade] || 'var(--tx0)';
+            const gb = gradeBGs[s.grade] || 'var(--bg2)';
+            const bar = (pct, color) => `<div class="strength-bar"><div class="strength-fill" style="width:${pct}%;background:${color}"></div></div>`;
+            const color = (v, good, bad) => v >= good ? 'var(--green1)' : v <= bad ? 'var(--red1)' : 'var(--amber1)';
+            let h = `<div class="card" style="margin-bottom:10px;border-color:var(--amber3);background:linear-gradient(135deg,var(--bg1),var(--amber2))">`;
+            h += `<div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">`;
+            h += `<div class="grade-badge" style="background:${gb};color:${gc}">${s.grade}</div>`;
+            h += `<div><div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--amber0)">Team Strength</div><div style="font-size:11px;color:var(--tx2);font-family:'DM Mono',monospace">Composite: ${s.composite}/100</div></div>`;
+            h += `</div>`;
+            const rows = [
+                { label: 'Offense', val: s.offScore, detail: `OPS ${s.offenseOPS.toFixed(3)}`, col: color(s.offScore, 60, 35) },
+                { label: 'Rotation', val: s.rotScore, detail: `ERA ${s.spERA.toFixed(2)}`, col: color(s.rotScore, 60, 35) },
+                { label: 'Bullpen', val: s.bullScore, detail: `ERA ${s.rpERA.toFixed(2)} / K ${Math.round(s.rpK * 100)}%`, col: color(s.bullScore, 55, 30) },
+                { label: 'Speed', val: s.spdScore, detail: `Avg ${Math.round(s.avgSpd)} spd`, col: color(s.spdScore, 55, 25) },
+            ];
+            rows.forEach(r => {
+                h += `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;font-family:'DM Mono',monospace"><span style="color:var(--tx2)">${r.label}</span><span style="color:${r.col};font-weight:600">${r.val}/100 · ${r.detail}</span></div>${bar(r.val, r.col)}</div>`;
+            });
+            if (s.weaknesses.length) {
+                h += `<div style="margin-top:8px">`;
+                s.weaknesses.forEach(w => { h += `<div class="weakness-alert${w.severe ? ' red' : ''}">⚠️ ${w.msg}</div>`; });
+                h += `</div>`;
+            }
+            h += `</div>`;
+            return h;
+        }
+
+        function showOffseason() {
+            document.getElementById('offseason-team-name').textContent = SEASON.playerTeam;
+            document.getElementById('offseason-year-pill').textContent = SEASON.year + ' Season';
+            _acqPool = genAcqPool(false);
+            renderOffseasonScreen();
+            showScreen('offseason');
+        }
+
+        function renderOffseasonScreen() {
+            renderOffseasonBudget();
+            renderOffseasonRoster();
+            renderOffseasonStrength();
+            renderOffseasonPool();
+        }
+
+        function renderOffseasonBudget() {
+            const rem = getBudgetRemaining();
+            const el = document.getElementById('offseason-budget-bar');
+            el.innerHTML = `<div class="budget-display">
+        <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:1.2px;color:var(--amber1);font-family:'DM Mono',monospace;white-space:nowrap">Front Office Budget</div>
+        <div style="flex:1;min-width:0"></div>
+        <div style="display:flex;align-items:baseline;gap:8px">
+            <span class="budget-remaining">${rem}</span>
+            <span style="font-size:11px;color:var(--tx2);font-family:'DM Mono',monospace">pts remaining</span>
+            <span class="budget-spent" style="font-size:16px">/ ${SEASON.acquisitionBudget} budget</span>
+        </div>
+    </div>`;
+        }
+
+        function renderOffseasonStrength() {
+            document.getElementById('offseason-strength-card').innerHTML = renderStrengthCard(G.you);
+        }
+
+        function renderOffseasonRoster() {
+            const el = document.getElementById('offseason-roster');
+            let h = '<div class="section-label" style="margin-bottom:5px">Hitters</div>';
+            G.you.hitters.slice(0, 13).forEach((p, i) => {
+                const fp = p.isFP;
+                h += `<div style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:.5px solid var(--bdr);font-size:11px;flex-wrap:wrap">
+            <span style="color:var(--tx3);width:14px;font-size:10px;font-family:'DM Mono',monospace">${i + 1}</span>
+            <span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${p.pos}</span>
+            <span style="flex:1;font-weight:500;font-family:'DM Mono',monospace;min-width:80px">${fp ? '★ ' : ''}${p.name}</span>
+            ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
+            <span class="chip ${p.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(p.avg * 1000)}</span>
+            <span class="chip ${p.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${p.ops}</span>
+            <span class="chip ${spdChip(p.spd)}" style="font-size:10px">${p.spd}spd</span>
+            <span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${Math.round(p.kRate * 100)}%</span>
+            <span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">BB ${Math.round(p.bbRate * 100)}%</span>
+            <span class="chip chip-blue" style="font-size:9px">${p.hand}</span>
+        </div>`;
+            });
+            h += '<div class="section-label" style="margin-top:8px;margin-bottom:5px">Pitchers</div>';
+            G.you.pitchers.slice(0, 13).forEach((p, i) => {
+                const fp = p.isFP;
+                h += `<div style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:.5px solid var(--bdr);font-size:11px;flex-wrap:wrap">
+            <span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span>
+            <span style="flex:1;font-weight:500;font-family:'DM Mono',monospace;min-width:80px">${fp ? '★ ' : ''}${p.name}</span>
+            ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
+            <span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">ERA ${p.era}</span>
+            <span class="chip ${p.whip < 1.1 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${p.whip}</span>
+            <span class="chip ${p.kRate >= .25 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${Math.round(p.kRate * 100)}%</span>
+            <span class="chip ${p.bbRate <= .08 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">BB ${Math.round(p.bbRate * 100)}%</span>
+            <span class="chip chip-blue" style="font-size:9px">${p.hand}HP</span>
+        </div>`;
+            });
+            el.innerHTML = h;
+        }
+
+        function renderOffseasonPool() {
+            const rem = getBudgetRemaining();
+            const el = document.getElementById('offseason-pool');
+            if (!_acqPool.length) { el.innerHTML = '<div style="color:var(--tx3);font-family:\'DM Mono\',monospace;font-size:11px">Pool exhausted.</div>'; return; }
+            let h = '<div class="acq-pool-grid">';
+            _acqPool.forEach((p, idx) => {
+                const canAfford = p._acqCost <= rem;
+                const isH = p._acqType === 'hitter';
+                const tierColors = { elite: 'chip-green', solid: 'chip-blue', depth: 'chip-gray', aceSP: 'chip-green', midSP: 'chip-blue', qualRP: 'chip-amber', depthRP: 'chip-gray' };
+                const tierLabels = { elite: 'Elite', solid: 'Solid', depth: 'Depth', aceSP: 'Ace SP', midSP: 'Mid SP', qualRP: 'Quality RP', depthRP: 'Depth RP' };
+                h += `<div class="acq-player-card${!canAfford ? ' too-expensive' : ''}">`;
+                h += `<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap">`;
+                h += `<span style="font-weight:600;font-size:13px;font-family:'DM Mono',monospace;flex:1">${p.name}</span>`;
+                h += `<span class="chip ${tierColors[p._acqTier]}">${tierLabels[p._acqTier]}</span>`;
+                h += `<span class="chip chip-gold" style="font-size:11px">${p._acqCost} pts</span>`;
+                h += `</div>`;
+                h += `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">`;
+                if (isH) {
+                    h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span>`;
+                    h += `<span class="chip chip-blue" style="font-size:9px">${p.hand}</span>`;
+                    h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : p.avg >= .260 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">.${Math.round(p.avg * 1000)} AVG</span>`;
+                    h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : p.ops >= .750 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">OPS ${p.ops}</span>`;
+                    h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${p.spd} spd</span>`;
+                    h += `<span class="chip chip-gray" style="font-size:9px">K ${Math.round(p.kRate * 100)}% BB ${Math.round(p.bbRate * 100)}%</span>`;
+                } else {
+                    h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span>`;
+                    h += `<span class="chip chip-gray" style="font-size:9px">${p.hand}HP</span>`;
+                    h += `<span class="chip ${p.era < 3.0 ? 'chip-green' : p.era < 4.0 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">ERA ${p.era}</span>`;
+                    h += `<span class="chip ${p.whip < 1.0 ? 'chip-green' : p.whip < 1.2 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">WHIP ${p.whip}</span>`;
+                    h += `<span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${Math.round(p.kRate * 100)}%</span>`;
+                    h += `<span class="chip chip-gray" style="font-size:9px">BB ${Math.round(p.bbRate * 100)}%</span>`;
+                }
+                h += `</div>`;
+                // Replacement picker
+                if (canAfford) {
+                    h += `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">`;
+                    h += `<select id="acq-replace-${idx}" style="flex:1;min-width:120px;font-size:11px">`;
+                    if (isH) {
+                        G.you.hitters.forEach((hp, hi) => {
+                            const disabled = hp.isFP ? 'disabled' : '';
+                            const fpLabel = hp.isFP ? ' [★FP — protected]' : '';
+                            h += `<option value="h_${hi}" ${disabled}>${hp.name} (${hp.pos})${fpLabel}</option>`;
+                        });
+                    } else {
+                        G.you.pitchers.forEach((pp, pi) => {
+                            const disabled = pp.isFP ? 'disabled' : '';
+                            const fpLabel = pp.isFP ? ' [★FP — protected]' : '';
+                            h += `<option value="p_${pi}" ${disabled}>${pp.name} (${pp.role})${fpLabel}</option>`;
+                        });
+                    }
+                    h += `</select>`;
+                    h += `<button class="btn-amber btn-sm" onclick="acquirePlayer(${idx}, false)">Acquire</button>`;
+                    h += `</div>`;
+                } else {
+                    h += `<div style="font-size:11px;color:var(--tx3);font-family:'DM Mono',monospace">⚠️ Insufficient budget (need ${p._acqCost}, have ${rem})</div>`;
+                }
+                h += `</div>`;
+            });
+            h += '</div>';
+            el.innerHTML = h;
+        }
+
+        function acquirePlayer(poolIdx, isDeadline) {
+            const pool = isDeadline ? _acqDeadlinePool : _acqPool;
+            const p = pool[poolIdx];
+            if (!p) return;
+            const rem = getBudgetRemaining();
+            if (p._acqCost > rem) { alert('Not enough budget!'); return; }
+            const selEl = document.getElementById(`acq-replace-${poolIdx}`);
+            if (!selEl) return;
+            const val = selEl.value;
+            if (!val) return;
+            const isH = p._acqType === 'hitter';
+            const parts = val.split('_');
+            const idx = parseInt(parts[1]);
+            // Check FP protection
+            if (isH) {
+                if (G.you.hitters[idx].isFP) { alert('Franchise players cannot be traded away.'); return; }
+                const outPlayer = G.you.hitters[idx];
+                G.you.hitters[idx] = { ...p, id: idx, inGame: outPlayer.inGame, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } };
+                const txn = `✓ Acquired ${p.name} (${p.pos}) — replaced ${outPlayer.name} · Cost: ${p._acqCost} pts · Budget remaining: ${rem - p._acqCost}`;
+                SEASON.offseasonLog.push(txn);
+                SEASON.budgetSpent += p._acqCost;
+                pool.splice(poolIdx, 1);
+                addTxnLog(txn, isDeadline);
+            } else {
+                if (G.you.pitchers[idx].isFP) { alert('Franchise players cannot be traded away.'); return; }
+                const outPlayer = G.you.pitchers[idx];
+                G.you.pitchers[idx] = { ...p, id: idx, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false, stamina: 100, maxStamina: 100 };
+                const txn = `✓ Acquired ${p.name} (${p.role}) — replaced ${outPlayer.name} · Cost: ${p._acqCost} pts · Budget remaining: ${rem - p._acqCost}`;
+                SEASON.offseasonLog.push(txn);
+                SEASON.budgetSpent += p._acqCost;
+                pool.splice(poolIdx, 1);
+                addTxnLog(txn, isDeadline);
+            }
+            if (isDeadline) { renderDeadlineContent(); }
+            else { renderOffseasonScreen(); }
+        }
+
+        function addTxnLog(msg, isDeadline) {
+            if (!isDeadline) {
+                const el = document.getElementById('offseason-txn-log');
+                if (el) el.innerHTML = `<div class="txn-entry good">${msg}</div>` + el.innerHTML.replace('<div style="color:var(--tx3)', '<div style="display:none;color:var(--tx3)');
+            } else {
+                const el = document.getElementById('deadline-txn-log');
+                if (el) el.innerHTML = `<div class="txn-entry good">${msg}</div>` + el.innerHTML;
+            }
+        }
+
+        function finishOffseason() {
+            // Reset season sim UI
+            document.getElementById('season-title').textContent = SEASON.playerTeam + ' – ' + SEASON.year;
             document.getElementById('season-year-pill').textContent = SEASON.year + ' Season';
-            document.getElementById('season-your-team').textContent = name;
+            document.getElementById('season-your-team').textContent = SEASON.playerTeam;
             document.getElementById('season-record').textContent = '0-0';
             document.getElementById('season-bar').style.width = '0%';
             document.getElementById('season-game-count').textContent = 'Game 0 of 162';
@@ -2769,8 +3316,107 @@
             showScreen('season');
         }
 
+        // ── TRADE DEADLINE ──
+        function checkTradeDeadline() {
+            if (!SEASON.deadlineTriggered && SEASON.gamesPlayed >= 100) {
+                SEASON.deadlineTriggered = true;
+                _contSimRunning = false;
+                if (document.getElementById('btn-play-cont')) document.getElementById('btn-play-cont').textContent = '▶ Play';
+                showDeadline();
+            }
+        }
+
+        function showDeadline() {
+            _acqDeadlinePool = genAcqPool(true);
+            document.getElementById('deadline-overlay').style.display = 'flex';
+            renderDeadlineContent();
+        }
+
+        function renderDeadlineContent() {
+            const rem = getBudgetRemaining();
+            document.getElementById('deadline-budget-hdr').textContent = `Budget: ${rem} pts remaining`;
+            const el = document.getElementById('deadline-content');
+            let h = '';
+            // Budget banner
+            h += `<div class="budget-display" style="margin-bottom:12px">
+        <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:1.2px;color:var(--amber1);font-family:'DM Mono',monospace">Trade Deadline Budget</div>
+        <div style="flex:1"></div>
+        <span class="budget-remaining">${rem}</span>
+        <span style="font-size:11px;color:var(--tx2);font-family:'DM Mono',monospace">pts remaining of ${SEASON.acquisitionBudget}</span>
+    </div>`;
+            // Your record + standings context
+            const r = SEASON.records[SEASON.playerTeam];
+            h += `<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;padding:8px 12px;background:var(--bg2);border-radius:var(--radius-sm);border:1px solid var(--bdr)">
+        <span style="font-size:11px;color:var(--tx2);font-family:'DM Mono',monospace">Your record after Game 100:</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;color:${r.w >= 50 ? 'var(--green0)' : 'var(--red0)'}">${r.w}-${r.l}</span>
+    </div>`;
+            if (rem === 0) {
+                h += `<div class="alert-info" style="margin-bottom:14px">💰 Budget spent — all ${SEASON.acquisitionBudget} pts used this season.</div>`;
+            } else {
+                h += `<div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--amber0);margin-bottom:8px">Available Players</div>`;
+                h += `<div class="acq-pool-grid">`;
+                _acqDeadlinePool.forEach((p, idx) => {
+                    const canAfford = p._acqCost <= rem;
+                    const isH = p._acqType === 'hitter';
+                    const tierColors = { elite: 'chip-green', solid: 'chip-blue', depth: 'chip-gray', aceSP: 'chip-green', midSP: 'chip-blue', qualRP: 'chip-amber', depthRP: 'chip-gray' };
+                    const tierLabels = { elite: 'Elite', solid: 'Solid', depth: 'Depth', aceSP: 'Ace SP', midSP: 'Mid SP', qualRP: 'Quality RP', depthRP: 'Depth RP' };
+                    h += `<div class="acq-player-card${!canAfford ? ' too-expensive' : ''}">`;
+                    h += `<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap">`;
+                    h += `<span style="font-weight:600;font-size:12px;font-family:'DM Mono',monospace;flex:1">${p.name}</span>`;
+                    h += `<span class="chip ${tierColors[p._acqTier]}">${tierLabels[p._acqTier]}</span>`;
+                    h += `<span class="chip chip-gold">${p._acqCost} pts</span>`;
+                    h += `</div>`;
+                    h += `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">`;
+                    if (isH) {
+                        h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span><span class="chip chip-blue" style="font-size:9px">${p.hand}</span>`;
+                        h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(p.avg * 1000)}</span>`;
+                        h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${p.ops}</span>`;
+                        h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${p.spd}spd</span>`;
+                    } else {
+                        h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span>`;
+                        h += `<span class="chip ${p.era < 3.0 ? 'chip-green' : p.era < 4.0 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">ERA ${p.era}</span>`;
+                        h += `<span class="chip ${p.whip < 1.0 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${p.whip}</span>`;
+                        h += `<span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${Math.round(p.kRate * 100)}%</span>`;
+                    }
+                    h += `</div>`;
+                    if (canAfford) {
+                        h += `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">`;
+                        h += `<select id="acq-replace-${idx}" style="flex:1;min-width:100px;font-size:11px">`;
+                        if (isH) {
+                            G.you.hitters.forEach((hp, hi) => {
+                                const disabled = hp.isFP ? 'disabled' : '';
+                                const fpLabel = hp.isFP ? ' [★FP]' : '';
+                                h += `<option value="h_${hi}" ${disabled}>${hp.name}${fpLabel}</option>`;
+                            });
+                        } else {
+                            G.you.pitchers.forEach((pp, pi) => {
+                                const disabled = pp.isFP ? 'disabled' : '';
+                                const fpLabel = pp.isFP ? ' [★FP]' : '';
+                                h += `<option value="p_${pi}" ${disabled}>${pp.name} (${pp.role})${fpLabel}</option>`;
+                            });
+                        }
+                        h += `</select><button class="btn-amber btn-sm" onclick="acquirePlayer(${idx}, true)">Acquire</button>`;
+                        h += `</div>`;
+                    } else {
+                        h += `<div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">Need ${p._acqCost} pts</div>`;
+                    }
+                    h += `</div>`;
+                });
+                h += `</div>`;
+                h += `<div class="section-label" style="margin-top:12px">Transactions</div><div class="txn-log" id="deadline-txn-log" style="max-height:120px;overflow-y:auto"><div style="color:var(--tx3);font-size:11px">No transactions yet.</div></div>`;
+            }
+            h += `<div style="margin-top:16px;text-align:right"><button class="btn-gold" style="font-size:14px;padding:10px 24px" onclick="closeDeadline()">Set Lineup &amp; Continue →</button></div>`;
+            el.innerHTML = h;
+        }
+
+        function closeDeadline() {
+            document.getElementById('deadline-overlay').style.display = 'none';
+            // Resume season
+        }
+
         // ══ SEASON SIMULATION ══════════════════════════════════════════════════════
         const SEASON_TOTAL = 162;
+        const DEADLINE_GAME = 100;
 
         function simOneGame() {
             const playerWin = Math.random() < 0.5;
@@ -2848,6 +3494,7 @@
             const logEl = document.getElementById('manager-move-log');
             logEl.innerHTML = `<div style="padding:7px 12px;border-radius:var(--radius-sm);background:${success ? 'var(--green2)' : 'var(--red2)'};color:${success ? 'var(--green0)' : 'var(--red0)'};border:1px solid ${success ? 'var(--green3)' : 'var(--red3)'};font-size:12px;margin-top:4px"><strong>🧢 ${move.name}</strong> <span style="font-size:10px;opacity:.7">(${successPct}% win · 🔥${streakPct}% streak · max +${move.maxStreak})</span><br>${success ? move.good : move.bad}${streakMsg}${banMsg}</div>`;
             updateSeasonUI();
+            checkTradeDeadline();
             if (SEASON.gamesPlayed >= SEASON_TOTAL) { _contSimRunning = false; finishSeason(); }
         }
 
@@ -2857,6 +3504,8 @@
         function _contSimStep() {
             if (!_contSimRunning || SEASON.gamesPlayed >= SEASON_TOTAL) { _contSimRunning = false; if (document.getElementById('btn-play-cont')) document.getElementById('btn-play-cont').textContent = '▶ Play'; return; }
             if (SEASON.simRunning) { _contSimTimer = setTimeout(_contSimStep, 60); return; }
+            // Check deadline trigger
+            if (!SEASON.deadlineTriggered && SEASON.gamesPlayed >= DEADLINE_GAME) { _contSimRunning = false; if (document.getElementById('btn-play-cont')) document.getElementById('btn-play-cont').textContent = '▶ Play'; checkTradeDeadline(); return; }
             simOneGame(); updateSeasonUI();
             if (SEASON.gamesPlayed >= SEASON_TOTAL) { _contSimRunning = false; finishSeason(); return; }
             _contSimTimer = setTimeout(_contSimStep, 60);
@@ -2864,9 +3513,20 @@
         function toggleContSim() { if (_contSimRunning) { _contSimRunning = false; document.getElementById('btn-play-cont').textContent = '▶ Play'; } else startContSim(); }
         function simNGames(n) {
             if (SEASON.simRunning) return; SEASON.simRunning = true; let count = 0;
-            const doOne = () => { if (SEASON.gamesPlayed >= SEASON_TOTAL || count >= n) { SEASON.simRunning = false; updateSeasonUI(); if (SEASON.gamesPlayed >= SEASON_TOTAL) finishSeason(); return; } simOneGame(); count++; updateSeasonUI(); setTimeout(doOne, 40); }; doOne();
+            const doOne = () => {
+                if (SEASON.gamesPlayed >= SEASON_TOTAL || count >= n) { SEASON.simRunning = false; updateSeasonUI(); if (SEASON.gamesPlayed >= SEASON_TOTAL) finishSeason(); return; }
+                // Check deadline mid-sim
+                if (!SEASON.deadlineTriggered && SEASON.gamesPlayed >= DEADLINE_GAME) { SEASON.simRunning = false; updateSeasonUI(); checkTradeDeadline(); return; }
+                simOneGame(); count++; updateSeasonUI(); setTimeout(doOne, 40);
+            }; doOne();
         }
         function skipToEnd() {
+            // If deadline not triggered yet, force trigger it first
+            if (!SEASON.deadlineTriggered && SEASON.gamesPlayed < DEADLINE_GAME) {
+                // Fast-sim to game 100
+                while (SEASON.gamesPlayed < DEADLINE_GAME) simOneGame();
+                updateSeasonUI(); checkTradeDeadline(); return;
+            }
             while (SEASON.gamesPlayed < SEASON_TOTAL) { simOneGame(); ALL_TEAMS_FLAT.forEach(t => { if (t === SEASON.playerTeam) return; while (SEASON.records[t].w + SEASON.records[t].l < SEASON_TOTAL) { if (Math.random() < 0.5) SEASON.records[t].w++; else SEASON.records[t].l++; } }); }
             updateSeasonUI(); finishSeason();
         }
@@ -2899,8 +3559,7 @@
             document.getElementById('season-end-msg').textContent = `Season Complete: ${r.w}-${r.l}`;
             _contSimRunning = false;
             ['btn-play-cont', 'btn-sim-season', 'btn-sim-10', 'btn-sim-1', 'btn-skip-season', 'btn-manager-move'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
-            document.getElementById('manager-moves-panel').style.display = 'none';
-            _managerMovesOpen = false;
+            document.getElementById('manager-moves-panel').style.display = 'none'; _managerMovesOpen = false;
             if (inPlayoffs) {
                 LAST_MANAGED_MADE_PLAYOFFS = true;
                 const teamP2 = TEAM_PRESTIGE[SEASON.playerTeam] || 1;
@@ -2944,7 +3603,6 @@
                     wildcards: wildcards.map((wc, i) => ({ ...wc, wcSeed: i + 1 }))
                 };
             });
-            // NOTE: We do NOT clear the ban set here — showStandings reads it after getPlayoffTeams()
             return playoffTeams;
         }
 
@@ -2969,14 +3627,12 @@
         function isPlayerInPlayoffs() { if (!SEASON.playoffs) return false; for (const lg of Object.keys(SEASON.playoffs.bracket)) { const seeds = SEASON.playoffs.bracket[lg].seeds; if (seeds.find(s => s.name === SEASON.playerTeam)) return true; } return false; }
         function getPlayerLeague() { return TEAM_META[SEASON.playerTeam]?.league; }
 
-        // ══ SHOW STANDINGS (with banned-team highlighting) ═════════════════════════
         function showStandings() {
             document.getElementById('standings-year-pill').textContent = SEASON.year + ' Season';
             const grid = document.getElementById('standings-grid');
             const inPlayoffs = isPlayerInPlayoffs();
             document.getElementById('btn-standings-playoffs').style.display = inPlayoffs ? '' : 'none';
             document.getElementById('btn-standings-newseries').style.display = inPlayoffs ? 'none' : '';
-            // Capture banned teams BEFORE getPlayoffTeams (which would clear them in old code)
             const bannedTeams = SEASON.postseasonBannedTeams ? new Set(SEASON.postseasonBannedTeams) : new Set();
             const pt = getPlayoffTeams();
             let h = '';
@@ -2986,7 +3642,7 @@
                 h += `<div><div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--gold)">${lg}</div>`;
                 if (bannedTeams.size > 0) {
                     const lgBanned = [...bannedTeams].filter(t => TEAM_META[t]?.league === lg);
-                    if (lgBanned.length > 0) h += `<div style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;background:var(--red2);border:.5px solid var(--red3);font-size:10px;color:var(--red0);font-family:'DM Mono',monospace;margin-bottom:8px">🚫 Postseason ban: <strong>${lgBanned.join(', ')}</strong> — next eligible team advances in their place</div>`;
+                    if (lgBanned.length > 0) h += `<div style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;background:var(--red2);border:.5px solid var(--red3);font-size:10px;color:var(--red0);font-family:'DM Mono',monospace;margin-bottom:8px">🚫 Postseason ban: <strong>${lgBanned.join(', ')}</strong></div>`;
                 }
                 Object.entries(divs).forEach(([div, teams]) => {
                     const sorted = [...teams].sort((a, b) => seasonWinPct(b) - seasonWinPct(a)); const leader = seasonWinPct(sorted[0]);
@@ -2995,23 +3651,13 @@
                     sorted.forEach((t, i) => {
                         const r = SEASON.records[t]; const pct = seasonWinPct(t).toFixed(3).replace('0.', '.'); const total = r.w + r.l || 162; const gb = i === 0 ? '—' : (((leader - seasonWinPct(t)) * total) / 2).toFixed(1);
                         const isBanned = bannedTeams.has(t);
-                        // A "replacement" team = in playoffs due to another team being banned (amber highlight)
                         const isReplacement = !isBanned && lgPlayoffNames.has(t) && t !== SEASON.playerTeam && bannedTeams.size > 0;
                         let rowStyle = ''; let prefix = ''; let suffix = '';
-                        if (t === SEASON.playerTeam) {
-                            rowStyle = ' class="player-row"'; prefix = '▶ ';
-                        } else if (isBanned) {
-                            rowStyle = ' style="background:var(--red2);opacity:.75"';
-                            prefix = '🚫 ';
-                            suffix = `<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:var(--red1);color:var(--red2);font-family:'DM Mono',monospace;margin-left:4px">BANNED</span>`;
-                        } else if (lgDivWinners.has(t)) {
-                            rowStyle = isReplacement ? ' style="background:var(--amber2)"' : ' class="playoff-div"';
-                            prefix = isReplacement ? '↑ ' : '★ ';
-                            if (isReplacement) suffix = `<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:var(--amber1);color:var(--amber2);font-family:'DM Mono',monospace;margin-left:4px">replaces banned</span>`;
-                        } else if (lgPlayoffNames.has(t)) {
-                            rowStyle = isReplacement ? ' style="background:var(--amber2)"' : ' class="playoff-wc"';
-                            if (isReplacement) { prefix = '↑ '; suffix = `<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:var(--amber1);color:var(--amber2);font-family:'DM Mono',monospace;margin-left:4px">replaces banned</span>`; }
-                        } else if (i >= 3) { rowStyle = ' class="elim-row"'; }
+                        if (t === SEASON.playerTeam) { rowStyle = ' class="player-row"'; prefix = '▶ '; }
+                        else if (isBanned) { rowStyle = ' style="background:var(--red2);opacity:.75"'; prefix = '🚫 '; suffix = `<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:var(--red1);color:var(--red2);font-family:'DM Mono',monospace;margin-left:4px">BANNED</span>`; }
+                        else if (lgDivWinners.has(t)) { rowStyle = isReplacement ? ' style="background:var(--amber2)"' : ' class="playoff-div"'; prefix = isReplacement ? '↑ ' : '★ '; }
+                        else if (lgPlayoffNames.has(t)) { rowStyle = isReplacement ? ' style="background:var(--amber2)"' : ' class="playoff-wc"'; if (isReplacement) prefix = '↑ '; }
+                        else if (i >= 3) { rowStyle = ' class="elim-row"'; }
                         h += `<tr${rowStyle}><td>${prefix}<strong>${t}</strong>${suffix}</td><td class="num">${r.w}</td><td class="num">${r.l}</td><td class="num">${pct}</td><td class="num">${gb}</td></tr>`;
                     });
                     h += '</tbody></table></div>';
@@ -3193,8 +3839,7 @@
             const ga = document.getElementById('series-game-area');
             if (s.done) { renderSeriesResult(); }
             else {
-                // PATCH: recalculate home/away per game using homePattern
-                const gameIndex = myWins + oppWins; // 0-based game number in the series
+                const gameIndex = myWins + oppWins;
                 const pattern = s.homePattern || [true, true, false, false, true];
                 const seriesHomeIsGameHome = pattern[gameIndex] !== undefined ? pattern[gameIndex] : true;
                 const playerIsSeriesHome = s.home.name === SEASON.playerTeam;
@@ -3215,8 +3860,7 @@
             const s = CURRENT_SERIES.series;
             const playerIsSeriesHome = s.home.name === SEASON.playerTeam;
             const opp = playerIsSeriesHome ? s.away : s.home;
-            // PATCH FIX: Recalculate home/away for THIS game using homePattern
-            const gameIndex = s.wins.home + s.wins.away; // 0-based
+            const gameIndex = s.wins.home + s.wins.away;
             const pattern = s.homePattern || [true, true, false, false, true];
             const seriesHomeIsGameHome = pattern[gameIndex] !== undefined ? pattern[gameIndex] : true;
             const playerIsHomeThisGame = playerIsSeriesHome ? seriesHomeIsGameHome : !seriesHomeIsGameHome;
@@ -3242,8 +3886,8 @@
                 if (sp) {
                     const inningsPitched = rndI(4, 7); const drain = inningsPitched * sp.drainPerPitch * rndI(2, 3); sp.stamina = Math.max(0, sp.stamina - drain); sp.usedThisGame = true;
                     if (inningsPitched < 7) { const rps = G.you.pitchers.filter(p => !p.isStarter && !p.usedThisGame && p.stamina > 20); if (rps.length) { const rp = rps[Math.floor(Math.random() * Math.min(rps.length, 2))]; rp.stamina = Math.max(0, rp.stamina - (9 - inningsPitched) * rp.drainPerPitch * rndI(2, 3)); rp.usedThisGame = true; } }
+                    G.you.pitchers.forEach(p => { p.usedThisGame = false; p.currentPitcher = false; p.active = false; });
                 }
-                G.you.pitchers.forEach(p => { p.usedThisGame = false; p.currentPitcher = false; p.active = false; });
             }
         }
 
@@ -3284,8 +3928,7 @@
                     addB('View Championship', 'btn-gold', () => showScreen('seriesover'));
                 } else {
                     if (CURRENT_SERIES.round === 'lcs') { award('pennant'); MANAGER_PRESTIGE = Math.min(150, MANAGER_PRESTIGE + 5); savePrestige(); }
-                    else if (CURRENT_SERIES.round === 'div') { MANAGER_PRESTIGE = Math.min(150, MANAGER_PRESTIGE + 5); savePrestige(); }
-                    else if (CURRENT_SERIES.round === 'wc') { MANAGER_PRESTIGE = Math.min(150, MANAGER_PRESTIGE + 5); savePrestige(); }
+                    else { MANAGER_PRESTIGE = Math.min(150, MANAGER_PRESTIGE + 5); savePrestige(); }
                     addB('Play Next Series', 'btn-green', () => { recoverPitchersBetweenSeries(CURRENT_SERIES.series); advancePlayoffRound(); autoSimNonPlayerSeries(); const next = findNextPlayerSeries(); if (next) startPlayoffSeries(next); else goToPlayoffs(); });
                 }
             } else {
@@ -3321,40 +3964,40 @@
 
         // ══ FRANCHISE PLAYERS ══════════════════════════════════════════════════════
         const FRANCHISE_PLAYERS = {
-            'Lakewood Pilgrims': { name: 'J. Pilgrim', hand: 'R', num: 99, pos: 'C ', spd: 60, avg: 0.320, ops: 0.815, bbRate: 0.07, kRate: 0.24, isFP: true, isStarter: false, isPitcher: false },
-            'Springfield Crabs': { name: 'T. Crabman', hand: 'S', num: 45, pos: 'SS', spd: 85, avg: 0.270, ops: 1.077, bbRate: 0.19, kRate: 0.11, isFP: true, isStarter: false, isPitcher: false },
-            'Oakburg Beavers': { name: 'D. Bober', hand: 'L', num: 67, pos: 'LF', spd: 94, avg: 0.309, ops: 0.971, bbRate: 0.12, kRate: 0.14, isFP: true, isStarter: false, isPitcher: false },
-            'Millard Pioneers': { name: 'C. Trail', hand: 'R', num: 29, pos: 'RF', spd: 95, avg: 0.278, ops: 0.752, bbRate: 0.07, kRate: 0.26, isFP: true, isStarter: false, isPitcher: false },
-            'Millport Machines': { name: 'S. Torque', hand: 'R', num: 88, pos: '1B', spd: 40, avg: 0.210, ops: 1.334, bbRate: 0.12, kRate: 0.20, isFP: true, isStarter: false, isPitcher: false },
-            'Centertown Blizzard': { name: 'F. Chill', hand: 'L', num: 34, pos: '3B', spd: 65, avg: 0.330, ops: 0.821, bbRate: 0.14, kRate: 0.19, isFP: true, isStarter: false, isPitcher: false },
-            'Lemonte Bolts': { name: 'V. Sparks', hand: 'S', num: 90, pos: 'DH', spd: 41, avg: 0.265, ops: 1.770, bbRate: 0.13, kRate: 0.21, isFP: true, isStarter: false, isPitcher: false },
-            'Sunnydale Herons': { name: 'A. Wing', hand: 'R', num: 76, pos: 'C ', spd: 48, avg: 0.348, ops: 0.510, bbRate: 0.18, kRate: 0.20, isFP: true, isStarter: false, isPitcher: false },
-            'Summit Phantoms': { name: 'N. Shade', hand: 'R', num: 97, pos: 'CF', spd: 92, avg: 0.315, ops: 0.920, bbRate: 0.18, kRate: 0.18, isFP: true, isStarter: false, isPitcher: false },
-            'Washborough Ostrich Riders': { name: 'P. Stride', hand: 'L', num: 38, pos: 'CF', spd: 115, avg: 0.285, ops: 0.603, bbRate: 0.18, kRate: 0.16, isFP: true, isStarter: false, isPitcher: false },
-            'Crestmere Firehawks': { name: 'E. Fuego', hand: 'R', num: 54, pos: '2B', spd: 91, avg: 0.281, ops: 0.720, bbRate: 0.12, kRate: 0.21, isFP: true, isStarter: false, isPitcher: false },
-            'Mystridge Princes': { name: 'L. Crown', hand: 'L', num: 44, pos: 'C ', spd: 25, avg: 0.265, ops: 1.195, bbRate: 0.13, kRate: 0.18, isFP: true, isStarter: false, isPitcher: false },
-            'Norwyn Bay Seacats': { name: 'T. Tide', hand: 'R', num: 99, pos: '3B', spd: 55, avg: 0.341, ops: 0.963, bbRate: 0.11, kRate: 0.19, isFP: true, isStarter: false, isPitcher: false },
-            'Silverkeep Doves': { name: 'S. Peace', hand: 'R', num: 21, pos: 'RF', spd: 42, avg: 0.335, ops: 0.643, bbRate: 0.28, kRate: 0.20, isFP: true, isStarter: false, isPitcher: false },
-            'Ashbourne Wizards': { name: 'Z. Hex', hand: 'R', num: 69, pos: 'C ', spd: 37, avg: 0.299, ops: 0.909, bbRate: 0.24, kRate: 0.09, isFP: true, isStarter: false, isPitcher: false },
-            'Mooncliff Dreamers': { name: 'D. Lune', hand: 'R', num: 61, pos: 'CF', spd: 92, avg: 0.294, ops: 0.884, bbRate: 0.17, kRate: 0.19, isFP: true, isStarter: false, isPitcher: false },
-            'Stormhaven Igniters': { name: 'K. Surge', hand: 'R', num: 90, pos: 'SS', spd: 61, avg: 0.408, ops: 0.790, bbRate: 0.21, kRate: 0.11, isFP: true, isStarter: false, isPitcher: false },
-            'Atlantica Hammerheads': { name: 'B. Crush', hand: 'R', num: 49, pos: 'DH', spd: 33, avg: 0.247, ops: 1.317, bbRate: 0.14, kRate: 0.14, isFP: true, isStarter: false, isPitcher: false },
-            'Farlands Keepers': { name: 'G. Watchman', hand: 'R', num: 94, pos: '1B', spd: 72, avg: 0.350, ops: 0.803, bbRate: 0.16, kRate: 0.06, isFP: true, isStarter: false, isPitcher: false },
-            'Portaltown Tungsten Cubes': { name: 'Q. Cubert', hand: 'L', num: 67, pos: 'DH', spd: 4, avg: 0.151, ops: 0.350, bbRate: 5.98, kRate: 0.01, isFP: true, isStarter: false, isPitcher: false },
+            'Lakewood Pilgrims': { name: 'J. Pilgrim', hand: 'R', num: 99, pos: 'C ', spd: 60, avg: .320, ops: .815, bbRate: .07, kRate: .24, isFP: true, isStarter: false, isPitcher: false },
+            'Springfield Crabs': { name: 'T. Crabman', hand: 'S', num: 45, pos: 'SS', spd: 85, avg: .270, ops: 1.077, bbRate: .19, kRate: .11, isFP: true, isStarter: false, isPitcher: false },
+            'Oakburg Beavers': { name: 'D. Bober', hand: 'L', num: 67, pos: 'LF', spd: 94, avg: .309, ops: .971, bbRate: .12, kRate: .14, isFP: true, isStarter: false, isPitcher: false },
+            'Millard Pioneers': { name: 'C. Trail', hand: 'R', num: 29, pos: 'RF', spd: 95, avg: .278, ops: .752, bbRate: .07, kRate: .26, isFP: true, isStarter: false, isPitcher: false },
+            'Millport Machines': { name: 'S. Torque', hand: 'R', num: 88, pos: '1B', spd: 40, avg: .210, ops: 1.334, bbRate: .12, kRate: .20, isFP: true, isStarter: false, isPitcher: false },
+            'Centertown Blizzard': { name: 'F. Chill', hand: 'L', num: 34, pos: '3B', spd: 65, avg: .330, ops: .821, bbRate: .14, kRate: .19, isFP: true, isStarter: false, isPitcher: false },
+            'Lemonte Bolts': { name: 'V. Sparks', hand: 'S', num: 90, pos: 'DH', spd: 41, avg: .265, ops: 1.770, bbRate: .13, kRate: .21, isFP: true, isStarter: false, isPitcher: false },
+            'Sunnydale Herons': { name: 'A. Wing', hand: 'R', num: 76, pos: 'C ', spd: 48, avg: .348, ops: .510, bbRate: .18, kRate: .20, isFP: true, isStarter: false, isPitcher: false },
+            'Summit Phantoms': { name: 'N. Shade', hand: 'R', num: 97, pos: 'CF', spd: 92, avg: .315, ops: .920, bbRate: .18, kRate: .18, isFP: true, isStarter: false, isPitcher: false },
+            'Washborough Ostrich Riders': { name: 'P. Stride', hand: 'L', num: 38, pos: 'CF', spd: 115, avg: .285, ops: .603, bbRate: .18, kRate: .16, isFP: true, isStarter: false, isPitcher: false },
+            'Crestmere Firehawks': { name: 'E. Fuego', hand: 'R', num: 54, pos: '2B', spd: 91, avg: .281, ops: .720, bbRate: .12, kRate: .21, isFP: true, isStarter: false, isPitcher: false },
+            'Mystridge Princes': { name: 'L. Crown', hand: 'L', num: 44, pos: 'C ', spd: 25, avg: .265, ops: 1.195, bbRate: .13, kRate: .18, isFP: true, isStarter: false, isPitcher: false },
+            'Norwyn Bay Seacats': { name: 'T. Tide', hand: 'R', num: 99, pos: '3B', spd: 55, avg: .341, ops: .963, bbRate: .11, kRate: .19, isFP: true, isStarter: false, isPitcher: false },
+            'Silverkeep Doves': { name: 'S. Peace', hand: 'R', num: 21, pos: 'RF', spd: 42, avg: .335, ops: .643, bbRate: .28, kRate: .20, isFP: true, isStarter: false, isPitcher: false },
+            'Ashbourne Wizards': { name: 'Z. Hex', hand: 'R', num: 69, pos: 'C ', spd: 37, avg: .299, ops: .909, bbRate: .24, kRate: .09, isFP: true, isStarter: false, isPitcher: false },
+            'Mooncliff Dreamers': { name: 'D. Lune', hand: 'R', num: 61, pos: 'CF', spd: 92, avg: .294, ops: .884, bbRate: .17, kRate: .19, isFP: true, isStarter: false, isPitcher: false },
+            'Stormhaven Igniters': { name: 'K. Surge', hand: 'R', num: 90, pos: 'SS', spd: 61, avg: .408, ops: .790, bbRate: .21, kRate: .11, isFP: true, isStarter: false, isPitcher: false },
+            'Atlantica Hammerheads': { name: 'B. Crush', hand: 'R', num: 49, pos: 'DH', spd: 33, avg: .247, ops: 1.317, bbRate: .14, kRate: .14, isFP: true, isStarter: false, isPitcher: false },
+            'Farlands Keepers': { name: 'G. Watchman', hand: 'R', num: 94, pos: '1B', spd: 72, avg: .350, ops: .803, bbRate: .16, kRate: .06, isFP: true, isStarter: false, isPitcher: false },
+            'Portaltown Tungsten Cubes': { name: 'Q. Cubert', hand: 'L', num: 67, pos: 'DH', spd: 4, avg: .151, ops: .350, bbRate: 5.98, kRate: .01, isFP: true, isStarter: false, isPitcher: false },
         };
         function getFranchisePlayer(teamName, slotId) { const fp = FRANCHISE_PLAYERS[teamName]; if (!fp) return null; return { id: slotId, name: fp.name, hand: fp.hand, num: fp.num, pos: fp.pos, spd: fp.spd, bbRate: fp.bbRate, kRate: fp.kRate, active: true, inGame: true, isFP: true, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }, avg: fp.avg, ops: fp.ops }; }
 
         const FRANCHISE_PITCHERS = {
-            'Riverdale Redbirds': { name: 'R. Warbler', hand: 'R', num: 18, isStarter: true, role: 'SP', era: 2.79, whip: 0.95, kRate: 0.29, bbRate: 0.15, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.4, isFP: true, isPitcher: true },
-            'Eastville Barracudas': { name: 'E. Fisher', hand: 'L', num: 16, isStarter: true, role: 'SP', era: 2.62, whip: 0.87, kRate: 0.34, bbRate: 0.05, stamina: 110, maxStamina: 110, recoverRate: 9, drainPerPitch: 1.4, isFP: true, isPitcher: true },
-            'Hendersonville Seals': { name: 'B. Harbor', hand: 'L', num: 47, isStarter: false, role: 'RP', era: 2.87, whip: 0.64, kRate: 0.42, bbRate: 0.09, stamina: 100, maxStamina: 105, recoverRate: 18, drainPerPitch: 4.9, isFP: true, isPitcher: true },
-            'Westgate Firespitters': { name: 'D. Blaze', hand: 'R', num: 90, isStarter: false, role: 'RP', era: 3.88, whip: 0.91, kRate: 0.51, bbRate: 0.14, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 4.9, isFP: true, isPitcher: true },
-            'Seaport Ironclads': { name: 'H. Steel', hand: 'R', num: 74, isStarter: true, role: 'SP', era: 2.71, whip: 0.86, kRate: 0.28, bbRate: 0.04, stamina: 100, maxStamina: 105, recoverRate: 18, drainPerPitch: 4.9, isFP: true, isPitcher: true },
-            'Quartz Hollow Craftsmen': { name: 'E. Chisel', hand: 'L', num: 2, isStarter: true, role: 'SP', era: 3.25, whip: 1.09, kRate: 0.31, bbRate: 0.07, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.5, isFP: true, isPitcher: true },
-            'Stonefall Fairies': { name: 'F. Dust', hand: 'R', num: 33, isStarter: false, role: 'RP', era: 2.12, whip: 0.75, kRate: 0.48, bbRate: 0.21, stamina: 100, maxStamina: 110, recoverRate: 18, drainPerPitch: 4.1, isFP: true, isPitcher: true },
-            'Frostford Freeze': { name: 'I. Ice', hand: 'R', num: 13, isStarter: true, role: 'RP', era: 2.85, whip: 0.88, kRate: 0.41, bbRate: 0.09, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 5.3, isFP: true, isPitcher: true },
-            'Zandria Gladiators': { name: 'R. Valor', hand: 'R', num: 10, isStarter: false, role: 'RP', era: 3.18, whip: 1.05, kRate: 0.39, bbRate: 0.14, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 4.8, isFP: true, isPitcher: true },
-            'Brickmoor Serpents': { name: 'S. Coil', hand: 'L', num: 66, isStarter: true, role: 'SP', era: 2.91, whip: 0.91, kRate: 0.24, bbRate: 0.09, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.2, isFP: true, isPitcher: true },
+            'Riverdale Redbirds': { name: 'R. Warbler', hand: 'R', num: 18, isStarter: true, role: 'SP', era: 2.79, whip: .95, kRate: .29, bbRate: .15, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.4, isFP: true, isPitcher: true },
+            'Eastville Barracudas': { name: 'E. Fisher', hand: 'L', num: 16, isStarter: true, role: 'SP', era: 2.62, whip: .87, kRate: .34, bbRate: .05, stamina: 110, maxStamina: 110, recoverRate: 9, drainPerPitch: 1.4, isFP: true, isPitcher: true },
+            'Hendersonville Seals': { name: 'B. Harbor', hand: 'L', num: 47, isStarter: false, role: 'RP', era: 2.87, whip: .64, kRate: .42, bbRate: .09, stamina: 100, maxStamina: 105, recoverRate: 18, drainPerPitch: 4.9, isFP: true, isPitcher: true },
+            'Westgate Firespitters': { name: 'D. Blaze', hand: 'R', num: 90, isStarter: false, role: 'RP', era: 3.88, whip: .91, kRate: .51, bbRate: .14, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 4.9, isFP: true, isPitcher: true },
+            'Seaport Ironclads': { name: 'H. Steel', hand: 'R', num: 74, isStarter: true, role: 'SP', era: 2.71, whip: .86, kRate: .28, bbRate: .04, stamina: 100, maxStamina: 105, recoverRate: 18, drainPerPitch: 4.9, isFP: true, isPitcher: true },
+            'Quartz Hollow Craftsmen': { name: 'E. Chisel', hand: 'L', num: 2, isStarter: true, role: 'SP', era: 3.25, whip: 1.09, kRate: .31, bbRate: .07, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.5, isFP: true, isPitcher: true },
+            'Stonefall Fairies': { name: 'F. Dust', hand: 'R', num: 33, isStarter: false, role: 'RP', era: 2.12, whip: .75, kRate: .48, bbRate: .21, stamina: 100, maxStamina: 110, recoverRate: 18, drainPerPitch: 4.1, isFP: true, isPitcher: true },
+            'Frostford Freeze': { name: 'I. Ice', hand: 'R', num: 13, isStarter: true, role: 'RP', era: 2.85, whip: .88, kRate: .41, bbRate: .09, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 5.3, isFP: true, isPitcher: true },
+            'Zandria Gladiators': { name: 'R. Valor', hand: 'R', num: 10, isStarter: false, role: 'RP', era: 3.18, whip: 1.05, kRate: .39, bbRate: .14, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 4.8, isFP: true, isPitcher: true },
+            'Brickmoor Serpents': { name: 'S. Coil', hand: 'L', num: 66, isStarter: true, role: 'SP', era: 2.91, whip: .91, kRate: .24, bbRate: .09, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.2, isFP: true, isPitcher: true },
         };
         function getFranchisePitcher(teamName, slotId) { const fp = FRANCHISE_PITCHERS[teamName]; if (!fp) return null; return { id: slotId, name: fp.name, hand: fp.hand, num: fp.num, isStarter: fp.isStarter, role: fp.role, kRate: fp.kRate, bbRate: fp.bbRate, whip: fp.whip, era: fp.era, stamina: fp.stamina, maxStamina: fp.maxStamina, recoverRate: fp.recoverRate, drainPerPitch: fp.drainPerPitch, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false, isFP: true }; }
 
@@ -3376,7 +4019,6 @@
                 if (ai) { return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? .15 : .29, sp ? .27 : .3)), bbRate: r2(rnd(.05, .15)), whip: r2(rnd(sp ? .8 : .8, sp ? 1.6 : 1.2)), era: r2(rnd(sp ? 2.4 : 2.6, sp ? 5.0 : 4.7)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false }; }
                 return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? .09 : .23, sp ? .21 : .24)), bbRate: r2(rnd(.09, .23)), whip: r2(rnd(sp ? .98 : .97, sp ? 1.99 : 1.39)), era: r2(rnd(sp ? 3.5 : 3.7, sp ? 6.9 : 6.4)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
             } else {
-                // All-Star
                 if (ai) { return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? .15 : .29, sp ? .27 : .3)), bbRate: r2(rnd(.05, .15)), whip: r2(rnd(sp ? .7 : .7, sp ? 1.5 : 1.1)), era: r2(rnd(sp ? 2.4 : 2.6, sp ? 4.5 : 4.2)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false }; }
                 return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? .07 : .19, sp ? .20 : .24)), bbRate: r2(rnd(.10, .25)), whip: r2(rnd(sp ? 1.1 : .97, sp ? 1.99 : 1.39)), era: r2(rnd(sp ? 3.7 : 3.8, sp ? 6.9 : 6.5)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
             }
@@ -3404,9 +4046,7 @@
             G.oppLineup = [0, 1, 2, 3, 4, 5, 6, 7, 8]; G.maxInning = 9;
             G.you.score = {}; G.you.runs = 0; G.opp.score = {}; G.opp.runs = 0;
             G.lastFlyOut = false; G.tagState = null; G.tagPending = [false, false, false]; G.gameMaxDef = 0;
-            // G.homeTeam is set by launchSeriesGame() based on homePattern for each game
-            // It must NOT be overwritten here (default removed to prevent mid-series flip bugs)
-            if (!G.homeTeam) G.homeTeam = 'you'; // only fallback if never set
+            if (!G.homeTeam) G.homeTeam = 'you';
             const starters = G.you.pitchers.filter(p => p.isStarter); starters.sort((a, b) => b.stamina - a.stamina);
             const bestSP = starters[0]; G.you.pitchers.forEach(p => { p.currentPitcher = false; p.active = false; });
             bestSP.currentPitcher = true; bestSP.active = true;
@@ -3944,7 +4584,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
                 const kPct = Math.round(hb.kRate * 100), bbPct = Math.round(hb.bbRate * 100);
                 const avgDisp = bon > 0 ? `<span style="color:var(--green0);font-weight:600">.${adj}★</span>` : `<span style="color:${hb.avg >= .290 ? 'var(--green0)' : hb.avg >= .250 ? 'var(--tx0)' : 'var(--amber0)'}">.${Math.round(hb.avg * 1000)}</span>`;
                 const opsCol = hb.ops >= .900 ? 'var(--green0)' : hb.ops >= .720 ? 'var(--tx0)' : 'var(--amber0)';
-                const kCol = hb.kRate >= .25 ? 'var(--red0)' : hb.kRate <= .16 ? 'var(--green0)' : 'var(--tx0)';
+                const kCol = hb.kRate <= .15 ? 'var(--red0)' : hb.kRate <= .16 ? 'var(--green0)' : 'var(--tx0)';
                 const bbCol = hb.bbRate >= .14 ? 'var(--green0)' : hb.bbRate <= .08 ? 'var(--amber0)' : 'var(--tx0)';
 
                 const opsDisp = Number(hb.ops).toFixed(3);
@@ -3984,7 +4624,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
                 // Handedness bonus shown as threat (red = higher adjusted avg = harder to get out)
                 const avgDisp = bon > 0 ? `<span style="color:var(--red0);font-weight:600">.${adj}★</span>` : `<span style="color:${hb.avg >= .290 ? 'var(--red0)' : hb.avg >= .250 ? 'var(--tx0)' : 'var(--green0)'}">.${Math.round(hb.avg * 1000)}</span>`;
                 const opsCol = hb.ops >= .900 ? 'var(--red0)' : hb.ops >= .720 ? 'var(--tx0)' : 'var(--green0)';
-                const kCol = hb.kRate >= .25 ? 'var(--green0)' : hb.kRate <= .16 ? 'var(--red0)' : 'var(--tx0)';
+                const kCol = hb.kRate <= .15 ? 'var(--green0)' : hb.kRate <= .16 ? 'var(--red0)' : 'var(--tx0)';
                 const bbCol = hb.bbRate >= .14 ? 'var(--red0)' : hb.bbRate <= .08 ? 'var(--green0)' : 'var(--tx0)';
 
                 const opsDisp = Number(hb.ops).toFixed(3);
