@@ -494,18 +494,24 @@ PICK 3 batters and 3 pitchers to protect for free agency for next year - FP auto
 
 
 ________________________________________
-SHOW ALL 13 NOT JUST 9
-Deadline only shows some pitchers too deadline
+
+TODO
+SHOW ALL 13 pitchers and 13 batters in the new player acquisition section NOT JUST 9
 
 
-SUPER WEIGHT Fantasy pitchers
+GIVE THE FP pitchers better stats. SUPER WEIGHT Fantasy pitchers
 
-Rescale bar chart
+Rescale bar chart - currently gives like a C grade to a really good team?
 
-Current pitcher K% BB%
+Add cells for "Current pitcher" K% BB% only shows whip are era at the moment
 
-Win circles in stoplight mode but were good on original
+After every game the win total is updated. Can you restyle that to have those circles horizontal in the middle. They currenty are up and down to the far left
 
+
+K RATE BB RATE MORE VARIATION NOW THAT VISIBLE
+
+
+_
 Check walks
 
 Dark mode cell gradient
