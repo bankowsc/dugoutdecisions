@@ -511,8 +511,16 @@ After every game the win total is updated. Can you restyle that to have those ci
 K RATE BB RATE MORE VARIATION NOW THAT VISIBLE
 
 
+
+CHANGING DIFFICULTIES UP MAKES IT YOU CANT RESIGN PLAYERS FROM PREVIOUS SEASON AS LOW DIFF.
+
+
 _
+
+Doesnt gen all SP
+
 Check walks
 
 Dark mode cell gradient
 
+Add orderby for all 5 stats!
