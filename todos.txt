@@ -531,6 +531,8 @@ _____________________
 
 2. Orderby stats trade deadline
 
+3. reweight ops
+
 4. Bugs with resigns not simming SP
 
 5. Make sure all stats Cells shown
