@@ -3602,7 +3602,7 @@
             if (r < k) return 'K'; if (r < k + bb) return 'BB';
             if (r < k + bb + bip * babip) { if (Math.random() < 0.05) return 'E'; return hitType(bat); }
             if (Math.random() < 0.05) return 'E';
-            return Math.random() < (0.55 - (bat.ops * 0.22)) ? 'GO' : 'FO';
+            return Math.random() < (0.55 - (bat.ops * 0.15)) ? 'GO' : 'FO';
         }
         function tryXB(runner, ch) { return runner && Math.random() < (runner.spd / 100) * ch; }
 
@@ -3613,12 +3613,44 @@
                 if (nb[2]) { score(nb[2]); nb[2] = null; }
                 let r2s = false;
                 if (nb[1]) { if (outs === 2 && tryXB(nb[1], 0.55)) { score(nb[1]); nb[1] = null; r2s = true; } else { nb[2] = nb[1]; nb[1] = null; } }
-                if (nb[0]) { if (!r2s && !nb[2] && tryXB(nb[0], 0.30)) { nb[2] = nb[0]; nb[0] = null; } else if (!nb[1]) { nb[1] = nb[0]; nb[0] = null; } else { nb[1] = nb[0]; nb[0] = null; } }
+                if (nb[0]) { if (!r2s && !nb[2] && tryXB(nb[0], 0.30)) { nb[2] = nb[0]; nb[0] = null; } else if (!nb[1]) { nb[1] = nb[0]; nb[0] = null; } else { nb[1] = nb[0]; nb[0] = null; } } //FLAG
                 nb[0] = bat;
-            } else if (res === '2B') { if (nb[2]) { score(nb[2]); nb[2] = null; } if (nb[1]) { score(nb[1]); nb[1] = null; } if (nb[0]) { if (tryXB(nb[0], 0.50)) { score(nb[0]); nb[0] = null; } else { nb[2] = nb[0]; nb[0] = null; } } nb[1] = bat; }
+            } else if (res === '2B') {
+                if (nb[2]) { score(nb[2]); nb[2] = null; }
+                if (nb[1]) { score(nb[1]); nb[1] = null; }
+                if (nb[0]) {
+                    const prob = outs === 2 ? 0.75 : 0.50;
+                    if (tryXB(nb[0], prob)) { score(nb[0]); nb[0] = null; }
+                    else { nb[2] = nb[0]; nb[0] = null; }
+                }
+                nb[1] = bat;
+            }
             else if (res === '3B') { [nb[0], nb[1], nb[2]].forEach(x => score(x)); nb[0] = null; nb[1] = null; nb[2] = bat; }
             else if (res === 'HR') { [nb[0], nb[1], nb[2]].forEach(x => score(x)); score(bat); nb[0] = nb[1] = nb[2] = null; }
-            else if (res === 'BB') { if (nb[0] && nb[1] && nb[2]) { score(nb[2]); nb[2] = nb[1]; nb[1] = nb[0]; nb[0] = bat; } else if (nb[0] && nb[1]) { nb[2] = bat; } else if (nb[0]) { nb[1] = bat; } else { nb[0] = bat; } }
+
+            else if (res === 'BB') {
+                // Force runners: each runner only advances if forced by the walk
+                if (nb[0] && nb[1] && nb[2]) {
+                    // Bases loaded: everyone forced, runner on 3rd scores
+                    score(nb[2]);
+                    nb[2] = nb[1];
+                    nb[1] = nb[0];
+                    nb[0] = bat;
+                } else if (nb[0] && nb[1]) {
+                    // Runners on 1st and 2nd: both forced up one base
+                    nb[2] = nb[1];
+                    nb[1] = nb[0];
+                    nb[0] = bat;
+                } else if (nb[0]) {
+                    // Runner on 1st only: forced to 2nd
+                    nb[1] = nb[0];
+                    nb[0] = bat;
+                } else {
+                    // Bases empty (or runner on 2nd/3rd only): batter takes 1st, others stay
+                    nb[0] = bat;
+                }
+            }
+
             return { bases: nb, sc };
         }
 

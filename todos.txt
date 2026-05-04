@@ -524,3 +524,19 @@ Check walks
 Dark mode cell gradient
 
 Add orderby for all 5 stats!
+
+
+_____________________
+1. Orderby stats off season
+
+2. Orderby stats trade deadline
+
+3. If mode changes down NO resigns - add flag too
+
+4. Bugs with resigns not simming SP
+
+5. Make sure all stats Cells shown
+
+6. **FIX WALKS MOVING ORDER BROOO
+
+7. Re weight the trade deadline costs BY DIFFICULTY
