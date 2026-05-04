@@ -531,12 +531,24 @@ _____________________
 
 2. Orderby stats trade deadline
 
-3. If mode changes down NO resigns - add flag too
-
 4. Bugs with resigns not simming SP
 
 5. Make sure all stats Cells shown
+ - standardize num digits everywhere --> bb and k rate and speed leading 0 digit
+ - offseason resign needs bb and k hand and make speed color
+ - trade deadline needs bb k and spd 
+
 
 6. Home order
 
-7. Re weight the trade deadline costs BY DIFFICULTY
+7. Re weight the trade deadline costs BY DIFFICULTY************* more expensivde offseasons
+
+
+POSITIONS NEEDED -
+OF
+INF
+C
+SP
+RP
+
+acquisiton can only replace someone of same position group or a slot 10-13
