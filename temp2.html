@@ -3214,12 +3214,19 @@
         // ══ SEASON SIMULATION ══════════════════════════════════════════════════════
         const SEASON_TOTAL = 162;
         function simOneGame() {
-            const playerWin = Math.random() < 0.5;
+            const s = assessTeamStrength(G.you);
+            const gradeBonus = { 'E': 0.00, 'D': 0.00, 'C': 0.02, 'B': 0.04, 'A': 0.06, 'S': 0.08 };
+            const grade = gradeBonus[s.grade] ?? 0.00;
+
+            const diffOdds = { "Easy": 0.51, "Normal": 0.49, "Hard": 0.47, "All-Star": 0.45 };
+            const playerWin = Math.random() < ((diffOdds[SEASON.difficulty] ?? 0.50) + grade);
+
             if (playerWin) SEASON.records[SEASON.playerTeam].w++; else SEASON.records[SEASON.playerTeam].l++;
             ALL_TEAMS_FLAT.forEach(t => { if (t === SEASON.playerTeam) return; const r = SEASON.records[t]; if (r.w + r.l < SEASON_TOTAL) { if (Math.random() < 0.5) r.w++; else r.l++; } });
             SEASON.gamesPlayed++; if (SEASON.managerCooldown > 0) SEASON.managerCooldown--;
             const r = SEASON.records[SEASON.playerTeam]; SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result: r.w > (r.w + r.l - 1) ? 'W' : 'L' });
-            // Fix: determine win based on increment
+
+            // determine win based on increment
             const wasWin = playerWin; SEASON.seasonLog[0].result = wasWin ? 'W' : 'L';
             return { playerWin };
         }
@@ -3828,7 +3835,8 @@
                 document.getElementById('go-series-pill').textContent = `Series: You ${myW}–${oppW} ${opp.name}`;
             }
             starOfGame(youWon); renderBadges('gameover-badges'); renderChampCounter('champ-counter-go');
-            let dots = '<div class="series-tracker" style="justify-content:center">';
+            let dots = '<div class="series-tracker" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6px">';
+
             if (CURRENT_GAME_SERIES) {
                 const s = CURRENT_GAME_SERIES.series; const myW = s.home.name === SEASON.playerTeam ? s.wins.home : s.wins.away; const oppW = s.home.name === SEASON.playerTeam ? s.wins.away : s.wins.home;
                 for (let i = 0; i < s.format; i++) { let cls = 'win-dot'; if (i < myW) cls += ' you'; else if (i >= s.format - oppW) cls += ' opp'; dots += `<div class="${cls}"></div>`; }
