@@ -2666,7 +2666,10 @@
         const LEAGUE_STRUCTURE = { 'Realistic League': { 'RL East': ['Lakewood Pilgrims', 'Springfield Crabs', 'Riverdale Redbirds', 'Oakburg Beavers', 'Eastville Barracudas'], 'RL Central': ['Millard Pioneers', 'Millport Machines', 'Centertown Blizzard', 'Hendersonville Seals', 'Lemonte Bolts'], 'RL West': ['Sunnydale Herons', 'Westgate Firespitters', 'Summit Phantoms', 'Seaport Ironclads', 'Washborough Ostrich Riders'] }, 'Fantasy League': { 'FL East': ['Quartz Hollow Craftsmen', 'Crestmere Firehawks', 'Mystridge Princes', 'Norwyn Bay Seacats', 'Stonefall Fairies'], 'FL Central': ['Silverkeep Doves', 'Ashbourne Wizards', 'Frostford Freeze', 'Mooncliff Dreamers', 'Stormhaven Igniters'], 'FL West': ['Zandria Gladiators', 'Brickmoor Serpents', 'Atlantica Hammerheads', 'Farlands Keepers', 'Portaltown Tungsten Cubes'] } };
         const ALL_TEAMS_FLAT = []; const TEAM_META = {};
         Object.entries(LEAGUE_STRUCTURE).forEach(([lg, divs]) => { Object.entries(divs).forEach(([div, teams]) => { teams.forEach(t => { ALL_TEAMS_FLAT.push(t); TEAM_META[t] = { league: lg, division: div }; }); }); });
-        const POSITIONS = ['C ', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH'];
+
+        const BATTER_POSITIONS = ['OF', 'OF', 'OF', 'INF', 'INF', 'INF', 'INF', 'C', 'UTIL', 'UTIL', 'UTIL', 'UTIL', 'UTIL'];
+        // Slot layout: slots 0-2 = OF, slots 3-6 = INF, slot 7 = C, slots 8-12 = UTIL (flex)
+
         const NF = ['Carter', 'Eric', 'James', 'Tung', 'Mason', 'Morgan', 'Rickey', 'William', 'Davis', 'Wilson', 'Jack', 'Thompson', 'Robinson', 'Hayes', 'Parker', 'Jackson', 'Miguel', 'Ivan', 'Rodrigo', 'Sam', 'Bob', 'Douglass', 'Archibald', 'Stu', 'Zack', 'Quinn', 'Barry', 'Kevin', 'Johnathan', 'Yung', 'David', 'Andruw', 'Barney', 'Drake', 'Easton', 'Fred', 'Gino', 'Harvey', 'Jesus', 'Zeke', 'Tristan', 'Russell', 'Steven'];
         const NL_NAMES = ['Smith', 'Johnson', 'Sahur', 'Brown', 'Lee', 'Garcia', 'Rivera', 'Miller', 'Chen', 'Moore', 'Williams', 'Taylor', 'Anderson', 'Thomas', 'Torres', 'Nguyen', 'White', 'Martinez', 'Harris', 'Clark', 'Andrevski', 'Walker', 'Perez', 'Black', 'McCormick', 'Turner', 'Patel', 'Schmirkovski', 'Mrokonov', 'Yao', 'Ling', 'Hardson', 'Malianno', 'Torilli', 'Park', 'Kim', 'Hayes', 'Colon', 'Rodriguez', 'McDonald'];
 
@@ -2960,12 +2963,42 @@
                 }
             }
 
-            let pitcherReplaceIdx = 0;
+            // Place resigned SPs into slots 0-4, resigned RPs into slots 5-12
             for (const p of resignedPitchers) {
-                while (pitcherReplaceIdx < G.you.pitchers.length && G.you.pitchers[pitcherReplaceIdx].isFP) pitcherReplaceIdx++;
-                if (pitcherReplaceIdx < G.you.pitchers.length) {
-                    G.you.pitchers[pitcherReplaceIdx] = { ...p, id: pitcherReplaceIdx, stamina: 100, maxStamina: p.maxStamina || 100, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
-                    pitcherReplaceIdx++;
+                const startSlot = p.isStarter ? 0 : 5;
+                const endSlot = p.isStarter ? 5 : G.you.pitchers.length;
+                let placed = false;
+                for (let i = startSlot; i < endSlot; i++) {
+                    if (!G.you.pitchers[i].isFP) {
+                        G.you.pitchers[i] = {
+                            ...p,
+                            id: i,
+                            isStarter: p.isStarter,   // preserve the resigned pitcher's role
+                            role: p.role,
+                            stamina: 100,
+                            maxStamina: p.maxStamina || 100,
+                            pitchesThisGame: 0,
+                            usedThisGame: false,
+                            active: false,
+                            currentPitcher: false
+                        };
+                        placed = true;
+                        break;
+                    }
+                }
+                // Fallback: if no open slot of the right type exists, find any non-FP slot
+                // that matches the role (shouldn't happen with valid roster, but safety net)
+                if (!placed) {
+                    for (let i = 0; i < G.you.pitchers.length; i++) {
+                        if (!G.you.pitchers[i].isFP && G.you.pitchers[i].isStarter === p.isStarter) {
+                            G.you.pitchers[i] = {
+                                ...p, id: i, isStarter: p.isStarter, role: p.role,
+                                stamina: 100, maxStamina: p.maxStamina || 100,
+                                pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false
+                            };
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -3008,9 +3041,13 @@
 
         function genAcqHitter(tier) {
             const tiers = { elite: { avgMin: .310, avgMax: .345, opsMin: .950, opsMax: 1.100, spdMin: 70, spdMax: 98, costMin: 40, costMax: 55 }, solid: { avgMin: .275, avgMax: .309, opsMin: .800, opsMax: .949, spdMin: 45, spdMax: 89, costMin: 20, costMax: 35 }, depth: { avgMin: .240, avgMax: .274, opsMin: .680, opsMax: .799, spdMin: 25, spdMax: 75, costMin: 8, costMax: 18 } };
-            const t = tiers[tier]; const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R'; const pos = pick(POSITIONS); const fn = pick(NF), ln = pick(NL_NAMES);
+            const t = tiers[tier];
+            const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
+            const pos = pick(['OF', 'OF', 'INF', 'INF', 'C', 'UTIL']); // weighted toward OF/INF
+            const fn = pick(NF), ln = pick(NL_NAMES);
             return { id: Math.floor(Math.random() * 90000) + 10000, name: fn[0] + '. ' + ln, hand, num: rndI(1, 99), pos, spd: rndI(t.spdMin, t.spdMax), bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .28)), avg: r3(rnd(t.avgMin, t.avgMax)), ops: r3(rnd(t.opsMin, t.opsMax)), active: true, inGame: false, isFP: false, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }, _acqTier: tier, _acqCost: rndI(t.costMin, t.costMax), _acqType: 'hitter' };
         }
+
         function genAcqPitcher(tier) {
             const tiers = { aceSP: { eraMin: 2.3, eraMax: 3.0, whipMin: .80, whipMax: 1.00, kMin: .28, kMax: .34, bbMin: .05, bbMax: .10, costMin: 45, costMax: 60, sp: true }, midSP: { eraMin: 3.1, eraMax: 4.2, whipMin: 1.00, whipMax: 1.20, kMin: .18, kMax: .26, bbMin: .06, bbMax: .16, costMin: 20, costMax: 35, sp: true }, qualRP: { eraMin: 2.5, eraMax: 3.5, whipMin: .75, whipMax: 1.05, kMin: .30, kMax: .42, bbMin: .07, bbMax: .15, costMin: 18, costMax: 28, sp: false }, depthRP: { eraMin: 3.6, eraMax: 5.0, whipMin: 1.10, whipMax: 1.40, kMin: .18, kMax: .28, bbMin: .09, bbMax: .22, costMin: 6, costMax: 15, sp: false } };
             const t = tiers[tier]; const hand = Math.random() > .3 ? 'R' : 'L'; const fn = pick(NF), ln = pick(NL_NAMES);
@@ -3108,14 +3145,32 @@
                 h += `<div class="acq-player-card${!canAfford ? ' too-expensive' : ''}">`;
                 h += `<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap"><span style="font-weight:600;font-size:12px;font-family:'DM Mono',monospace;flex:1">${p.name}</span><span class="chip ${tC[p._acqTier]}">${tL[p._acqTier]}</span><span class="chip chip-gold">${p._acqCost} pts</span></div>`;
                 h += `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">`;
-                if (isH) { h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span><span class="chip ${p.avg >= .290 ? 'chip-green' : p.avg >= .250 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">.${Math.round(p.avg * 1000)}</span><span class="chip ${p.ops >= .900 ? 'chip-green' : p.ops >= .700 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">OPS ${p.ops}</span><span class="chip ${spdChip(p.spd)}" style="font-size:9px">${p.spd}spd</span><span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${Math.round(p.kRate * 100)}%</span><span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${Math.round(p.bbRate * 100)}%</span><span class="chip chip-blue" style="font-size:9px">${p.hand}</span>`; } // Player 
-                else { h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span><span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span><span class="chip ${p.era < 3.0 ? 'chip-green' : p.era < 5.0 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">ERA ${p.era}</span><span class="chip ${p.whip < 1.0 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${p.whip}</span><span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${Math.round(p.kRate * 100)}%</span><span class="chip chip-gray" style="font-size:9px">BB ${Math.round(p.bbRate * 100)}%</span>`; } // Pitcher
+                if (isH) { h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span><span class="chip ${p.avg >= .290 ? 'chip-green' : p.avg >= .250 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">.${Math.round(p.avg * 1000)}</span><span class="chip ${p.ops >= .900 ? 'chip-green' : p.ops >= .700 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">OPS ${p.ops}</span><span class="chip ${spdChip(p.spd)}" style="font-size:9px">${p.spd}spd</span><span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${Math.round(p.kRate * 100)}%</span><span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${Math.round(p.bbRate * 100)}%</span><span class="chip chip-blue" style="font-size:9px">${p.hand}</span>`; }
+                else { h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span><span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span><span class="chip ${p.era < 3.0 ? 'chip-green' : p.era < 5.0 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">ERA ${p.era}</span><span class="chip ${p.whip < 1.0 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${p.whip}</span><span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${Math.round(p.kRate * 100)}%</span><span class="chip chip-gray" style="font-size:9px">BB ${Math.round(p.bbRate * 100)}%</span>`; }
                 h += `</div>`;
                 if (canAfford) {
                     h += `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select id="acq-replace-${idx}" style="flex:1;min-width:120px;font-size:11px">`;
-                    if (isH) { G.you.hitters.forEach((hp, hi) => { const dis = hp.isFP ? 'disabled' : ''; h += `<option value="h_${hi}" ${dis}>${hp.name} (${hp.pos})${hp.isFP ? ' [★FP]' : ''}</option>`; }); }
-                    else { G.you.pitchers.forEach((pp, pi) => { const dis = pp.isFP ? 'disabled' : ''; h += `<option value="p_${pi}" ${dis}>${pp.name} (${pp.role})${pp.isFP ? ' [★FP]' : ''}</option>`; }); }
+                    if (isH) {
+                        const allowedSlots = getReplaceableHitterSlots(G.you.hitters, p.pos);
+                        G.you.hitters.forEach((hp, hi) => {
+                            const allowed = allowedSlots[hi];
+                            const dis = !allowed ? 'disabled' : '';
+                            const reason = hp.isFP ? ' [★FP]' : !allowed ? ' [constraint]' : '';
+                            h += `<option value="h_${hi}" ${dis}>${hp.name} (${hp.pos})${reason}</option>`;
+                        });
+                    } else {
+                        const allowedSlots = getReplaceablePitcherSlots(G.you.pitchers, p.isStarter);
+                        G.you.pitchers.forEach((pp, pi) => {
+                            const allowed = allowedSlots[pi];
+                            const dis = !allowed ? 'disabled' : '';
+                            const reason = pp.isFP ? ' [★FP]' : !allowed ? ' [constraint]' : '';
+                            h += `<option value="p_${pi}" ${dis}>${pp.name} (${pp.role})${reason}</option>`;
+                        });
+                    }
                     h += `</select><button class="btn-amber btn-sm" onclick="acquirePlayer(${idx},false)">Acquire</button></div>`;
+                    // Show constraint note
+                    if (isH) h += `<div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace;margin-top:3px">${p.pos} player — can only replace slots that keep ≥3 OF, ≥4 INF, ≥1 C</div>`;
+                    else h += `<div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace;margin-top:3px">${p.role} — can only replace ${p.isStarter ? 'SP (min 5 SP required)' : 'RP (min 8 RP required)'}</div>`;
                 } else { h += `<div style="font-size:11px;color:var(--tx3);font-family:'DM Mono',monospace">⚠️ Need ${p._acqCost} pts (have ${rem})</div>`; }
                 h += `</div>`;
             });
@@ -3128,6 +3183,16 @@
             const selEl = document.getElementById(`acq-replace-${poolIdx}`); if (!selEl) return;
             const val = selEl.value; if (!val) return;
             const isH = p._acqType === 'hitter'; const idx = parseInt(val.split('_')[1]);
+
+            // Constraint double-check
+            if (isH) {
+                const allowed = getReplaceableHitterSlots(G.you.hitters, p.pos);
+                if (!allowed[idx]) { alert(`Cannot replace that player — would violate roster minimums (3 OF, 4 INF, 1 C).`); return; }
+            } else {
+                const allowed = getReplaceablePitcherSlots(G.you.pitchers, p.isStarter);
+                if (!allowed[idx]) { alert(`Cannot replace that pitcher — would violate roster minimums (5 SP, 8 RP).`); return; }
+            }
+
             if (isH) { if (G.you.hitters[idx].isFP) { alert('Franchise players cannot be traded away.'); return; } const out = G.you.hitters[idx]; G.you.hitters[idx] = { ...p, id: idx, inGame: out.inGame, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } }; const txn = `✓ Acquired ${p.name} (${p.pos}) — replaced ${out.name} · Cost: ${p._acqCost} pts · Remaining: ${rem - p._acqCost}`; SEASON.offseasonLog.push(txn); SEASON.budgetSpent += p._acqCost; pool.splice(poolIdx, 1); addTxnLog(txn, isDeadline); }
             else { if (G.you.pitchers[idx].isFP) { alert('Franchise players cannot be traded away.'); return; } const out = G.you.pitchers[idx]; G.you.pitchers[idx] = { ...p, id: idx, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false, stamina: 100, maxStamina: 100 }; const txn = `✓ Acquired ${p.name} (${p.role}) — replaced ${out.name} · Cost: ${p._acqCost} pts · Remaining: ${rem - p._acqCost}`; SEASON.offseasonLog.push(txn); SEASON.budgetSpent += p._acqCost; pool.splice(poolIdx, 1); addTxnLog(txn, isDeadline); }
             if (isDeadline) renderDeadlineContent(); else renderOffseasonScreen();
@@ -3219,10 +3284,26 @@
                     h += `</div>`;
                     if (canAfford) {
                         h += `<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap"><select id="acq-replace-${idx}" style="flex:1;min-width:100px;font-size:11px">`;
-                        if (isH) { G.you.hitters.forEach((hp, hi) => { const dis = hp.isFP ? 'disabled' : ''; h += `<option value="h_${hi}" ${dis}>${hp.name}${hp.isFP ? ' [★FP]' : ''}</option>`; }); }
-                        else { G.you.pitchers.forEach((pp, pi) => { const dis = pp.isFP ? 'disabled' : ''; h += `<option value="p_${pi}" ${dis}>${pp.name} (${pp.role})${pp.isFP ? ' [★FP]' : ''}</option>`; }); }
+                        if (isH) {
+                            const allowedSlots = getReplaceableHitterSlots(G.you.hitters, p.pos);
+                            G.you.hitters.forEach((hp, hi) => {
+                                const allowed = allowedSlots[hi];
+                                const dis = !allowed ? 'disabled' : '';
+                                const reason = hp.isFP ? ' [★FP]' : !allowed ? ' [constraint]' : '';
+                                h += `<option value="h_${hi}" ${dis}>${hp.name} (${hp.pos})${reason}</option>`;
+                            });
+                        } else {
+                            const allowedSlots = getReplaceablePitcherSlots(G.you.pitchers, p.isStarter);
+                            G.you.pitchers.forEach((pp, pi) => {
+                                const allowed = allowedSlots[pi];
+                                const dis = !allowed ? 'disabled' : '';
+                                const reason = pp.isFP ? ' [★FP]' : !allowed ? ' [constraint]' : '';
+                                h += `<option value="p_${pi}" ${dis}>${pp.name} (${pp.role})${reason}</option>`;
+                            });
+                        }
                         h += `</select><button class="btn-amber btn-sm" onclick="acquirePlayer(${idx},true)">Acquire</button></div>`;
-                    } else { h += `<div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">Need ${p._acqCost} pts</div>`; }
+                    }
+                    else { h += `<div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">Need ${p._acqCost} pts</div>`; }
                     h += `</div>`;
                 });
                 h += `</div>`;
@@ -3536,9 +3617,26 @@
 
         // FRANCHISE PLAYERS
         const FRANCHISE_PLAYERS = {
-            'Lakewood Pilgrims': { name: 'J. Pilgrim', hand: 'R', num: 99, pos: 'C ', spd: 60, avg: .320, ops: .815, bbRate: .07, kRate: .24 }, 'Springfield Crabs': { name: 'T. Crabman', hand: 'S', num: 45, pos: 'SS', spd: 85, avg: .270, ops: 1.077, bbRate: .19, kRate: .11 }, 'Oakburg Beavers': { name: 'D. Bober', hand: 'L', num: 67, pos: 'LF', spd: 94, avg: .309, ops: .971, bbRate: .12, kRate: .14 }, 'Millard Pioneers': { name: 'C. Trail', hand: 'R', num: 29, pos: 'RF', spd: 95, avg: .278, ops: .752, bbRate: .07, kRate: .26 }, 'Millport Machines': { name: 'S. Torque', hand: 'R', num: 88, pos: '1B', spd: 40, avg: .210, ops: 1.334, bbRate: .12, kRate: .20 }, 'Centertown Blizzard': { name: 'F. Chill', hand: 'L', num: 34, pos: '3B', spd: 65, avg: .330, ops: .821, bbRate: .14, kRate: .19 }, 'Lemonte Bolts': { name: 'V. Sparks', hand: 'S', num: 90, pos: 'DH', spd: 41, avg: .265, ops: 1.770, bbRate: .13, kRate: .21 },
-            'Sunnydale Herons': { name: 'A. Wing', hand: 'R', num: 76, pos: 'C ', spd: 48, avg: .348, ops: .510, bbRate: .18, kRate: .20 }, 'Summit Phantoms': { name: 'N. Shade', hand: 'R', num: 97, pos: 'CF', spd: 92, avg: .315, ops: .920, bbRate: .18, kRate: .18 }, 'Washborough Ostrich Riders': { name: 'P. Stride', hand: 'L', num: 38, pos: 'CF', spd: 115, avg: .285, ops: .603, bbRate: .18, kRate: .16 }, 'Crestmere Firehawks': { name: 'E. Fuego', hand: 'R', num: 54, pos: '2B', spd: 91, avg: .281, ops: .720, bbRate: .12, kRate: .21 }, 'Mystridge Princes': { name: 'L. Crown', hand: 'L', num: 44, pos: 'C ', spd: 25, avg: .265, ops: 1.195, bbRate: .13, kRate: .18 }, 'Norwyn Bay Seacats': { name: 'T. Tide', hand: 'R', num: 99, pos: '3B', spd: 55, avg: .341, ops: .963, bbRate: .11, kRate: .19 }, 'Silverkeep Doves': { name: 'S. Peace', hand: 'R', num: 21, pos: 'RF', spd: 42, avg: .335, ops: .643, bbRate: .28, kRate: .20 },
-            'Ashbourne Wizards': { name: 'Z. Hex', hand: 'R', num: 69, pos: 'C ', spd: 37, avg: .299, ops: .909, bbRate: .24, kRate: .09 }, 'Mooncliff Dreamers': { name: 'D. Lune', hand: 'R', num: 61, pos: 'CF', spd: 92, avg: .294, ops: .884, bbRate: .17, kRate: .19 }, 'Stormhaven Igniters': { name: 'K. Surge', hand: 'R', num: 90, pos: 'SS', spd: 61, avg: .408, ops: .790, bbRate: .21, kRate: .11 }, 'Atlantica Hammerheads': { name: 'B. Crush', hand: 'R', num: 49, pos: 'DH', spd: 33, avg: .247, ops: 1.317, bbRate: .14, kRate: .14 }, 'Farlands Keepers': { name: 'G. Watchman', hand: 'R', num: 94, pos: '1B', spd: 72, avg: .350, ops: .803, bbRate: .16, kRate: .06 }, 'Portaltown Tungsten Cubes': { name: 'Q. Cubert', hand: 'L', num: 67, pos: 'DH', spd: 4, avg: .151, ops: .350, bbRate: 5.98, kRate: .01 }
+            'Lakewood Pilgrims': { name: 'J. Pilgrim', hand: 'R', num: 99, pos: 'C', spd: 60, avg: .320, ops: .815, bbRate: .07, kRate: .24 },
+            'Springfield Crabs': { name: 'T. Crabman', hand: 'S', num: 45, pos: 'INF', spd: 85, avg: .270, ops: 1.077, bbRate: .19, kRate: .11 },
+            'Oakburg Beavers': { name: 'D. Bober', hand: 'L', num: 67, pos: 'OF', spd: 94, avg: .309, ops: .971, bbRate: .12, kRate: .14 },
+            'Millard Pioneers': { name: 'C. Trail', hand: 'R', num: 29, pos: 'OF', spd: 95, avg: .278, ops: .752, bbRate: .07, kRate: .26 },
+            'Millport Machines': { name: 'S. Torque', hand: 'R', num: 88, pos: 'INF', spd: 40, avg: .210, ops: 1.334, bbRate: .12, kRate: .20 },
+            'Centertown Blizzard': { name: 'F. Chill', hand: 'L', num: 34, pos: 'INF', spd: 65, avg: .330, ops: .821, bbRate: .14, kRate: .19 },
+            'Lemonte Bolts': { name: 'V. Sparks', hand: 'S', num: 90, pos: 'UTIL', spd: 41, avg: .265, ops: 1.770, bbRate: .13, kRate: .21 },
+            'Sunnydale Herons': { name: 'A. Wing', hand: 'R', num: 76, pos: 'C', spd: 48, avg: .348, ops: .510, bbRate: .18, kRate: .20 },
+            'Summit Phantoms': { name: 'N. Shade', hand: 'R', num: 97, pos: 'OF', spd: 92, avg: .315, ops: .920, bbRate: .18, kRate: .18 },
+            'Washborough Ostrich Riders': { name: 'P. Stride', hand: 'L', num: 38, pos: 'OF', spd: 115, avg: .285, ops: .603, bbRate: .18, kRate: .16 },
+            'Crestmere Firehawks': { name: 'E. Fuego', hand: 'R', num: 54, pos: 'INF', spd: 91, avg: .281, ops: .720, bbRate: .12, kRate: .21 },
+            'Mystridge Princes': { name: 'L. Crown', hand: 'L', num: 44, pos: 'C', spd: 25, avg: .265, ops: 1.195, bbRate: .13, kRate: .18 },
+            'Norwyn Bay Seacats': { name: 'T. Tide', hand: 'R', num: 99, pos: 'INF', spd: 55, avg: .341, ops: .963, bbRate: .11, kRate: .19 },
+            'Silverkeep Doves': { name: 'S. Peace', hand: 'R', num: 21, pos: 'OF', spd: 42, avg: .335, ops: .643, bbRate: .28, kRate: .20 },
+            'Ashbourne Wizards': { name: 'Z. Hex', hand: 'R', num: 69, pos: 'C', spd: 37, avg: .299, ops: .909, bbRate: .24, kRate: .09 },
+            'Mooncliff Dreamers': { name: 'D. Lune', hand: 'R', num: 61, pos: 'OF', spd: 92, avg: .294, ops: .884, bbRate: .17, kRate: .19 },
+            'Stormhaven Igniters': { name: 'K. Surge', hand: 'R', num: 90, pos: 'INF', spd: 61, avg: .408, ops: .790, bbRate: .21, kRate: .11 },
+            'Atlantica Hammerheads': { name: 'B. Crush', hand: 'R', num: 49, pos: 'UTIL', spd: 33, avg: .247, ops: 1.317, bbRate: .14, kRate: .14 },
+            'Farlands Keepers': { name: 'G. Watchman', hand: 'R', num: 94, pos: 'INF', spd: 72, avg: .350, ops: .803, bbRate: .16, kRate: .06 },
+            'Portaltown Tungsten Cubes': { name: 'Q. Cubert', hand: 'L', num: 67, pos: 'UTIL', spd: 4, avg: .151, ops: .350, bbRate: 5.98, kRate: .01 }
         };
         function getFranchisePlayer(teamName, slotId) { const fp = FRANCHISE_PLAYERS[teamName]; if (!fp) return null; return { id: slotId, name: fp.name, hand: fp.hand, num: fp.num, pos: fp.pos, spd: fp.spd, bbRate: fp.bbRate, kRate: fp.kRate, active: true, inGame: true, isFP: true, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }, avg: fp.avg, ops: fp.ops }; }
 
@@ -3558,17 +3656,35 @@
         };
         function getFranchisePitcher(teamName, slotId) { const fp = FRANCHISE_PITCHERS[teamName]; if (!fp) return null; return { id: slotId, name: fp.name, hand: fp.hand, num: fp.num, isStarter: fp.isStarter, role: fp.role, kRate: fp.kRate, bbRate: fp.bbRate, whip: fp.whip, era: fp.era, stamina: fp.stamina, maxStamina: fp.maxStamina, recoverRate: fp.recoverRate, drainPerPitch: fp.drainPerPitch, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false, isFP: true }; }
 
-        function genH(i, ai) { const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R'; const num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES), spd = rndI(15, 98), pos = POSITIONS[i] || pick(POSITIONS); const b = { id: i, name: fn[0] + '. ' + ln, hand, num, pos, spd, bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .30)), active: true, inGame: i < 9, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } }; if (ai) { b.avg = r3(rnd(.230, .335)); b.ops = r3(rnd(.620, .999)); } else { b.avg = r3(rnd(.215, .325)); b.ops = r3(rnd(.640, .980)); } return b; }
+        function genH(i, ai) {
+            const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
+            const num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES), spd = rndI(15, 98);
+            // Assign position group based on slot index
+            let pos;
+            if (i < 3) pos = 'OF';
+            else if (i < 7) pos = 'INF';
+            else if (i === 7) pos = 'C';
+            else pos = pick(['OF', 'INF', 'C', 'UTIL']);  // bench/flex slots
+            const b = {
+                id: i, name: fn[0] + '. ' + ln, hand, num, pos, spd,
+                bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .30)),
+                active: true, inGame: i < 9,
+                stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }
+            };
+            if (ai) { b.avg = r3(rnd(.230, .335)); b.ops = r3(rnd(.620, .999)); }
+            else { b.avg = r3(rnd(.215, .325)); b.ops = r3(rnd(.640, .980)); }
+            return b;
+        }
+
         function genP(i, ai) {
-            const sp = i < 5, hand = Math.random() > .3 ? 'R' : 'L', num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES);
+            const sp = i < 5;  // slots 0-4 = SP, 5-12 = RP
+            const hand = Math.random() > .3 ? 'R' : 'L', num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES);
             const d = SEASON.difficulty;
             if (d === 'Easy') {
                 if (ai) return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? .08 : .15, sp ? .25 : .32)), bbRate: r2(rnd(.08, .23)), whip: r2(rnd(sp ? 0.95 : 0.95, sp ? 1.95 : 1.59)), era: r2(rnd(sp ? 3.1 : 3.2, sp ? 6.9 : 6.4)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
                 return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? 0.14 : 0.21, sp ? 0.31 : 0.38)), bbRate: r2(rnd(.05, .17)), whip: r2(rnd(sp ? 0.80 : 0.80, sp ? 1.60 : 1.20)), era: r2(rnd(sp ? 2.4 : 2.6, sp ? 5.0 : 4.7)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
             }
-
             if (d === 'Normal') return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? 0.1 : .17, sp ? .27 : .34)), bbRate: r2(rnd(.07, .20)), whip: r2(rnd(sp ? 0.90 : 0.90, sp ? 1.80 : 1.30)), era: r2(rnd(sp ? 2.9 : 2.7, sp ? 5.9 : 5.4)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
-
             if (d === 'Hard') {
                 if (ai) return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? 0.12 : 0.19, sp ? 0.29 : 0.36)), bbRate: r2(rnd(.06, .18)), whip: r2(rnd(sp ? 0.86 : 0.85, sp ? 1.60 : 1.20)), era: r2(rnd(sp ? 2.5 : 2.6, sp ? 5.0 : 4.7)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
                 return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? .09 : .16, sp ? .26 : .33)), bbRate: r2(rnd(.07, .22)), whip: r2(rnd(sp ? 0.88 : 0.97, sp ? 1.89 : 1.39)), era: r2(rnd(sp ? 2.9 : 2.8, sp ? 6.2 : 5.9)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
@@ -3577,11 +3693,82 @@
             if (ai) return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? 0.14 : 0.21, sp ? 0.31 : 0.38)), bbRate: r2(rnd(.06, .18)), whip: r2(rnd(sp ? 0.79 : 0.80, sp ? 1.50 : 1.16)), era: r2(rnd(sp ? 2.4 : 2.6, sp ? 4.8 : 4.4)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
             return { id: i, name: fn[0] + '. ' + ln, hand, num, isStarter: sp, role: sp ? 'SP' : 'RP', kRate: r2(rnd(sp ? 0.07 : 0.19, sp ? 0.25 : 0.32)), bbRate: r2(rnd(.07, .24)), whip: r2(rnd(sp ? 0.94 : 0.92, sp ? 1.95 : 1.49)), era: r2(rnd(sp ? 3.0 : 2.9, sp ? 6.5 : 6.3)), stamina: 100, maxStamina: 100, recoverRate: sp ? 8 : 18, drainPerPitch: sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false };
         }
+
+        // ── ROSTER CONSTRAINT HELPERS ──
+        const ROSTER_MINS = { OF: 3, INF: 4, C: 1 };
+        const SP_COUNT = 5, RP_COUNT = 8;
+
+        function getPosGroup(pos) {
+            if (pos === 'OF') return 'OF';
+            if (pos === 'INF') return 'INF';
+            if (pos === 'C') return 'C';
+            return 'UTIL'; // flex/bench
+        }
+
+        // Returns which hitter indices can be replaced by a new player of posGroup
+        // without violating minimums. posGroup = 'OF'|'INF'|'C'|'UTIL'
+        function getReplaceableHitterSlots(hitters, incomingPosGroup) {
+            // Count current OF, INF, C in lineup
+            const counts = { OF: 0, INF: 0, C: 0, UTIL: 0 };
+            hitters.forEach(h => { counts[getPosGroup(h.pos)] = (counts[getPosGroup(h.pos)] || 0) + 1; });
+
+            return hitters.map((h, i) => {
+                if (h.isFP) return false; // can never replace FP
+                const outGroup = getPosGroup(h.pos);
+                // Simulate removing this player
+                const afterCounts = { ...counts };
+                afterCounts[outGroup]--;
+                // Then adding the incoming player
+                afterCounts[incomingPosGroup] = (afterCounts[incomingPosGroup] || 0) + 1;
+                // Check minimums are still met
+                for (const [grp, min] of Object.entries(ROSTER_MINS)) {
+                    if ((afterCounts[grp] || 0) < min) return false;
+                }
+                return true;
+            });
+        }
+
+        // Returns which pitcher indices can be replaced
+        // incoming isStarter = bool
+        function getReplaceablePitcherSlots(pitchers, incomingIsStarter) {
+            const spCount = pitchers.filter(p => p.isStarter).length;
+            const rpCount = pitchers.filter(p => !p.isStarter).length;
+
+            return pitchers.map((p, i) => {
+                if (p.isFP) return false;
+                const outIsSP = p.isStarter;
+                const afterSP = spCount + (incomingIsStarter ? 1 : 0) - (outIsSP ? 1 : 0);
+                const afterRP = rpCount + (!incomingIsStarter ? 1 : 0) - (!outIsSP ? 1 : 0);
+                if (afterSP < SP_COUNT) return false;
+                if (afterRP < RP_COUNT) return false;
+                return true;
+            });
+        }
+
+
         function genTeam(name, reuse, ai) {
-            if (reuse) { const h = reuse.hitters.map(p => ({ ...p, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }, inGame: false, active: true })); const pi = reuse.pitchers.map(p => ({ ...p, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false })); return { name, hitters: h, pitchers: pi, score: {}, runs: 0 }; }
-            const hitters = Array.from({ length: 13 }, (_, i) => { const fp = getFranchisePlayer(name, i); if (i === 3 && fp) return fp; return genH(i, ai); });
+            if (reuse) {
+                const h = reuse.hitters.map(p => ({ ...p, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }, inGame: false, active: true }));
+                const pi = reuse.pitchers.map(p => ({ ...p, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false }));
+                return { name, hitters: h, pitchers: pi, score: {}, runs: 0 };
+            }
+            // Generate 13 hitters respecting position slots
+            const hitters = Array.from({ length: 13 }, (_, i) => genH(i, ai));
+
+            // Apply franchise hitter (replaces slot 3 = first INF slot)
+            const fp = getFranchisePlayer(name, 3);
+            if (fp) hitters[3] = fp;
+
+            // Generate 13 pitchers: slots 0-4 = SP, 5-12 = RP
             const pitchers = Array.from({ length: 13 }, (_, i) => genP(i, ai));
-            const fpPit = getFranchisePitcher(name, 0); if (fpPit) { const slot = fpPit.isStarter ? 1 : 5; pitchers[slot] = { ...fpPit, id: slot }; }
+
+            // Apply franchise pitcher
+            const fpPit = getFranchisePitcher(name, 0);
+            if (fpPit) {
+                const slot = fpPit.isStarter ? 1 : 5;
+                pitchers[slot] = { ...fpPit, id: slot };
+            }
+
             return { name, hitters, pitchers, score: {}, runs: 0 };
         }
 

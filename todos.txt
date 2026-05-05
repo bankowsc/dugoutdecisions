@@ -533,13 +533,10 @@ _____________________
 
 3. reweight ops
 
-4. Bugs with resigns not simming SP
-
 5. Make sure all stats Cells shown
  - standardize num digits everywhere --> bb and k rate and speed leading 0 digit
  - offseason resign needs bb and k hand and make speed color
  - trade deadline needs bb k and spd 
-
 
 6. Home order
 
@@ -553,4 +550,11 @@ C
 SP
 RP
 
+MAKE FRANCHISE PLAYER GO IN AT 10 so it doesnt diddle the ordering?
+and then 11 - INF  12 - OF 13 - C 
+
 acquisiton can only replace someone of same position group or a slot 10-13
+
+
+LOWK check if acqusitio s actually work for RP SP
+Make lineup constrint position group
