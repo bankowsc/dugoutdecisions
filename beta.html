@@ -2171,6 +2171,7 @@
     </style>
 </head>
 
+
 <body>
     <div class="wrap">
 
@@ -2247,420 +2248,440 @@
                                         style="font-size:10px;padding:3px 9px">All-Star</button>
                                 </div>
                             </div>
-                            <div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">
-                                ⚠️ NOTE: Changing to a higher difficulty will remove <br> the ability to
-                                resign previous players this off-season.
-                            </div>
+                            <div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">⚠️ NOTE:
+                                Changing to a higher difficulty will remove <br> the ability to resign previous players
+                                this off-season.</div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
             <div id="team-select-grid"></div>
             <div class="btn-row" style="margin-top:16px;justify-content:center"><button onclick="showScreen('setup')">←
                     Back</button></div>
         </div>
-    </div>
 
-    <!-- ══ RE-SIGN SCREEN ════════════════════════════════════════════ -->
-    <div id="screen-resign" class="screen">
-        <div class="topbar acq-topbar-gold">
-            <h1 style="color:var(--gold)">📋 RE-SIGN — <span id="resign-team-name"
-                    style="color:var(--topbar-tx)">Team</span></h1><span class="series-pill"
-                id="resign-year-pill"></span>
-            <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
-                        type="checkbox" id="dm-toggle-resign" onchange="toggleDark(this)"><span
-                        class="dm-slider"></span></label></div>
+        <!-- ══ RE-SIGN SCREEN ════════════════════════════════════════════ -->
+        <div id="screen-resign" class="screen">
+            <div class="topbar acq-topbar-gold">
+                <h1 style="color:var(--gold)">📋 RE-SIGN — <span id="resign-team-name"
+                        style="color:var(--topbar-tx)">Team</span></h1>
+                <span class="series-pill" id="resign-year-pill"></span>
+                <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
+                            type="checkbox" id="dm-toggle-resign" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label></div>
+            </div>
+            <div class="body-area">
+                <div id="resign-content"></div>
+            </div>
         </div>
-        <div class="body-area">
-            <div id="resign-content"></div>
-        </div>
-    </div>
 
-    <!-- ══ OFFSEASON ACQUISITIONS ══════════════════════════════════════ -->
-    <div id="screen-offseason" class="screen">
-        <div class="topbar acq-topbar-gold">
-            <h1 style="color:var(--gold)">🏢 FRONT OFFICE — <span id="offseason-team-name"
-                    style="color:var(--topbar-tx)">Team</span></h1><span class="series-pill"
-                id="offseason-year-pill"></span>
-            <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
-                        type="checkbox" id="dm-toggle-os" onchange="toggleDark(this)"><span
-                        class="dm-slider"></span></label></div>
-        </div>
-        <div class="body-area">
-            <div id="offseason-budget-bar"></div>
-            <div class="two-col">
-                <div>
-                    <div id="offseason-strength-card"></div>
-                    <div class="card">
-                        <div class="section-label" style="margin-bottom:8px">Your Current Roster</div>
-                        <div id="offseason-roster"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="card">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-                            <div
-                                style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--amber0)">
-                                Available Players</div>
-                            <span class="chip chip-amber" style="font-size:10px">Offseason Window</span>
-                        </div>
-                        <div id="offseason-pool"></div>
-                    </div>
-                    <div class="card">
-                        <div class="section-label">Transaction Log</div>
-                        <div class="txn-log" id="offseason-txn-log">
-                            <div style="color:var(--tx3);font-size:11px">No transactions yet.</div>
+        <!-- ══ OFFSEASON ══════════════════════════════════════════════════ -->
+        <div id="screen-offseason" class="screen">
+            <div class="topbar acq-topbar-gold">
+                <h1 style="color:var(--gold)">🏢 FRONT OFFICE — <span id="offseason-team-name"
+                        style="color:var(--topbar-tx)">Team</span></h1>
+                <span class="series-pill" id="offseason-year-pill"></span>
+                <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
+                            type="checkbox" id="dm-toggle-os" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label></div>
+            </div>
+            <div class="body-area">
+                <div id="offseason-budget-bar"></div>
+                <div class="two-col">
+                    <div>
+                        <div id="offseason-strength-card"></div>
+                        <div class="card">
+                            <div class="section-label" style="margin-bottom:8px">Your Current Roster</div>
+                            <div id="offseason-roster"></div>
                         </div>
                     </div>
-                    <div class="btn-row"><button class="btn-gold" style="font-size:15px;padding:11px 28px"
-                            onclick="finishOffseason()">▶ Start Season</button></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ══ SEASON SIM ═════════════════════════════════════════════════ -->
-    <div id="screen-season" class="screen">
-        <div class="topbar">
-            <h1 id="season-title">⚾ SEASON</h1><span class="series-pill" id="season-year-pill"></span>
-            <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
-                        type="checkbox" id="dm-toggle-season" onchange="toggleDark(this)"><span
-                        class="dm-slider"></span></label></div>
-        </div>
-        <div class="body-area">
-            <div class="two-col">
-                <div>
-                    <div class="card">
-                        <div class="section-label">Your team</div>
-                        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:6px"
-                            id="season-your-team"></div>
-                        <div class="record-badge" id="season-record">0-0</div>
-                        <div class="season-sim-bar" style="margin-top:12px">
-                            <div class="season-sim-fill" id="season-bar" style="width:0%"></div>
+                    <div>
+                        <div class="card">
+                            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                                <div
+                                    style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--amber0)">
+                                    Available Players</div>
+                                <span class="chip chip-amber" style="font-size:10px">Offseason Window</span>
+                            </div>
+                            <div id="offseason-pool"></div>
                         </div>
-                        <div style="font-size:11px;color:var(--tx2);margin-top:4px;font-family:'DM Mono',monospace"
-                            id="season-game-count">Game 0 of 162</div>
-                        <div id="season-last-results"
-                            style="margin-top:8px;font-size:11px;color:var(--tx2);min-height:40px"></div>
-                        <div id="manager-move-log" style="margin-top:4px;font-size:11px;min-height:20px"></div>
-                        <div class="btn-row" style="margin-top:14px">
-                            <button class="btn-primary" id="btn-sim-season" onclick="simulateSeason()">▶ Simulate
-                                Season</button>
-                            <button class="btn-primary" id="btn-play-cont" onclick="toggleContSim()"
-                                style="display:none">⏸ Pause</button>
-                            <button class="btn-green" id="btn-sim-10" onclick="simNGames(10)">+10 Games</button>
-                            <button class="btn-green" id="btn-sim-1" onclick="simNGames(1)">+1 Game</button>
-                            <button id="btn-skip-season" onclick="skipToEnd()">Skip to End</button>
-                            <button id="btn-manager-move" onclick="toggleManagerMoves()">🧢 Manager Move ▾</button>
+                        <div class="card">
+                            <div class="section-label">Transaction Log</div>
+                            <div class="txn-log" id="offseason-txn-log">
+                                <div style="color:var(--tx3);font-size:11px">No transactions yet.</div>
+                            </div>
                         </div>
-                        <div id="manager-moves-panel"
-                            style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--bdr)">
-                            <div class="section-label" style="margin-bottom:8px">Choose your move</div>
-                            <div id="manager-moves-grid"></div>
+                        <div class="btn-row"><button class="btn-gold" style="font-size:15px;padding:11px 28px"
+                                onclick="finishOffseason()">▶ Start Season</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ SEASON SIM ═════════════════════════════════════════════════ -->
+        <div id="screen-season" class="screen">
+            <div class="topbar">
+                <h1 id="season-title">⚾ SEASON</h1><span class="series-pill" id="season-year-pill"></span>
+                <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
+                            type="checkbox" id="dm-toggle-season" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label></div>
+            </div>
+            <div class="body-area">
+                <div class="two-col">
+                    <div>
+                        <div class="card">
+                            <div class="section-label">Your team</div>
+                            <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:6px"
+                                id="season-your-team"></div>
+                            <div class="record-badge" id="season-record">0-0</div>
+                            <div class="season-sim-bar" style="margin-top:12px">
+                                <div class="season-sim-fill" id="season-bar" style="width:0%"></div>
+                            </div>
+                            <div style="font-size:11px;color:var(--tx2);margin-top:4px;font-family:'DM Mono',monospace"
+                                id="season-game-count">Game 0 of 162</div>
+                            <div id="season-last-results"
+                                style="margin-top:8px;font-size:11px;color:var(--tx2);min-height:40px"></div>
+                            <div id="manager-move-log" style="margin-top:4px;font-size:11px;min-height:20px"></div>
+                            <div class="btn-row" style="margin-top:14px">
+                                <button class="btn-primary" id="btn-sim-season" onclick="simulateSeason()">▶ Simulate
+                                    Season</button>
+                                <button class="btn-primary" id="btn-play-cont" onclick="toggleContSim()"
+                                    style="display:none">⏸ Pause</button>
+                                <button class="btn-green" id="btn-sim-10" onclick="simNGames(10)">+10 Games</button>
+                                <button class="btn-green" id="btn-sim-1" onclick="simNGames(1)">+1 Game</button>
+                                <button id="btn-skip-season" onclick="skipToEnd()">Skip to End</button>
+                                <button id="btn-manager-move" onclick="toggleManagerMoves()">🧢 Manager Move ▾</button>
+                            </div>
+                            <div id="manager-moves-panel"
+                                style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--bdr)">
+                                <div class="section-label" style="margin-bottom:8px">Choose your move</div>
+                                <div id="manager-moves-grid"></div>
+                            </div>
+                        </div>
+                        <div class="card" id="season-standing-card" style="display:none">
+                            <div class="section-label">Division standing</div>
+                            <div id="season-div-mini"></div>
                         </div>
                     </div>
-                    <div class="card" id="season-standing-card" style="display:none">
-                        <div class="section-label">Division standing</div>
-                        <div id="season-div-mini"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="card">
-                        <div class="section-label">Recent games</div>
-                        <div id="season-log"></div>
-                    </div>
-                </div>
-            </div>
-            <div id="season-end-panel" style="display:none">
-                <div class="card" style="text-align:center;padding:22px">
-                    <div id="season-end-msg"
-                        style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:8px">
-                    </div>
-                    <div id="season-end-sub" style="font-size:12px;color:var(--tx2);margin-bottom:16px"></div>
-                    <div class="btn-row" style="justify-content:center">
-                        <button class="btn-primary" onclick="showStandings()">View Standings</button>
-                        <button id="btn-to-playoffs" class="btn-green" onclick="goToPlayoffs()" style="display:none">→
-                            Playoffs!</button>
-                        <button id="btn-new-season" class="btn-amber" onclick="startNewFranchise()"
-                            style="display:none">New Franchise</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Trade Deadline Overlay -->
-    <div id="deadline-overlay" class="deadline-overlay" style="display:none">
-        <div class="deadline-modal">
-            <div class="deadline-header">
-                <span>📅 Trade Deadline</span>
-                <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-                    <span id="deadline-record-hdr"
-                        style="font-size:14px;opacity:.9;font-family:'DM Mono',monospace"></span>
-                    <span id="deadline-budget-hdr" style="font-size:16px"></span>
-                </div>
-            </div>
-            <div style="padding:14px" id="deadline-content"></div>
-        </div>
-    </div>
-
-    <!-- ══ STANDINGS ══════════════════════════════════════════════════ -->
-    <div id="screen-standings" class="screen">
-        <div class="topbar">
-            <h1>⚾ <span style="color:var(--gold)">STANDINGS</span></h1><span class="series-pill"
-                id="standings-year-pill"></span>
-            <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
-                        type="checkbox" id="dm-toggle-st" onchange="toggleDark(this)"><span
-                        class="dm-slider"></span></label></div>
-        </div>
-        <div class="body-area">
-            <div class="card" style="margin-bottom:10px">
-                <div
-                    style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:11px;margin-bottom:8px;font-family:'DM Mono',monospace">
-                    <span style="display:inline-flex;align-items:center;gap:4px"><span
-                            style="width:10px;height:10px;border-radius:2px;background:var(--green2);border:.5px solid var(--green3);display:inline-block"></span>Division
-                        winner</span>
-                    <span style="display:inline-flex;align-items:center;gap:4px"><span
-                            style="width:10px;height:10px;border-radius:2px;background:var(--amber2);border:.5px solid var(--amber3);display:inline-block"></span>Wild
-                        card</span>
-                    <span style="display:inline-flex;align-items:center;gap:4px"><span
-                            style="width:10px;height:10px;border-radius:2px;background:var(--blue2);border:.5px solid var(--blue3);display:inline-block"></span>Your
-                        team</span>
-                </div>
-            </div>
-            <div class="two-col" id="standings-grid"></div>
-            <div class="btn-row">
-                <button onclick="showScreen('season')">← Season</button>
-                <button id="btn-standings-playoffs" class="btn-green" onclick="goToPlayoffs()" style="display:none">→
-                    Playoffs</button>
-                <button id="btn-standings-newseries" class="btn-amber" onclick="startNewFranchise()"
-                    style="display:none">New Franchise</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ══ PLAYOFF BRACKET ════════════════════════════════════════════ -->
-    <div id="screen-bracket" class="screen">
-        <div class="topbar">
-            <h1>⚾ <span style="color:var(--gold)">PLAYOFFS</span></h1><span class="series-pill"
-                id="bracket-year-pill"></span>
-            <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
-                        type="checkbox" id="dm-toggle-br" onchange="toggleDark(this)"><span
-                        class="dm-slider"></span></label></div>
-        </div>
-        <div class="body-area">
-            <div id="bracket-content"></div>
-            <div class="btn-row" id="bracket-btn-row"></div>
-        </div>
-    </div>
-
-    <!-- ══ SERIES PLAY ════════════════════════════════════════════════ -->
-    <div id="screen-series" class="screen">
-        <div class="topbar">
-            <h1 id="series-title-hdr">⚾ SERIES</h1><span class="series-pill" id="series-round-pill"></span>
-            <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
-                        type="checkbox" id="dm-toggle-sr" onchange="toggleDark(this)"><span
-                        class="dm-slider"></span></label></div>
-        </div>
-        <div class="body-area">
-            <div id="series-matchup-display"></div>
-            <div id="series-game-area"></div>
-        </div>
-    </div>
-
-    <!-- ══ LINEUP ════════════════════════════════════════════════════ -->
-    <div id="screen-lineup" class="screen">
-        <div class="topbar">
-            <h1 id="lup-your-name">⚾ LINEUP</h1><span class="series-pill" id="lup-series"></span><span class="vs-pill"
-                id="lup-vs"></span>
-            <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
-                        type="checkbox" id="dm-toggle-lineup" onchange="toggleDark(this)"><span
-                        class="dm-slider"></span></label></div>
-        </div>
-        <div class="body-area">
-            <p style="font-size:11px;color:var(--tx2);margin-bottom:12px">Tap to select a lineup slot, then tap
-                another to swap. Or drag to reorder. Tap a bench player to swap into selected slot.</p>
-            <div class="two-col">
-                <div>
-                    <div class="card">
-                        <div class="section-label">Your lineup</div>
-                        <div id="lineup-list"></div>
-                        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--bdr)">
-                            <div class="section-label">Starting pitcher</div><select id="sp-select"
-                                style="width:100%"></select>
+                    <div>
+                        <div class="card">
+                            <div class="section-label">Recent games</div>
+                            <div id="season-log"></div>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div class="card" style="margin-bottom:10px">
-                        <div class="section-label">Bench</div>
-                        <div id="bench-display"></div>
-                    </div>
-                    <div class="card">
-                        <div class="section-label">Opponent lineup &amp; pitcher</div>
-                        <div id="opp-lineup-display"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="btn-row"><button class="btn-gold" style="font-size:15px;padding:10px 26px"
-                    onclick="startGame()">⚾ Play Ball!</button><button onclick="goBackFromLineup()">← Back</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ══ GAME ═══════════════════════════════════════════════════════ -->
-    <div id="screen-game" class="screen">
-        <div class="topbar">
-            <h1 id="game-title-hdr">⚾ GAME</h1><span class="series-pill" id="game-series-pill"></span><span
-                class="vs-pill" id="game-score-pill"></span>
-            <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
-                        type="checkbox" id="dm-toggle-game" onchange="toggleDark(this)"><span
-                        class="dm-slider"></span></label></div>
-        </div>
-        <div class="body-area">
-            <div class="game-grid">
-                <div>
-                    <div class="card">
-                        <div class="section-label" id="you-order-label"></div>
-                        <div id="you-order" class="order-panel"></div>
-                    </div>
-                    <div class="card">
-                        <div class="section-label" id="opp-order-label"></div>
-                        <div id="opp-order" class="order-panel"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="card">
-                        <div class="scoreboard-wrap" id="score-strip-wrap"></div>
-                        <div class="situation-strip"><span class="inning-badge" id="inning-badge"></span>
-                            <div class="outs-dots" id="outs-dots"></div><span id="outs-label"
-                                style="font-size:11px;color:var(--tx2);font-family:'DM Mono',monospace"></span>
+                <div id="season-end-panel" style="display:none">
+                    <div class="card" style="text-align:center;padding:22px">
+                        <div id="season-end-msg"
+                            style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:8px">
                         </div>
-                        <div class="diamond-area"><svg id="diamond-svg" viewBox="0 0 280 220" width="280"
-                                height="220"></svg></div>
-                        <div id="game-over-banner"></div>
-                        <div id="action-panel"></div>
-                        <div style="font-size:11px;color:var(--tx2);text-align:center;margin-bottom:10px">
-                            <div>Batting: <strong id="batter-label" style="color:var(--tx0)"></strong></div>
-                            <div>Pitching: <strong id="pitcher-label" style="color:var(--tx0)"></strong></div>
-                            <div id="handedness-note" style="margin-top:4px"></div>
+                        <div id="season-end-sub" style="font-size:12px;color:var(--tx2);margin-bottom:16px"></div>
+                        <div class="btn-row" style="justify-content:center">
+                            <button class="btn-primary" onclick="showStandings()">View Standings</button>
+                            <button id="btn-to-playoffs" class="btn-green" onclick="goToPlayoffs()"
+                                style="display:none">→ Playoffs!</button>
+                            <button id="btn-new-season" class="btn-amber" onclick="startNewFranchise()"
+                                style="display:none">New Franchise</button>
                         </div>
-                        <div class="btn-row" style="justify-content:center" id="game-btn-row">
-                            <button class="btn-primary" id="btn-atbat" onclick="simulateAtBat()">At-bat</button>
-                            <button class="btn-green" id="btn-simframe" onclick="simulateOneInning()">Sim
-                                Frame</button>
-                            <button class="btn-amber" id="btn-simgame" onclick="simulateFullGame()">Sim
-                                Game</button>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="section-label">Play log</div>
-                        <div class="log-scroll" id="game-log"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="card">
-                        <div class="tab-row">
-                            <button class="tab active" id="tab-sub" onclick="showTab('sub')">Subs</button>
-                            <button class="tab" id="tab-pitch" onclick="showTab('pitch')">Bullpen</button>
-                            <button class="tab" id="tab-stats" onclick="showTab('stats')">My Stats</button>
-                            <button class="tab" id="tab-opp" onclick="showTab('opp')">Opp Stats</button>
-                        </div>
-                        <div id="mgr-sub"></div>
-                        <div id="mgr-pitch" style="display:none"></div>
-                        <div id="mgr-stats" style="display:none"></div>
-                        <div id="mgr-opp" style="display:none"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ══ GAME OVER ══════════════════════════════════════════════════ -->
-    <div id="screen-gameover" class="screen">
-        <div class="topbar">
-            <h1>⚾ <span style="color:var(--gold)">GAME OVER</span></h1><span class="series-pill"
-                id="go-series-pill"></span>
-            <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
-                        type="checkbox" id="dm-toggle-go" onchange="toggleDark(this)"><span
-                        class="dm-slider"></span></label></div>
-        </div>
-        <div class="body-area">
-            <div class="card game-over-wrap">
-                <p id="final-score-line" class="final-score"></p>
-                <p id="final-result-line"
-                    style="font-size:15px;color:var(--tx2);margin-bottom:14px;font-family:'Fraunces',serif;font-style:italic">
-                </p>
-                <div id="star-display" style="margin-bottom:12px"></div>
-                <div id="series-status-display" style="margin-bottom:14px"></div>
-                <div style="font-size:11px;color:var(--tx2);margin-bottom:14px;font-family:'DM Mono',monospace"
-                    id="stamina-report"></div>
-                <div id="champ-counter-go"></div>
-                <div class="section-label" style="text-align:left;margin-top:10px">Achievements</div>
-                <div id="gameover-badges"></div>
-                <div class="btn-row" style="justify-content:center;margin-top:18px" id="go-btn-row"></div>
+        <!-- Trade Deadline Overlay -->
+        <div id="deadline-overlay" class="deadline-overlay" style="display:none">
+            <div class="deadline-modal">
+                <div class="deadline-header">
+                    <span>📅 Trade Deadline</span>
+                    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+                        <span id="deadline-record-hdr"
+                            style="font-size:14px;opacity:.9;font-family:'DM Mono',monospace"></span>
+                        <span id="deadline-budget-hdr" style="font-size:16px"></span>
+                    </div>
+                </div>
+                <div style="padding:14px" id="deadline-content"></div>
             </div>
         </div>
-    </div>
 
-    <!-- ══ SERIES OVER (playoff) ══════════════════════════════════════ -->
-    <div id="screen-seriesover-playoff" class="screen">
-        <div class="topbar">
-            <h1 id="sop-title">⚾ SERIES OVER</h1><span class="series-pill" id="sop-pill"></span>
-            <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
-                        type="checkbox" id="dm-toggle-sop" onchange="toggleDark(this)"><span
-                        class="dm-slider"></span></label></div>
-        </div>
-        <div class="body-area">
-            <div class="card game-over-wrap">
-                <div id="sop-banner" class="playoff-banner" style="margin-bottom:18px"></div>
-                <p id="sop-score"
-                    style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;margin-bottom:10px">
-                </p>
-                <p id="sop-sub"
-                    style="font-size:13px;color:var(--tx2);margin-bottom:18px;font-family:'Fraunces',serif;font-style:italic">
-                </p>
-                <div id="sop-champ"></div>
-                <div class="btn-row" style="justify-content:center;margin-top:14px" id="sop-btns"></div>
+        <!-- ══ STANDINGS ══════════════════════════════════════════════════ -->
+        <div id="screen-standings" class="screen">
+            <div class="topbar">
+                <h1>⚾ <span style="color:var(--gold)">STANDINGS</span></h1><span class="series-pill"
+                    id="standings-year-pill"></span>
+                <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
+                            type="checkbox" id="dm-toggle-st" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label></div>
+            </div>
+            <div class="body-area">
+                <div class="card" style="margin-bottom:10px">
+                    <div
+                        style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:11px;margin-bottom:8px;font-family:'DM Mono',monospace">
+                        <span style="display:inline-flex;align-items:center;gap:4px"><span
+                                style="width:10px;height:10px;border-radius:2px;background:var(--green2);border:.5px solid var(--green3);display:inline-block"></span>Division
+                            winner</span>
+                        <span style="display:inline-flex;align-items:center;gap:4px"><span
+                                style="width:10px;height:10px;border-radius:2px;background:var(--amber2);border:.5px solid var(--amber3);display:inline-block"></span>Wild
+                            card</span>
+                        <span style="display:inline-flex;align-items:center;gap:4px"><span
+                                style="width:10px;height:10px;border-radius:2px;background:var(--blue2);border:.5px solid var(--blue3);display:inline-block"></span>Your
+                            team</span>
+                    </div>
+                </div>
+                <div class="two-col" id="standings-grid"></div>
+                <div class="btn-row">
+                    <button onclick="showScreen('season')">← Season</button>
+                    <button id="btn-standings-playoffs" class="btn-green" onclick="goToPlayoffs()"
+                        style="display:none">→ Playoffs</button>
+                    <button id="btn-standings-newseries" class="btn-amber" onclick="startNewFranchise()"
+                        style="display:none">New Franchise</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- ══ WORLD SERIES OVER ══════════════════════════════════════════ -->
-    <div id="screen-seriesover" class="screen">
-        <div class="topbar">
-            <h1>⚾ <span style="color:var(--gold)">SEASON OVER</span></h1>
-            <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
-                        type="checkbox" id="dm-toggle-wsover" onchange="toggleDark(this)"><span
-                        class="dm-slider"></span></label></div>
-        </div>
-        <div class="body-area">
-            <div class="card game-over-wrap">
-                <p id="series-final-line"
-                    style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;margin:14px 0"></p>
-                <p id="series-result-line"
-                    style="font-size:15px;color:var(--tx2);margin-bottom:18px;font-family:'Fraunces',serif;font-style:italic">
-                </p>
-                <div id="champ-counter-so"></div>
-                <div class="section-label" style="text-align:left;margin-top:10px">Achievements</div>
-                <div id="seriesover-badges"></div>
-                <div class="btn-row" style="justify-content:center;margin-top:18px"><button class="btn-gold"
-                        style="font-size:15px;padding:10px 26px" onclick="startNewFranchise()">New
-                        Franchise</button></div>
+        <!-- ══ PLAYOFF BRACKET ════════════════════════════════════════════ -->
+        <div id="screen-bracket" class="screen">
+            <div class="topbar">
+                <h1>⚾ <span style="color:var(--gold)">PLAYOFFS</span></h1><span class="series-pill"
+                    id="bracket-year-pill"></span>
+                <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
+                            type="checkbox" id="dm-toggle-br" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label></div>
+            </div>
+            <div class="body-area">
+                <div id="bracket-content"></div>
+                <div class="btn-row" id="bracket-btn-row"></div>
             </div>
         </div>
-    </div>
+
+        <!-- ══ SERIES PLAY ════════════════════════════════════════════════ -->
+        <div id="screen-series" class="screen">
+            <div class="topbar">
+                <h1 id="series-title-hdr">⚾ SERIES</h1><span class="series-pill" id="series-round-pill"></span>
+                <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
+                            type="checkbox" id="dm-toggle-sr" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label></div>
+            </div>
+            <div class="body-area">
+                <div id="series-matchup-display"></div>
+                <div id="series-game-area"></div>
+            </div>
+        </div>
+
+        <!-- ══ LINEUP ════════════════════════════════════════════════════ -->
+        <div id="screen-lineup" class="screen">
+            <div class="topbar">
+                <h1 id="lup-your-name">⚾ LINEUP</h1><span class="series-pill" id="lup-series"></span><span
+                    class="vs-pill" id="lup-vs"></span>
+                <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
+                            type="checkbox" id="dm-toggle-lineup" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label></div>
+            </div>
+            <div class="body-area">
+                <p style="font-size:11px;color:var(--tx2);margin-bottom:12px">Tap to select a lineup slot, then tap
+                    another to swap. Or drag to reorder. Tap a bench player to swap into selected slot.</p>
+                <div class="two-col">
+                    <div>
+                        <div class="card">
+                            <div class="section-label">Your lineup</div>
+                            <div id="lineup-list"></div>
+                            <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--bdr)">
+                                <div class="section-label">Starting pitcher</div>
+                                <select id="sp-select" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card" style="margin-bottom:10px">
+                            <div class="section-label">Bench</div>
+                            <div id="bench-display"></div>
+                        </div>
+                        <div class="card">
+                            <div class="section-label">Opponent lineup &amp; pitcher</div>
+                            <div id="opp-lineup-display"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-gold" style="font-size:15px;padding:10px 26px" onclick="startGame()">⚾ Play
+                        Ball!</button>
+                    <button onclick="goBackFromLineup()">← Back</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ GAME ═══════════════════════════════════════════════════════ -->
+        <div id="screen-game" class="screen">
+            <div class="topbar">
+                <h1 id="game-title-hdr">⚾ GAME</h1><span class="series-pill" id="game-series-pill"></span><span
+                    class="vs-pill" id="game-score-pill"></span>
+                <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
+                            type="checkbox" id="dm-toggle-game" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label></div>
+            </div>
+            <div class="body-area">
+                <div class="game-grid">
+                    <div>
+                        <div class="card">
+                            <div class="section-label" id="you-order-label"></div>
+                            <div id="you-order" class="order-panel"></div>
+                        </div>
+                        <div class="card">
+                            <div class="section-label" id="opp-order-label"></div>
+                            <div id="opp-order" class="order-panel"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card">
+                            <div class="scoreboard-wrap" id="score-strip-wrap"></div>
+                            <div class="situation-strip"><span class="inning-badge" id="inning-badge"></span>
+                                <div class="outs-dots" id="outs-dots"></div><span id="outs-label"
+                                    style="font-size:11px;color:var(--tx2);font-family:'DM Mono',monospace"></span>
+                            </div>
+                            <div class="diamond-area"><svg id="diamond-svg" viewBox="0 0 280 220" width="280"
+                                    height="220"></svg></div>
+                            <div id="game-over-banner"></div>
+                            <div id="action-panel"></div>
+                            <div style="font-size:11px;color:var(--tx2);text-align:center;margin-bottom:10px">
+                                <div>Batting: <strong id="batter-label" style="color:var(--tx0)"></strong></div>
+                                <div>Pitching: <strong id="pitcher-label" style="color:var(--tx0)"></strong></div>
+                                <div id="handedness-note" style="margin-top:4px"></div>
+                            </div>
+                            <div class="btn-row" style="justify-content:center" id="game-btn-row">
+                                <button class="btn-primary" id="btn-atbat" onclick="simulateAtBat()">At-bat</button>
+                                <button class="btn-green" id="btn-simframe" onclick="simulateOneInning()">Sim
+                                    Frame</button>
+                                <button class="btn-amber" id="btn-simgame" onclick="simulateFullGame()">Sim
+                                    Game</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="section-label">Play log</div>
+                            <div class="log-scroll" id="game-log"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card">
+                            <div class="tab-row">
+                                <button class="tab active" id="tab-sub" onclick="showTab('sub')">Subs</button>
+                                <button class="tab" id="tab-pitch" onclick="showTab('pitch')">Bullpen</button>
+                                <button class="tab" id="tab-stats" onclick="showTab('stats')">My Stats</button>
+                                <button class="tab" id="tab-opp" onclick="showTab('opp')">Opp Stats</button>
+                            </div>
+                            <div id="mgr-sub"></div>
+                            <div id="mgr-pitch" style="display:none"></div>
+                            <div id="mgr-stats" style="display:none"></div>
+                            <div id="mgr-opp" style="display:none"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ GAME OVER ══════════════════════════════════════════════════ -->
+        <div id="screen-gameover" class="screen">
+            <div class="topbar">
+                <h1>⚾ <span style="color:var(--gold)">GAME OVER</span></h1><span class="series-pill"
+                    id="go-series-pill"></span>
+                <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
+                            type="checkbox" id="dm-toggle-go" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label></div>
+            </div>
+            <div class="body-area">
+                <div class="card game-over-wrap">
+                    <p id="final-score-line" class="final-score"></p>
+                    <p id="final-result-line"
+                        style="font-size:15px;color:var(--tx2);margin-bottom:14px;font-family:'Fraunces',serif;font-style:italic">
+                    </p>
+                    <div id="star-display" style="margin-bottom:12px"></div>
+                    <div id="series-status-display" style="margin-bottom:14px"></div>
+                    <div style="font-size:11px;color:var(--tx2);margin-bottom:14px;font-family:'DM Mono',monospace"
+                        id="stamina-report"></div>
+                    <div id="champ-counter-go"></div>
+                    <div class="section-label" style="text-align:left;margin-top:10px">Achievements</div>
+                    <div id="gameover-badges"></div>
+                    <div class="btn-row" style="justify-content:center;margin-top:18px" id="go-btn-row"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ SERIES OVER (playoff) ══════════════════════════════════════ -->
+        <div id="screen-seriesover-playoff" class="screen">
+            <div class="topbar">
+                <h1 id="sop-title">⚾ SERIES OVER</h1><span class="series-pill" id="sop-pill"></span>
+                <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
+                            type="checkbox" id="dm-toggle-sop" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label></div>
+            </div>
+            <div class="body-area">
+                <div class="card game-over-wrap">
+                    <div id="sop-banner" class="playoff-banner" style="margin-bottom:18px"></div>
+                    <p id="sop-score"
+                        style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;margin-bottom:10px">
+                    </p>
+                    <p id="sop-sub"
+                        style="font-size:13px;color:var(--tx2);margin-bottom:18px;font-family:'Fraunces',serif;font-style:italic">
+                    </p>
+                    <div id="sop-champ"></div>
+                    <div class="btn-row" style="justify-content:center;margin-top:14px" id="sop-btns"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ WORLD SERIES OVER ══════════════════════════════════════════ -->
+        <div id="screen-seriesover" class="screen">
+            <div class="topbar">
+                <h1>⚾ <span style="color:var(--gold)">SEASON OVER</span></h1>
+                <div class="topbar-controls"><span class="dm-label">DARK</span><label class="dm-toggle"><input
+                            type="checkbox" id="dm-toggle-wsover" onchange="toggleDark(this)"><span
+                            class="dm-slider"></span></label></div>
+            </div>
+            <div class="body-area">
+                <div class="card game-over-wrap">
+                    <p id="series-final-line"
+                        style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;margin:14px 0"></p>
+                    <p id="series-result-line"
+                        style="font-size:15px;color:var(--tx2);margin-bottom:18px;font-family:'Fraunces',serif;font-style:italic">
+                    </p>
+                    <div id="champ-counter-so"></div>
+                    <div class="section-label" style="text-align:left;margin-top:10px">Achievements</div>
+                    <div id="seriesover-badges"></div>
+                    <div class="btn-row" style="justify-content:center;margin-top:18px">
+                        <button class="btn-gold" style="font-size:15px;padding:10px 26px"
+                            onclick="startNewFranchise()">New Franchise</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div><!-- end .wrap -->
     <script>
         'use strict';
+
         // ══ DARK MODE ══════════════════════════════════════════════════════════════
         let darkMode = localStorage.getItem('bbm_dark') === '1';
         function applyDark() { document.documentElement.classList.toggle('dark', darkMode); document.querySelectorAll('input[type=checkbox][id^=dm-toggle]').forEach(el => el.checked = darkMode); }
         function toggleDark(el) { darkMode = el.checked; localStorage.setItem('bbm_dark', darkMode ? '1' : '0'); applyDark(); }
         applyDark();
+
+        // ══ STAT FORMATTING HELPERS ════════════════════════════════════════════════
+        // CHANGE 4: Standardized stat display
+        // AVG / OPS → .XXX  (3 decimals, always show leading zeros after dot)
+        // ERA / WHIP → X.XX  (2 decimal places)
+        // K% / BB% → XX%    (2 digits, leading zero if <10)
+        // spd       → XX     (2 digits, leading zero if <10)
+        function fmtAVG(v) {
+            // ".289" or ".000"
+            return '.' + String(Math.round((v || 0) * 1000)).padStart(3, '0');
+        }
+        function fmtOPS(v) {
+            // ".950" or "1.023"
+            const s = (v || 0).toFixed(3);
+            return s.startsWith('0.') ? s.slice(1) : s;
+        }
+        function fmtERA(v) { return (v || 0).toFixed(2); }
+        function fmtWHIP(v) { return (v || 0).toFixed(2); }
+        function fmtPct(v) { return String(Math.round((v || 0) * 100)).padStart(2, '0') + '%'; }
+        function fmtSpd(v) { return String(v || 0).padStart(2, '0'); }
 
         // ══ CONSTANTS ══════════════════════════════════════════════════════════════
         const LEAGUE_STRUCTURE = { 'Realistic League': { 'RL East': ['Lakewood Pilgrims', 'Springfield Crabs', 'Riverdale Redbirds', 'Oakburg Beavers', 'Eastville Barracudas'], 'RL Central': ['Millard Pioneers', 'Millport Machines', 'Centertown Blizzard', 'Hendersonville Seals', 'Lemonte Bolts'], 'RL West': ['Sunnydale Herons', 'Westgate Firespitters', 'Summit Phantoms', 'Seaport Ironclads', 'Washborough Ostrich Riders'] }, 'Fantasy League': { 'FL East': ['Quartz Hollow Craftsmen', 'Crestmere Firehawks', 'Mystridge Princes', 'Norwyn Bay Seacats', 'Stonefall Fairies'], 'FL Central': ['Silverkeep Doves', 'Ashbourne Wizards', 'Frostford Freeze', 'Mooncliff Dreamers', 'Stormhaven Igniters'], 'FL West': ['Zandria Gladiators', 'Brickmoor Serpents', 'Atlantica Hammerheads', 'Farlands Keepers', 'Portaltown Tungsten Cubes'] } };
@@ -2668,10 +2689,9 @@
         Object.entries(LEAGUE_STRUCTURE).forEach(([lg, divs]) => { Object.entries(divs).forEach(([div, teams]) => { teams.forEach(t => { ALL_TEAMS_FLAT.push(t); TEAM_META[t] = { league: lg, division: div }; }); }); });
 
         const BATTER_POSITIONS = ['OF', 'OF', 'OF', 'INF', 'INF', 'INF', 'INF', 'C', 'UTIL', 'UTIL', 'UTIL', 'UTIL', 'UTIL'];
-        // Slot layout: slots 0-2 = OF, slots 3-6 = INF, slot 7 = C, slots 8-12 = UTIL (flex)
 
-        const NF = ['Carter', 'Eric', 'James', 'Tung', 'Mason', 'Morgan', 'Rickey', 'William', 'Davis', 'Wilson', 'Jack', 'Thompson', 'Robinson', 'Hayes', 'Parker', 'Jackson', 'Miguel', 'Ivan', 'Rodrigo', 'Sam', 'Bob', 'Douglass', 'Archibald', 'Stu', 'Zack', 'Quinn', 'Barry', 'Kevin', 'Johnathan', 'Yung', 'David', 'Andruw', 'Barney', 'Drake', 'Easton', 'Fred', 'Gino', 'Harvey', 'Jesus', 'Zeke', 'Tristan', 'Russell', 'Steven'];
-        const NL_NAMES = ['Smith', 'Johnson', 'Sahur', 'Brown', 'Lee', 'Garcia', 'Rivera', 'Miller', 'Chen', 'Moore', 'Williams', 'Taylor', 'Anderson', 'Thomas', 'Torres', 'Nguyen', 'White', 'Martinez', 'Harris', 'Clark', 'Andrevski', 'Walker', 'Perez', 'Black', 'McCormick', 'Turner', 'Patel', 'Schmirkovski', 'Mrokonov', 'Yao', 'Ling', 'Hardson', 'Malianno', 'Torilli', 'Park', 'Kim', 'Hayes', 'Colon', 'Rodriguez', 'McDonald'];
+        const NF = ['Carter', 'Eric', 'James', 'Tung', 'Mason', 'Morgan', 'Rickey', 'William', 'Davis', 'Wilson', 'Jack', 'Thompson', 'Robinson', 'Hayes', 'Parker', 'Jackson', 'Miguel', 'Ivan', 'Rodrigo', 'Sam', 'Bob', 'Douglass', 'Archibald', 'Stu', 'Zack', 'Quinn', 'Barry', 'Kevin', 'Johnathan', 'Yung', 'David', 'Andruw', 'Barney', 'Drake', 'Easton', 'Fred', 'Gino', 'Harvey', 'Jesus', 'Zeke', 'Tristan', 'Russell', 'Steven', 'Liam', 'Willie', 'Alvin', 'Denzel', 'Elliot', 'Glenn', 'Yon', 'Ike', 'Perry', 'Trevor', 'Uma', 'Kirby'];
+        const NL_NAMES = ['Smith', 'Johnson', 'Sahur', 'Brown', 'Lee', 'Garcia', 'Rivera', 'Miller', 'Chen', 'Moore', 'Williams', 'Taylor', 'Anderson', 'Thomas', 'Torres', 'Nguyen', 'White', 'Martinez', 'Harris', 'Clark', 'Andrevski', 'Walker', 'Perez', 'Black', 'McCormick', 'Turner', 'Patel', 'Schmirkovski', 'Mrokonov', 'Yao', 'Ling', 'Hardson', 'Malianno', 'Torilli', 'Park', 'Kim', 'Hayes', 'Colon', 'Rodriguez', 'McDonald', 'Suit', 'Dickson', 'Sawyer', 'Blueburn', 'Novak', 'Rossi', 'Dubois', 'Dadapoulous', 'Conway', 'Biggie-Sorensen', 'Stevenson', 'Thomas', 'DeRosa', 'Stallions', 'Aziz', 'Sato', 'Choi', 'Zhao', 'Jahari', 'Mensah', 'Onyango', 'Svensson', 'Holm', 'Fjelstad', 'Borbavic', 'Plantovic', 'Drummond', 'Goodman', 'Badman', 'Okayman', 'Delamarion'];
 
         const BADGE_DEFS = [{ id: 'champion', icon: '🏆', label: 'Champion', desc: 'Win the World Series', cat: 'Series' }, { id: 'dynasty', icon: '👑', label: 'Dynasty', desc: 'Win 3 championships in any 5 seasons', cat: 'Series' }, { id: 'backtback', icon: '🔗', label: 'Back-to-Back', desc: 'Win championships in consecutive seasons', cat: 'Series' }, { id: 'pennant', icon: '🚩', label: 'Pennant', desc: 'Win your league championship', cat: 'Series' }, { id: 'rivalwinner', icon: '⚔️', label: 'Rival Winner', desc: 'Win a playoff series vs same-division team', cat: 'Series' }, { id: 'cardiac', icon: '❤️', label: 'Cardiac', desc: 'Win after trailing by 4+ runs', cat: 'Game' }, { id: 'blowout', icon: '💥', label: 'Blow-Out', desc: 'Win a game by 7+ runs', cat: 'Game' }, { id: 'maddux', icon: '🎯', label: 'Maddux', desc: 'Win without making a pitching change', cat: 'Game' }, { id: 'shutout', icon: '🔒', label: 'Shutout', desc: 'Win without allowing a run', cat: 'Game' }, { id: 'walkoff', icon: '⚡', label: 'Walk-Off', desc: 'Win in a walkoff', cat: 'Game' }, { id: 'guardball', icon: '🤦', label: 'GuardsBall', desc: 'Score a run off an error', cat: 'Play' }, { id: 'salami', icon: '🌭', label: 'Salami', desc: 'Hit a grand slam', cat: 'Play' }, { id: 'threebag', icon: '👜', label: 'Three Bag', desc: 'Hit a triple', cat: 'Play' }, { id: 'onpatrol', icon: '🔄', label: 'On Patrol', desc: 'Turn a double play', cat: 'Play' }, { id: 'tagged', icon: '🏃', label: 'Tagged', desc: 'Score a run by tagging up', cat: 'Play' }, { id: 'goodcall', icon: '📣', label: 'Good Call', desc: 'Make a successful manager move', cat: 'Manager' }, { id: 'luckyskipper', icon: '🍀', label: 'Lucky Skipper', desc: 'Make 7 successful manager moves in one season', cat: 'Manager' }, { id: 'moneyball', icon: '💰', label: 'Moneyball', desc: 'Pinch hit in a playoff game', cat: 'Manager' }, { id: 'trashcan', icon: '🗑️', label: 'Trash Can', desc: "Successfully pull off 'Steal the Signs'", cat: 'Manager' }, { id: 'hofmanager', icon: '🎖️', label: 'HOF Manager', desc: 'Manage a 90+ prestige team', cat: 'Manager' }];
 
@@ -2699,9 +2719,6 @@
         let CURRENT_SERIES = null; let CURRENT_GAME_SERIES = null; let LAST_CHAMP = null;
         const _sp = loadPrestige(); let MANAGER_PRESTIGE = _sp.p; let LAST_MANAGED_TEAM = _sp.team; let LAST_MANAGED_MADE_PLAYOFFS = _sp.playoffs;
 
-        // ── RE-SIGN STATE ──
-        // resignSlots: how many players can be re-signed based on prestige
-        // 0-20 → 1, 21-50 → 2, 51-80 → 3, 81-110 → 4, 111-140 → 5, 141+ → 6
         function getResignSlots() { if (MANAGER_PRESTIGE <= 20) return 1; if (MANAGER_PRESTIGE <= 50) return 2; if (MANAGER_PRESTIGE <= 80) return 3; if (MANAGER_PRESTIGE <= 110) return 4; if (MANAGER_PRESTIGE <= 140) return 5; return 6; }
 
         const TEAM_PRESTIGE = {};
@@ -2712,27 +2729,13 @@
 
         // ══ DIFFICULTY ═════════════════════════════════════════════════════════════
         const DIFF_RANK = { "Easy": 1, "Normal": 2, "Hard": 3, "All-Star": 4 };
-
-        // Fix 1: setDifficulty — normalize prev before comparing
         function setDifficulty(d) {
-            const prev = SEASON.difficulty || 'All-Star';  // keep casing consistent
+            const prev = SEASON.difficulty || 'All-Star';
             SEASON.difficulty = d;
-
-            if (DIFF_RANK[d] > DIFF_RANK[prev]) {
-                SEASON.difficultyRaised = true;
-                SEASON._originalDifficulty = SEASON._originalDifficulty || prev;
-            } else if (SEASON._originalDifficulty && DIFF_RANK[d] <= DIFF_RANK[SEASON._originalDifficulty]) {
-                SEASON.difficultyRaised = false;
-                SEASON._originalDifficulty = null;
-            }
-
-            updateDiffButtons();
-            renderTeamSelect();
+            if (DIFF_RANK[d] > DIFF_RANK[prev]) { SEASON.difficultyRaised = true; SEASON._originalDifficulty = SEASON._originalDifficulty || prev; }
+            else if (SEASON._originalDifficulty && DIFF_RANK[d] <= DIFF_RANK[SEASON._originalDifficulty]) { SEASON.difficultyRaised = false; SEASON._originalDifficulty = null; }
+            updateDiffButtons(); renderTeamSelect();
         }
-
-
-
-
         function updateDiffButtons() { const d = SEASON.difficulty || 'All-Star'; const ids = { Easy: 'diff-easy', Normal: 'diff-normal', Hard: 'diff-hard', 'All-Star': 'diff-allstar' }; const colors = { Easy: 'var(--green1)', Normal: 'var(--blue1)', Hard: 'var(--amber1)', 'All-Star': 'var(--red1)' }; Object.entries(ids).forEach(([k, id]) => { const el = document.getElementById(id); if (!el) return; if (k === d) { el.style.background = colors[d]; el.style.color = '#fff'; el.style.borderColor = colors[d]; el.style.fontWeight = '700'; } else { el.style.background = ''; el.style.color = ''; el.style.borderColor = ''; el.style.fontWeight = ''; } }); }
 
         // ══ FRANCHISE START ════════════════════════════════════════════════════════
@@ -2766,12 +2769,8 @@
                         const style = isC ? ';background:var(--amber2)' : (canManage ? '' : ';opacity:.6');
                         const nameColor = isC ? 'var(--amber0)' : (canManage ? 'var(--tx0)' : 'var(--tx3)');
                         const returnBadge = returnException && MANAGER_PRESTIGE < tp ? `<span class="chip chip-teal" style="font-size:9px">↩ Return</span>` : '';
-                        // Show resign badge if returning to same team with retained players
                         const hasRetained = retained && retained.teamName === t && retained.players && retained.players.length > 0;
-                        const resignBadge = hasRetained && canManage && !SEASON.difficultyRaised
-                            ? `<span class="chip chip-green" style="font-size:9px">📋 ${getResignSlots()} resignable</span>` : '';
-                        // const hasRetained = retained && retained.teamName === t && retained.players && retained.players.length > 0;
-                        // const resignBadge = hasRetained && canManage ? `<span class="chip chip-green" style="font-size:9px">📋 ${getResignSlots()} resignable</span>` : '';
+                        const resignBadge = hasRetained && canManage && !SEASON.difficultyRaised ? `<span class="chip chip-green" style="font-size:9px">📋 ${getResignSlots()} resignable</span>` : '';
                         const btn = canManage ? `<button class="btn-sm btn-primary" onclick="selectTeam('${t.replace(/'/g, "\\'")}')">Manage</button>` : `<span style="font-size:10px;padding:2px 7px;border-radius:6px;background:var(--bg3);color:var(--tx3);border:.5px solid var(--bdr)">Req. ${tp}</span>`;
                         const prestigeChip = `<span class="chip ${canManage ? 'chip-blue' : 'chip-gray'}" style="font-size:10px">${tp}</span>`;
                         h += `<div style="display:flex;align-items:center;gap:6px;padding:6px 4px;border-bottom:.5px solid var(--bdr)${style}"><span style="flex:1;font-size:12px;font-weight:${isC ? '700' : '500'};color:${nameColor};font-family:'DM Mono',monospace">${isC ? '🏆 ' : ''}${t}</span>${resignBadge}${returnBadge}${prestigeChip}${btn}</div>`;
@@ -2788,246 +2787,95 @@
             SEASON.acquisitionBudget = MANAGER_PRESTIGE; SEASON.budgetSpent = 0; SEASON.offseasonLog = []; SEASON.deadlineTriggered = false;
             if ((TEAM_PRESTIGE[name] || 1) >= 90) { G = {}; if (!BADGES.hofmanager) award('hofmanager'); }
             G.you = genTeam(name, null, false);
-
             const retained = loadRetainedRoster();
             const canResign = !SEASON.difficultyRaised;
-
-            if (canResign && retained && retained.teamName === name && retained.players && retained.players.length > 0) {
-                showResignScreen(name, retained);
-            } else {
-                saveRetainedRoster(null);
-                showOffseason();
-            }
-
-            // Clear the flag and origin after team is selected — offseason is starting fresh
-            SEASON.difficultyRaised = false;
-            SEASON._originalDifficulty = null;
+            if (canResign && retained && retained.teamName === name && retained.players && retained.players.length > 0) { showResignScreen(name, retained); }
+            else { saveRetainedRoster(null); showOffseason(); }
+            SEASON.difficultyRaised = false; SEASON._originalDifficulty = null;
         }
 
         // ══ RE-SIGN SYSTEM ═════════════════════════════════════════════════════════
-        // resignSlotCount: based on prestige
-        // After a season, if same team is managed again, players from last season's roster can be kept
-        // FRANCHISE PLAYERS never need to be re-signed (always retained)
-
-        let _resignSelected = [];// indices into retained.players array
-
-        function showResignScreen(teamName, retained) {
-            const slots = getResignSlots();
-            document.getElementById('resign-team-name').textContent = teamName;
-            document.getElementById('resign-year-pill').textContent = SEASON.year + ' Season';
-            _resignSelected = [];
-            renderResignContent(teamName, retained, slots);
-            showScreen('resign');
-        }
+        let _resignSelected = [];
+        function showResignScreen(teamName, retained) { const slots = getResignSlots(); document.getElementById('resign-team-name').textContent = teamName; document.getElementById('resign-year-pill').textContent = SEASON.year + ' Season'; _resignSelected = []; renderResignContent(teamName, retained, slots); showScreen('resign'); }
 
         function renderResignContent(teamName, retained, slots) {
             const el = document.getElementById('resign-content');
-            const players = retained.players || [];// non-FP players saved from last season
-            const fpPlayers = retained.fpPlayers || [];// always retained
-
+            const players = retained.players || []; const fpPlayers = retained.fpPlayers || [];
             let h = `<div style="background:linear-gradient(135deg,var(--bg1),var(--green2));border:1.5px solid var(--green3);border-radius:var(--radius);padding:16px;margin-bottom:14px">`;
             h += `<div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--green0);margin-bottom:6px">📋 Player Re-Signing</div>`;
-            h += `<div style="font-size:12px;color:var(--tx1);font-family:'DM Mono',monospace;line-height:1.7">You're returning to manage <strong>${teamName}</strong>. Select up to <strong>${slots}</strong> player${slots > 1 ? 's' : ''} from last season's roster to re-sign. Franchise players are always retained. Others will be replaced by new generated players.</div>`;
-            h += `<div style="margin-top:8px;font-size:11px;color:var(--green0);font-family:'DM Mono',monospace">Manager Prestige: ${MANAGER_PRESTIGE} → ${slots} re-sign slot${slots > 1 ? 's' : ''}</div>`;
-            h += `</div>`;
-
+            h += `<div style="font-size:12px;color:var(--tx1);font-family:'DM Mono',monospace;line-height:1.7">You're returning to manage <strong>${teamName}</strong>. Select up to <strong>${slots}</strong> player${slots > 1 ? 's' : ''} from last season's roster to re-sign.</div>`;
+            h += `<div style="margin-top:8px;font-size:11px;color:var(--green0);font-family:'DM Mono',monospace">Manager Prestige: ${MANAGER_PRESTIGE} → ${slots} re-sign slot${slots > 1 ? 's' : ''}</div></div>`;
             h += `<div class="two-col">`;
-
-            // Left col: available to re-sign
-            h += `<div>`;
-            h += `<div class="card">`;
-            h += `<div class="section-label" style="margin-bottom:8px">Last Season's Roster — Click to Re-Sign</div>`;
-
+            h += `<div><div class="card"><div class="section-label" style="margin-bottom:8px">Last Season's Roster — Click to Re-Sign</div>`;
             if (fpPlayers.length > 0) {
                 h += `<div style="margin-bottom:8px;font-size:11px;color:var(--purple0);font-family:'DM Mono',monospace;font-weight:600">★ Franchise Players (always retained)</div>`;
                 fpPlayers.forEach(p => {
                     const isH = !p.isPitcher;
-                    h += `<div class="resign-player-card fp-protected">`;
-                    h += `<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">`;
-                    h += `<span class="chip chip-purple" style="font-size:9px">★FP</span>`;
-                    h += `<span style="font-weight:600;font-size:12px;flex:1;font-family:'DM Mono',monospace">${p.name}</span>`;
-                    if (isH) { h += `<span class="chip chip-blue" style="font-size:9px">${p.pos || '—'}</span><span class="chip chip-green" style="font-size:9px">.${Math.round((p.avg || 0) * 1000)}</span><span class="chip chip-green" style="font-size:9px">OPS ${p.ops || 0}</span>`; }
-                    else { h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span><span class="chip chip-green" style="font-size:9px">ERA ${p.era}</span><span class="chip chip-green" style="font-size:9px">WHIP ${p.whip}</span>`; }
-                    h += `<span style="font-size:10px;color:var(--purple0);font-family:'DM Mono',monospace">Auto-retained ✓</span>`;
-                    h += `</div></div>`;
+                    h += `<div class="resign-player-card fp-protected"><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span class="chip chip-purple" style="font-size:9px">★FP</span><span style="font-weight:600;font-size:12px;flex:1;font-family:'DM Mono',monospace">${p.name}</span>`;
+                    if (isH) { h += `<span class="chip chip-blue" style="font-size:9px">${p.pos || '—'}</span><span class="chip chip-green" style="font-size:9px">${fmtAVG(p.avg)}</span><span class="chip chip-green" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`; }
+                    else { h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span><span class="chip chip-green" style="font-size:9px">ERA ${fmtERA(p.era)}</span><span class="chip chip-green" style="font-size:9px">WHIP ${fmtWHIP(p.whip)}</span>`; }
+                    h += `<span style="font-size:10px;color:var(--purple0);font-family:'DM Mono',monospace">Auto-retained ✓</span></div></div>`;
                 });
             }
-
             if (players.length > 0) {
                 h += `<div style="margin:10px 0 8px;font-size:11px;color:var(--tx2);font-family:'DM Mono',monospace;font-weight:600">Select up to ${slots} to re-sign (${_resignSelected.length}/${slots} chosen)</div>`;
                 players.forEach((p, idx) => {
-                    const isH = !p.isPitcher;
-                    const isSel = _resignSelected.includes(idx);
-                    const isMax = _resignSelected.length >= slots && !isSel;
+                    const isH = !p.isPitcher; const isSel = _resignSelected.includes(idx); const isMax = _resignSelected.length >= slots && !isSel;
                     h += `<div class="resign-player-card${isSel ? ' selected' : ''}${isMax ? ' too-expensive' : ''}" onclick="toggleResign(${idx},${slots})" id="resign-card-${idx}">`;
-                    h += `<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">`;
-                    h += `<span style="font-size:16px">${isSel ? '✅' : '⬜'}</span>`;
-                    h += `<span style="font-weight:600;font-size:12px;flex:1;font-family:'DM Mono',monospace">${p.name}</span>`;
+                    h += `<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-size:16px">${isSel ? '✅' : '⬜'}</span><span style="font-weight:600;font-size:12px;flex:1;font-family:'DM Mono',monospace">${p.name}</span>`;
                     if (isH) {
                         h += `<span class="chip chip-blue" style="font-size:9px">${p.pos || '—'}</span>`;
-                        h += `<span class="chip ${(p.avg || 0) >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round((p.avg || 0) * 1000)} AVG</span>`;
-                        h += `<span class="chip ${(p.ops || 0) >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${p.ops || 0}</span>`;
-                        h += `<span class="chip chip-gray" style="font-size:9px">${p.spd || 50}spd</span>`;
-                        h += `<span class="chip chip-blue" style="font-size:9px">${p.hand}</span>`;
-
+                        h += `<span class="chip ${(p.avg || 0) >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtAVG(p.avg)} AVG</span>`;
+                        h += `<span class="chip ${(p.ops || 0) >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
+                        h += `<span class="chip chip-gray" style="font-size:9px">${fmtSpd(p.spd)}spd</span><span class="chip chip-blue" style="font-size:9px">${p.hand}</span>`;
                     } else {
                         h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span>`;
                         h += `<span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span>`;
-                        h += `<span class="chip ${(p.era || 5) < 3.5 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">ERA ${p.era || 0}</span>`;
-                        h += `<span class="chip ${(p.whip || 1.5) < 1.1 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${p.whip || 0}</span>`;
-                        h += `<span class="chip ${(p.kRate || 0) >= .25 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${Math.round((p.kRate || 0) * 100)}%</span>`;
+                        h += `<span class="chip ${(p.era || 5) < 3.5 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">ERA ${fmtERA(p.era)}</span>`;
+                        h += `<span class="chip ${(p.whip || 1.5) < 1.1 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${fmtWHIP(p.whip)}</span>`;
+                        h += `<span class="chip ${(p.kRate || 0) >= .25 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${fmtPct(p.kRate)}</span>`;
                     }
                     if (isMax && !isSel) h += `<span style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">Slots full</span>`;
                     h += `</div></div>`;
                 });
-            } else {
-                h += `<div style="font-size:12px;color:var(--tx3);font-family:'DM Mono',monospace;padding:12px 0">No additional players available to re-sign from last season.</div>`;
-            }
-            h += `</div></div>`;// end left card+col
-
-            // Right col: signed slots + summary
-            h += `<div>`;
-            h += `<div class="card">`;
-            h += `<div class="section-label" style="margin-bottom:8px">Re-Sign Slots (${_resignSelected.length}/${slots} used)</div>`;
-            for (let i = 0; i < slots; i++) {
-                if (i < _resignSelected.length) {
-                    const p = players[_resignSelected[i]];
-                    const isH = !p.isPitcher;
-                    h += `<div class="resign-slot-filled"><span style="font-size:14px">✅</span><span style="font-weight:600;font-family:'DM Mono',monospace;flex:1">${p.name}</span>`;
-                    if (isH) h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span>`;
-                    else h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span>`;
-                    h += `<button class="btn-sm btn-red" style="font-size:10px;padding:2px 6px" onclick="removeResign(${i})">✕</button>`;
-                    h += `</div>`;
-                } else {
-                    h += `<div class="resign-slot-empty">Slot ${i + 1} — Empty</div>`;
-                }
-            }
-            h += `</div>`;
-
-            h += `<div class="card" style="background:linear-gradient(135deg,var(--bg1),var(--amber2));border-color:var(--amber3)">`;
-            h += `<div class="section-label" style="margin-bottom:6px">What happens next</div>`;
-            h += `<div style="font-size:11px;color:var(--tx1);font-family:'DM Mono',monospace;line-height:1.8">`;
-            h += `★ FP players stay — always<br>`;
-            h += `✅ Re-signed players — kept on roster<br>`;
-            h += `⬜ Others — replaced by new players<br>`;
-            h += `📋 Then: Offseason acquisitions window`;
+            } else { h += `<div style="font-size:12px;color:var(--tx3);font-family:'DM Mono',monospace;padding:12px 0">No additional players available to re-sign.</div>`; }
             h += `</div></div>`;
-
-            h += `<div class="btn-row">`;
-            h += `<button class="btn-gold" style="font-size:15px;padding:11px 28px" onclick="confirmResigns()">Confirm &amp; Go to Front Office →</button>`;
-            h += `<button onclick="skipResigns()">Skip Re-Signing</button>`;
+            h += `<div>`;
+            h += `<div class="card"><div class="section-label" style="margin-bottom:8px">Re-Sign Slots (${_resignSelected.length}/${slots} used)</div>`;
+            for (let i = 0; i < slots; i++) {
+                if (i < _resignSelected.length) { const p = players[_resignSelected[i]]; const isH = !p.isPitcher; h += `<div class="resign-slot-filled"><span style="font-size:14px">✅</span><span style="font-weight:600;font-family:'DM Mono',monospace;flex:1">${p.name}</span>${isH ? `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span>` : `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span>`}<button class="btn-sm btn-red" style="font-size:10px;padding:2px 6px" onclick="removeResign(${i})">✕</button></div>`; }
+                else { h += `<div class="resign-slot-empty">Slot ${i + 1} — Empty</div>`; }
+            }
             h += `</div>`;
-            h += `</div>`; // end right col
-            h += `</div>`; // end two-col
-
+            h += `<div class="card" style="background:linear-gradient(135deg,var(--bg1),var(--amber2));border-color:var(--amber3)"><div class="section-label" style="margin-bottom:6px">What happens next</div><div style="font-size:11px;color:var(--tx1);font-family:'DM Mono',monospace;line-height:1.8">★ FP players stay — always<br>✅ Re-signed players — kept on roster<br>⬜ Others — replaced by new players<br>📋 Then: Offseason acquisitions window</div></div>`;
+            h += `<div class="btn-row"><button class="btn-gold" style="font-size:15px;padding:11px 28px" onclick="confirmResigns()">Confirm &amp; Go to Front Office →</button><button onclick="skipResigns()">Skip Re-Signing</button></div>`;
+            h += `</div></div>`;
             el.innerHTML = h;
         }
 
-        function toggleResign(idx, slots) {
-            const i = _resignSelected.indexOf(idx);
-            if (i >= 0) { _resignSelected.splice(i, 1); }
-            else if (_resignSelected.length < slots) { _resignSelected.push(idx); }
-            const retained = loadRetainedRoster();
-            renderResignContent(SEASON.playerTeam, retained, slots);
-        }
-
-        function removeResign(slotIdx) {
-            _resignSelected.splice(slotIdx, 1);
-            const retained = loadRetainedRoster();
-            renderResignContent(SEASON.playerTeam, retained, getResignSlots());
-        }
+        function toggleResign(idx, slots) { const i = _resignSelected.indexOf(idx); if (i >= 0) { _resignSelected.splice(i, 1); } else if (_resignSelected.length < slots) { _resignSelected.push(idx); } const retained = loadRetainedRoster(); renderResignContent(SEASON.playerTeam, retained, slots); }
+        function removeResign(slotIdx) { _resignSelected.splice(slotIdx, 1); const retained = loadRetainedRoster(); renderResignContent(SEASON.playerTeam, retained, getResignSlots()); }
 
         function confirmResigns() {
-            const retained = loadRetainedRoster();
-            if (!retained) return skipResigns();
-            const players = retained.players || [];
-            const fpPlayers = retained.fpPlayers || [];
-
-            // Apply re-signs to G.you roster
-            // FP players are always in G.you already (generated by genTeam)
-            // Re-signed players: find a matching slot or replace a non-FP, non-resigned player
-
-            const resignedPlayers = _resignSelected.map(i => players[i]);
-
-            // Apply resigned hitters: replace non-FP hitters by index
-            const resignedHitters = resignedPlayers.filter(p => !p.isPitcher);
-            const resignedPitchers = resignedPlayers.filter(p => p.isPitcher);
-
+            const retained = loadRetainedRoster(); if (!retained) return skipResigns();
+            const players = retained.players || []; const resignedPlayers = _resignSelected.map(i => players[i]);
+            const resignedHitters = resignedPlayers.filter(p => !p.isPitcher); const resignedPitchers = resignedPlayers.filter(p => p.isPitcher);
             let hitterReplaceIdx = 0;
-            for (const p of resignedHitters) {
-                // Find next non-FP hitter slot
-                while (hitterReplaceIdx < G.you.hitters.length && G.you.hitters[hitterReplaceIdx].isFP) hitterReplaceIdx++;
-                if (hitterReplaceIdx < G.you.hitters.length) {
-                    G.you.hitters[hitterReplaceIdx] = { ...p, id: hitterReplaceIdx, inGame: hitterReplaceIdx < 9, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } };
-                    hitterReplaceIdx++;
-                }
-            }
-
-            // Place resigned SPs into slots 0-4, resigned RPs into slots 5-12
+            for (const p of resignedHitters) { while (hitterReplaceIdx < G.you.hitters.length && G.you.hitters[hitterReplaceIdx].isFP) hitterReplaceIdx++; if (hitterReplaceIdx < G.you.hitters.length) { G.you.hitters[hitterReplaceIdx] = { ...p, id: hitterReplaceIdx, inGame: hitterReplaceIdx < 9, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } }; hitterReplaceIdx++; } }
             for (const p of resignedPitchers) {
-                const startSlot = p.isStarter ? 0 : 5;
-                const endSlot = p.isStarter ? 5 : G.you.pitchers.length;
-                let placed = false;
-                for (let i = startSlot; i < endSlot; i++) {
-                    if (!G.you.pitchers[i].isFP) {
-                        G.you.pitchers[i] = {
-                            ...p,
-                            id: i,
-                            isStarter: p.isStarter,   // preserve the resigned pitcher's role
-                            role: p.role,
-                            stamina: 100,
-                            maxStamina: p.maxStamina || 100,
-                            pitchesThisGame: 0,
-                            usedThisGame: false,
-                            active: false,
-                            currentPitcher: false
-                        };
-                        placed = true;
-                        break;
-                    }
-                }
-                // Fallback: if no open slot of the right type exists, find any non-FP slot
-                // that matches the role (shouldn't happen with valid roster, but safety net)
-                if (!placed) {
-                    for (let i = 0; i < G.you.pitchers.length; i++) {
-                        if (!G.you.pitchers[i].isFP && G.you.pitchers[i].isStarter === p.isStarter) {
-                            G.you.pitchers[i] = {
-                                ...p, id: i, isStarter: p.isStarter, role: p.role,
-                                stamina: 100, maxStamina: p.maxStamina || 100,
-                                pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false
-                            };
-                            break;
-                        }
-                    }
-                }
+                const startSlot = p.isStarter ? 0 : 5; const endSlot = p.isStarter ? 5 : G.you.pitchers.length; let placed = false;
+                for (let i = startSlot; i < endSlot; i++) { if (!G.you.pitchers[i].isFP) { G.you.pitchers[i] = { ...p, id: i, isStarter: p.isStarter, role: p.role, stamina: 100, maxStamina: p.maxStamina || 100, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false }; placed = true; break; } }
+                if (!placed) { for (let i = 0; i < G.you.pitchers.length; i++) { if (!G.you.pitchers[i].isFP && G.you.pitchers[i].isStarter === p.isStarter) { G.you.pitchers[i] = { ...p, id: i, isStarter: p.isStarter, role: p.role, stamina: 100, maxStamina: p.maxStamina || 100, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false }; break; } } }
             }
-
-            // Clear retained data (used, don't re-offer next season from same pool)
-            saveRetainedRoster(null);
-            showOffseason();
+            saveRetainedRoster(null); showOffseason();
         }
+        function skipResigns() { saveRetainedRoster(null); showOffseason(); }
 
-        function skipResigns() {
-            saveRetainedRoster(null);
-            showOffseason();
-        }
-
-        // Save roster snapshot for potential re-signing next season
         function saveRosterForResign(teamName) {
-            const hitters = G.you ? G.you.hitters : [];
-            const pitchers = G.you ? G.you.pitchers : [];
-            const fpPlayers = [];
-            const nonFPPlayers = [];
-
-            hitters.forEach(p => {
-                if (p.isFP) { fpPlayers.push({ ...p, isPitcher: false }); }
-                else { nonFPPlayers.push({ ...p, isPitcher: false }); }
-            });
-            pitchers.forEach(p => {
-                if (p.isFP) { fpPlayers.push({ ...p, isPitcher: true }); }
-                else { nonFPPlayers.push({ ...p, isPitcher: true }); }
-            });
-
+            const hitters = G.you ? G.you.hitters : []; const pitchers = G.you ? G.you.pitchers : [];
+            const fpPlayers = []; const nonFPPlayers = [];
+            hitters.forEach(p => { if (p.isFP) { fpPlayers.push({ ...p, isPitcher: false }); } else { nonFPPlayers.push({ ...p, isPitcher: false }); } });
+            pitchers.forEach(p => { if (p.isFP) { fpPlayers.push({ ...p, isPitcher: true }); } else { nonFPPlayers.push({ ...p, isPitcher: true }); } });
             saveRetainedRoster({ teamName, players: nonFPPlayers, fpPlayers });
         }
 
@@ -3041,13 +2889,10 @@
 
         function genAcqHitter(tier) {
             const tiers = { elite: { avgMin: .310, avgMax: .345, opsMin: .950, opsMax: 1.100, spdMin: 70, spdMax: 98, costMin: 40, costMax: 55 }, solid: { avgMin: .275, avgMax: .309, opsMin: .800, opsMax: .949, spdMin: 45, spdMax: 89, costMin: 20, costMax: 35 }, depth: { avgMin: .240, avgMax: .274, opsMin: .680, opsMax: .799, spdMin: 25, spdMax: 75, costMin: 8, costMax: 18 } };
-            const t = tiers[tier];
-            const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
-            const pos = pick(['OF', 'OF', 'INF', 'INF', 'C', 'UTIL']); // weighted toward OF/INF
-            const fn = pick(NF), ln = pick(NL_NAMES);
+            const t = tiers[tier]; const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
+            const pos = pick(['OF', 'OF', 'INF', 'INF', 'C', 'UTIL']); const fn = pick(NF), ln = pick(NL_NAMES);
             return { id: Math.floor(Math.random() * 90000) + 10000, name: fn[0] + '. ' + ln, hand, num: rndI(1, 99), pos, spd: rndI(t.spdMin, t.spdMax), bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .28)), avg: r3(rnd(t.avgMin, t.avgMax)), ops: r3(rnd(t.opsMin, t.opsMax)), active: true, inGame: false, isFP: false, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }, _acqTier: tier, _acqCost: rndI(t.costMin, t.costMax), _acqType: 'hitter' };
         }
-
         function genAcqPitcher(tier) {
             const tiers = { aceSP: { eraMin: 2.3, eraMax: 3.0, whipMin: .80, whipMax: 1.00, kMin: .28, kMax: .34, bbMin: .05, bbMax: .10, costMin: 45, costMax: 60, sp: true }, midSP: { eraMin: 3.1, eraMax: 4.2, whipMin: 1.00, whipMax: 1.20, kMin: .18, kMax: .26, bbMin: .06, bbMax: .16, costMin: 20, costMax: 35, sp: true }, qualRP: { eraMin: 2.5, eraMax: 3.5, whipMin: .75, whipMax: 1.05, kMin: .30, kMax: .42, bbMin: .07, bbMax: .15, costMin: 18, costMax: 28, sp: false }, depthRP: { eraMin: 3.6, eraMax: 5.0, whipMin: 1.10, whipMax: 1.40, kMin: .18, kMax: .28, bbMin: .09, bbMax: .22, costMin: 6, costMax: 15, sp: false } };
             const t = tiers[tier]; const hand = Math.random() > .3 ? 'R' : 'L'; const fn = pick(NF), ln = pick(NL_NAMES);
@@ -3055,8 +2900,8 @@
         }
         function genAcqPool(isDeadline) {
             const pool = [];
-            if (!isDeadline) { const hT = ['elite', 'solid', 'solid', 'depth', 'depth'], pT = ['aceSP', 'midSP', 'midSP', 'qualRP', 'qualRP', 'depthRP']; const nH = rndI(4, 6), nP = rndI(4, 6); for (let i = 0; i < nH; i++)pool.push(genAcqHitter(pick(hT))); for (let i = 0; i < nP; i++)pool.push(genAcqPitcher(pick(pT))); }
-            else { const hT = ['solid', 'solid', 'depth', 'depth'], pT = ['qualRP', 'qualRP', 'depthRP', 'depthRP', 'midSP']; const nH = rndI(2, 4), nP = rndI(4, 6); for (let i = 0; i < nH; i++)pool.push(genAcqHitter(pick(hT))); for (let i = 0; i < nP; i++)pool.push(genAcqPitcher(pick(pT))); }
+            if (!isDeadline) { const hT = ['elite', 'solid', 'solid', 'depth', 'depth'], pT = ['aceSP', 'midSP', 'midSP', 'qualRP', 'qualRP', 'depthRP']; const nH = rndI(4, 6), nP = rndI(4, 6); for (let i = 0; i < nH; i++) pool.push(genAcqHitter(pick(hT))); for (let i = 0; i < nP; i++) pool.push(genAcqPitcher(pick(pT))); }
+            else { const hT = ['solid', 'solid', 'depth', 'depth'], pT = ['qualRP', 'qualRP', 'depthRP', 'depthRP', 'midSP']; const nH = rndI(2, 4), nP = rndI(4, 6); for (let i = 0; i < nH; i++) pool.push(genAcqHitter(pick(hT))); for (let i = 0; i < nP; i++) pool.push(genAcqPitcher(pick(pT))); }
             return pool;
         }
         let _acqPool = []; let _acqDeadlinePool = [];
@@ -3065,34 +2910,22 @@
         // ── Team Strength Assessment ──
         function assessTeamStrength(team) {
             const lu = team.hitters.slice(0, 13); const sps = team.pitchers.filter(p => p.isStarter); const rps = team.pitchers.filter(p => !p.isStarter);
-
             const offenseAVG = lu.reduce((a, h) => a + (h.avg || 0), 0) / lu.length;
             const offenseOPS = lu.reduce((a, h) => a + (h.ops || 0), 0) / lu.length;
             const offScore = Math.round(clamp(((offenseOPS - 0.600) / 0.600 * 100) + ((offenseAVG - 0.220) / 0.2) * 100, 0, 100));
-
             const spERA = sps.length ? sps.reduce((a, p) => a + (p.era || 4.5), 0) / sps.length : 5.0;
             const spWHIP = sps.length ? sps.reduce((a, p) => a + (p.whip || 2.0), 0) / sps.length : 2.0;
             const spCommand = sps.length ? sps.reduce((a, p) => a + (p.bbRate - p.kRate || 0.1), 0) / sps.length : 0.2;
-
             const rpERA = rps.length ? rps.reduce((a, p) => a + (p.era || 4.5), 0) / rps.length : 5.0;
             const rpWHIP = rps.length ? rps.reduce((a, p) => a + (p.whip || 2.0), 0) / rps.length : 2.0;
             const rpCommand = rps.length ? rps.reduce((a, p) => a + (p.bbRate - p.kRate || 0.1), 0) / rps.length : 0.2;
-
-            const spEraScore = (5.0 - spERA) / 5.0 * 100;
-            const spWhipScore = (2.0 - spWHIP) / 2.0 * 100;
-            const spCommandScore = (0.2 - spCommand) / 0.2 * 10;
+            const spEraScore = (5.0 - spERA) / 5.0 * 100; const spWhipScore = (2.0 - spWHIP) / 2.0 * 100; const spCommandScore = (0.2 - spCommand) / 0.2 * 10;
             const rotScore = Math.round(spEraScore + spWhipScore + spCommandScore, 0, 100);
-
-            const rpEraScore = (5.0 - rpERA) / 5.0 * 100;
-            const rpWhipScore = (2.0 - rpWHIP) / 2.0 * 100;
-            const rpCommandScore = (0.2 - rpCommand) / 0.2 * 10;
+            const rpEraScore = (5.0 - rpERA) / 5.0 * 100; const rpWhipScore = (2.0 - rpWHIP) / 2.0 * 100; const rpCommandScore = (0.2 - rpCommand) / 0.2 * 10;
             const bullScore = Math.round(rpEraScore + rpWhipScore + rpCommandScore, 0, 100);
-
             const avgSpd = lu.reduce((a, h) => a + (h.spd || 50), 0) / lu.length;
             const spdScore = Math.round(clamp((avgSpd - 10) / 80 * 100, 0, 100));
-
             const composite = Math.round(offScore * 0.35 + rotScore * 0.30 + bullScore * 0.25 + spdScore * 0.10);
-
             let grade = 'D'; if (composite >= 85) grade = 'S'; else if (composite >= 75) grade = 'A'; else if (composite >= 65) grade = 'B'; else if (composite >= 55) grade = 'C'; else if (composite >= 45) grade = 'C';
             const weaknesses = [];
             if (offScore < 40) weaknesses.push({ msg: `Weak offense — avg OPS ${offenseOPS.toFixed(3)} + avg AVG ${offenseAVG.toFixed(3)}`, severe: offScore < 25 });
@@ -3118,8 +2951,7 @@
         function showOffseason() {
             document.getElementById('offseason-team-name').textContent = SEASON.playerTeam;
             document.getElementById('offseason-year-pill').textContent = SEASON.year + ' Season';
-            _acqPool = genAcqPool(false);
-            renderOffseasonScreen(); showScreen('offseason');
+            _acqPool = genAcqPool(false); renderOffseasonScreen(); showScreen('offseason');
         }
         function renderOffseasonScreen() { renderOffseasonBudget(); renderOffseasonRoster(); renderOffseasonStrength(); renderOffseasonPool(); }
         function renderOffseasonBudget() {
@@ -3129,9 +2961,34 @@
         function renderOffseasonStrength() { document.getElementById('offseason-strength-card').innerHTML = renderStrengthCard(G.you); }
         function renderOffseasonRoster() {
             const el = document.getElementById('offseason-roster'); let h = '<div class="section-label" style="margin-bottom:5px">Hitters</div>';
-            G.you.hitters.slice(0, 13).forEach((p, i) => { const fp = p.isFP; h += `<div style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:.5px solid var(--bdr);font-size:11px;flex-wrap:wrap"><span style="color:var(--tx3);width:14px;font-size:10px;font-family:'DM Mono',monospace">${i + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${p.pos}</span><span style="flex:1;font-weight:500;font-family:'DM Mono',monospace">${fp ? '★ ' : ''}${p.name}</span>${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}<span class="chip ${p.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(p.avg * 1000)}</span><span class="chip ${p.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${p.ops}</span><span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${Math.round(p.kRate * 100)}%</span><span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${Math.round(p.bbRate * 100)}%</span><span class="chip ${spdChip(p.spd)}" style="font-size:9px">${p.spd}spd</span><span class="chip chip-blue" style="font-size:9px">${p.hand}</span></div>`; });
+            G.you.hitters.slice(0, 13).forEach((p, i) => {
+                const fp = p.isFP;
+                // CHANGE 4: use formatting helpers
+                h += `<div style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:.5px solid var(--bdr);font-size:11px;flex-wrap:wrap">
+<span style="color:var(--tx3);width:14px;font-size:10px;font-family:'DM Mono',monospace">${i + 1}</span>
+<span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${p.pos}</span>
+<span style="flex:1;font-weight:500;font-family:'DM Mono',monospace">${fp ? '★ ' : ''}${p.name}</span>
+${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
+<span class="chip ${p.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtAVG(p.avg)}</span>
+<span class="chip ${p.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>
+<span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>
+<span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>
+<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>
+<span class="chip chip-blue" style="font-size:9px">${p.hand}</span></div>`;
+            });
             h += '<div class="section-label" style="margin-top:8px;margin-bottom:5px">Pitchers</div>';
-            G.you.pitchers.slice(0, 13).forEach((p) => { const fp = p.isFP; h += `<div style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:.5px solid var(--bdr);font-size:11px;flex-wrap:wrap"><span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span><span style="flex:1;font-weight:500;font-family:'DM Mono',monospace">${fp ? '★ ' : ''}${p.name}</span>${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}<span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">ERA ${p.era}</span><span class="chip ${p.whip < 1.0 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${p.whip}</span><span class="chip ${p.kRate >= 0.28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${Number(p.kRate * 100).toFixed(0)}%</span><span class="chip ${p.bbRate <= 0.08 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">BB ${Number(p.bbRate * 100).toFixed(0)}%</span><span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span></div>`; });
+            G.you.pitchers.slice(0, 13).forEach((p) => {
+                const fp = p.isFP;
+                h += `<div style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:.5px solid var(--bdr);font-size:11px;flex-wrap:wrap">
+<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span>
+<span style="flex:1;font-weight:500;font-family:'DM Mono',monospace">${fp ? '★ ' : ''}${p.name}</span>
+${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
+<span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">ERA ${fmtERA(p.era)}</span>
+<span class="chip ${p.whip < 1.0 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${fmtWHIP(p.whip)}</span>
+<span class="chip ${p.kRate >= 0.28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${fmtPct(p.kRate)}</span>
+<span class="chip ${p.bbRate <= 0.08 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">BB ${fmtPct(p.bbRate)}</span>
+<span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span></div>`;
+            });
             el.innerHTML = h;
         }
         function renderOffseasonPool() {
@@ -3145,32 +3002,41 @@
                 h += `<div class="acq-player-card${!canAfford ? ' too-expensive' : ''}">`;
                 h += `<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap"><span style="font-weight:600;font-size:12px;font-family:'DM Mono',monospace;flex:1">${p.name}</span><span class="chip ${tC[p._acqTier]}">${tL[p._acqTier]}</span><span class="chip chip-gold">${p._acqCost} pts</span></div>`;
                 h += `<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">`;
-                if (isH) { h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span><span class="chip ${p.avg >= .290 ? 'chip-green' : p.avg >= .250 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">.${Math.round(p.avg * 1000)}</span><span class="chip ${p.ops >= .900 ? 'chip-green' : p.ops >= .700 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">OPS ${p.ops}</span><span class="chip ${spdChip(p.spd)}" style="font-size:9px">${p.spd}spd</span><span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${Math.round(p.kRate * 100)}%</span><span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${Math.round(p.bbRate * 100)}%</span><span class="chip chip-blue" style="font-size:9px">${p.hand}</span>`; }
-                else { h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span><span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span><span class="chip ${p.era < 3.0 ? 'chip-green' : p.era < 5.0 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">ERA ${p.era}</span><span class="chip ${p.whip < 1.0 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${p.whip}</span><span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${Math.round(p.kRate * 100)}%</span><span class="chip chip-gray" style="font-size:9px">BB ${Math.round(p.bbRate * 100)}%</span>`; }
+                if (isH) {
+                    h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span>`;
+                    h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : p.avg >= .250 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${fmtAVG(p.avg)}</span>`;
+                    h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : p.ops >= .700 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
+                    h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>`;
+                    h += `<span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>`;
+                    h += `<span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>`;
+                    h += `<span class="chip chip-blue" style="font-size:9px">${p.hand}</span>`;
+                } else {
+                    h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span>`;
+                    h += `<span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span>`;
+                    h += `<span class="chip ${p.era < 3.0 ? 'chip-green' : p.era < 5.0 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">ERA ${fmtERA(p.era)}</span>`;
+                    h += `<span class="chip ${p.whip < 1.0 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${fmtWHIP(p.whip)}</span>`;
+                    h += `<span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${fmtPct(p.kRate)}</span>`;
+                    h += `<span class="chip chip-gray" style="font-size:9px">BB ${fmtPct(p.bbRate)}</span>`;
+                }
                 h += `</div>`;
                 if (canAfford) {
+                    // CHANGE 1: No position constraints — any non-FP hitter can be replaced
                     h += `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select id="acq-replace-${idx}" style="flex:1;min-width:120px;font-size:11px">`;
                     if (isH) {
-                        const allowedSlots = getReplaceableHitterSlots(G.you.hitters, p.pos);
                         G.you.hitters.forEach((hp, hi) => {
-                            const allowed = allowedSlots[hi];
-                            const dis = !allowed ? 'disabled' : '';
-                            const reason = hp.isFP ? ' [★FP]' : !allowed ? ' [constraint]' : '';
+                            const dis = hp.isFP ? 'disabled' : '';
+                            const reason = hp.isFP ? ' [★FP]' : '';
                             h += `<option value="h_${hi}" ${dis}>${hp.name} (${hp.pos})${reason}</option>`;
                         });
                     } else {
                         const allowedSlots = getReplaceablePitcherSlots(G.you.pitchers, p.isStarter);
                         G.you.pitchers.forEach((pp, pi) => {
-                            const allowed = allowedSlots[pi];
-                            const dis = !allowed ? 'disabled' : '';
-                            const reason = pp.isFP ? ' [★FP]' : !allowed ? ' [constraint]' : '';
+                            const allowed = allowedSlots[pi]; const dis = !allowed ? 'disabled' : '';
+                            const reason = pp.isFP ? ' [★FP]' : !allowed ? ' [min SP/RP]' : '';
                             h += `<option value="p_${pi}" ${dis}>${pp.name} (${pp.role})${reason}</option>`;
                         });
                     }
                     h += `</select><button class="btn-amber btn-sm" onclick="acquirePlayer(${idx},false)">Acquire</button></div>`;
-                    // Show constraint note
-                    if (isH) h += `<div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace;margin-top:3px">${p.pos} player — can only replace slots that keep ≥3 OF, ≥4 INF, ≥1 C</div>`;
-                    else h += `<div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace;margin-top:3px">${p.role} — can only replace ${p.isStarter ? 'SP (min 5 SP required)' : 'RP (min 8 RP required)'}</div>`;
                 } else { h += `<div style="font-size:11px;color:var(--tx3);font-family:'DM Mono',monospace">⚠️ Need ${p._acqCost} pts (have ${rem})</div>`; }
                 h += `</div>`;
             });
@@ -3184,17 +3050,22 @@
             const val = selEl.value; if (!val) return;
             const isH = p._acqType === 'hitter'; const idx = parseInt(val.split('_')[1]);
 
-            // Constraint double-check
             if (isH) {
-                const allowed = getReplaceableHitterSlots(G.you.hitters, p.pos);
-                if (!allowed[idx]) { alert(`Cannot replace that player — would violate roster minimums (3 OF, 4 INF, 1 C).`); return; }
+                // CHANGE 1: Only FP check, no positional constraints
+                if (G.you.hitters[idx].isFP) { alert('Franchise players cannot be traded away.'); return; }
+                const out = G.you.hitters[idx];
+                G.you.hitters[idx] = { ...p, id: idx, inGame: out.inGame, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } };
+                const txn = `✓ Acquired ${p.name} (${p.pos}) — replaced ${out.name} · Cost: ${p._acqCost} pts · Remaining: ${rem - p._acqCost}`;
+                SEASON.offseasonLog.push(txn); SEASON.budgetSpent += p._acqCost; pool.splice(poolIdx, 1); addTxnLog(txn, isDeadline);
             } else {
                 const allowed = getReplaceablePitcherSlots(G.you.pitchers, p.isStarter);
                 if (!allowed[idx]) { alert(`Cannot replace that pitcher — would violate roster minimums (5 SP, 8 RP).`); return; }
+                if (G.you.pitchers[idx].isFP) { alert('Franchise players cannot be traded away.'); return; }
+                const out = G.you.pitchers[idx];
+                G.you.pitchers[idx] = { ...p, id: idx, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false, stamina: 100, maxStamina: 100 };
+                const txn = `✓ Acquired ${p.name} (${p.role}) — replaced ${out.name} · Cost: ${p._acqCost} pts · Remaining: ${rem - p._acqCost}`;
+                SEASON.offseasonLog.push(txn); SEASON.budgetSpent += p._acqCost; pool.splice(poolIdx, 1); addTxnLog(txn, isDeadline);
             }
-
-            if (isH) { if (G.you.hitters[idx].isFP) { alert('Franchise players cannot be traded away.'); return; } const out = G.you.hitters[idx]; G.you.hitters[idx] = { ...p, id: idx, inGame: out.inGame, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } }; const txn = `✓ Acquired ${p.name} (${p.pos}) — replaced ${out.name} · Cost: ${p._acqCost} pts · Remaining: ${rem - p._acqCost}`; SEASON.offseasonLog.push(txn); SEASON.budgetSpent += p._acqCost; pool.splice(poolIdx, 1); addTxnLog(txn, isDeadline); }
-            else { if (G.you.pitchers[idx].isFP) { alert('Franchise players cannot be traded away.'); return; } const out = G.you.pitchers[idx]; G.you.pitchers[idx] = { ...p, id: idx, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false, stamina: 100, maxStamina: 100 }; const txn = `✓ Acquired ${p.name} (${p.role}) — replaced ${out.name} · Cost: ${p._acqCost} pts · Remaining: ${rem - p._acqCost}`; SEASON.offseasonLog.push(txn); SEASON.budgetSpent += p._acqCost; pool.splice(poolIdx, 1); addTxnLog(txn, isDeadline); }
             if (isDeadline) renderDeadlineContent(); else renderOffseasonScreen();
         }
         function addTxnLog(msg, isDeadline) {
@@ -3231,16 +3102,11 @@
             document.getElementById('deadline-record-hdr').textContent = `${SEASON.playerTeam}: ${r.w}-${r.l}`;
             document.getElementById('deadline-budget-hdr').textContent = `Budget: ${rem} pts remaining`;
             const el = document.getElementById('deadline-content');
-
             let h = `<div class="budget-display" style="margin-bottom:12px"><div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:1.2px;color:var(--amber1);font-family:'DM Mono',monospace">Trade Deadline</div><div style="flex:1"></div><span class="budget-remaining${rem < 10 ? ' low' : ''}">${rem}</span><span style="font-size:11px;color:var(--tx2);font-family:'DM Mono',monospace">pts remaining of ${SEASON.acquisitionBudget} budget</span></div>`;
-
             if (rem === 0) {
-                h += `<div class="alert-info" style="margin-bottom:14px">💰 Budget fully spent — no moves available. You used all ${SEASON.acquisitionBudget} pts this season.</div>`;
+                h += `<div class="alert-info" style="margin-bottom:14px">💰 Budget fully spent. You used all ${SEASON.acquisitionBudget} pts this season.</div>`;
             } else {
-                // Three-column layout: Your roster | Available players | Pool
                 h += `<div class="deadline-three-col">`;
-
-                // LEFT: Your current roster (hitters + pitchers for comparison)
                 h += `<div>`;
                 h += `<div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--blue0);margin-bottom:8px">Your Roster</div>`;
                 h += `<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:4px;font-family:'DM Mono',monospace">Hitters</div>`;
@@ -3250,8 +3116,8 @@
                     h += `<span style="color:var(--tx3);width:12px;font-size:10px">${i + 1}</span>`;
                     h += `<span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px;flex-shrink:0">${p.pos}</span>`;
                     h += `<span style="flex:1;font-weight:500;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fp ? '★ ' : resigned ? '📋 ' : ''}${p.name}</span>`;
-                    h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : p.avg >= .260 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">.${Math.round(p.avg * 1000)}</span>`;
-                    h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : p.ops >= .750 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${p.ops}</span>`;
+                    h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : p.avg >= .260 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${fmtAVG(p.avg)}</span>`;
+                    h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : p.ops >= .750 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${fmtOPS(p.ops)}</span>`;
                     h += `</div>`;
                 });
                 h += `<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin:8px 0 4px;font-family:'DM Mono',monospace">Pitchers</div>`;
@@ -3260,15 +3126,12 @@
                     h += `<div class="roster-compare-row${fp ? ' fp-row' : ''}${resigned ? ' resigned-row' : ''}">`;
                     h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:8px;padding:1px 4px">${p.role}</span>`;
                     h += `<span style="flex:1;font-weight:500;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fp ? '★ ' : resigned ? '📋 ' : ''}${p.name}</span>`;
-                    h += `<span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${p.era}</span>`;
-                    h += `<span class="chip ${p.whip < 1.1 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${p.whip}</span>`;
+                    h += `<span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtERA(p.era)}</span>`;
+                    h += `<span class="chip ${p.whip < 1.1 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtWHIP(p.whip)}</span>`;
                     h += `<span style="font-size:9px;color:${stamCol(sc)};font-family:'DM Mono',monospace;flex-shrink:0">${sc}%</span>`;
                     h += `</div>`;
                 });
-                h += `<div style="margin-top:8px;font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace;line-height:1.6">★ FP — franchise player<br>📋 — re-signed from last season</div>`;
-                h += `</div>`;
-
-                // MIDDLE: Available pool
+                h += `<div style="margin-top:8px;font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace;line-height:1.6">★ FP — franchise player<br>📋 — re-signed</div></div>`;
                 h += `<div>`;
                 h += `<div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--amber0);margin-bottom:8px">Available Players</div>`;
                 if (!_acqDeadlinePool.length) { h += `<div style="color:var(--tx3);font-size:11px;font-family:'DM Mono',monospace">Pool exhausted.</div>`; }
@@ -3279,40 +3142,44 @@
                     h += `<div class="acq-player-card${!canAfford ? ' too-expensive' : ''}">`;
                     h += `<div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;flex-wrap:wrap"><span style="font-weight:600;font-size:12px;font-family:'DM Mono',monospace;flex:1">${p.name}</span><span class="chip ${tC[p._acqTier]}" style="font-size:9px">${tL[p._acqTier]}</span><span class="chip chip-gold" style="font-size:10px">${p._acqCost} pts</span></div>`;
                     h += `<div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px">`;
-                    if (isH) { h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span><span class="chip ${p.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(p.avg * 1000)}</span><span class="chip ${p.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${p.ops}</span><span class="chip ${spdChip(p.spd)}" style="font-size:9px">${p.spd}spd</span><span class="chip chip-blue" style="font-size:9px">${p.hand}</span>`; }
-                    else { h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span><span class="chip ${p.era < 3.0 ? 'chip-green' : p.era < 4.0 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">ERA ${p.era}</span><span class="chip ${p.whip < 1.0 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${p.whip}</span><span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${Math.round(p.kRate * 100)}%</span>`; }
+                    if (isH) {
+                        h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span>`;
+                        h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtAVG(p.avg)}</span>`;
+                        h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
+                        h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>`;
+                        h += `<span class="chip chip-blue" style="font-size:9px">${p.hand}</span>`;
+                    } else {
+                        h += `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span>`;
+                        h += `<span class="chip ${p.era < 3.0 ? 'chip-green' : p.era < 4.0 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">ERA ${fmtERA(p.era)}</span>`;
+                        h += `<span class="chip ${p.whip < 1.0 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${fmtWHIP(p.whip)}</span>`;
+                        h += `<span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${fmtPct(p.kRate)}</span>`;
+                    }
                     h += `</div>`;
                     if (canAfford) {
                         h += `<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap"><select id="acq-replace-${idx}" style="flex:1;min-width:100px;font-size:11px">`;
                         if (isH) {
-                            const allowedSlots = getReplaceableHitterSlots(G.you.hitters, p.pos);
+                            // CHANGE 1: No positional constraints for hitters
                             G.you.hitters.forEach((hp, hi) => {
-                                const allowed = allowedSlots[hi];
-                                const dis = !allowed ? 'disabled' : '';
-                                const reason = hp.isFP ? ' [★FP]' : !allowed ? ' [constraint]' : '';
+                                const dis = hp.isFP ? 'disabled' : '';
+                                const reason = hp.isFP ? ' [★FP]' : '';
                                 h += `<option value="h_${hi}" ${dis}>${hp.name} (${hp.pos})${reason}</option>`;
                             });
                         } else {
                             const allowedSlots = getReplaceablePitcherSlots(G.you.pitchers, p.isStarter);
                             G.you.pitchers.forEach((pp, pi) => {
-                                const allowed = allowedSlots[pi];
-                                const dis = !allowed ? 'disabled' : '';
-                                const reason = pp.isFP ? ' [★FP]' : !allowed ? ' [constraint]' : '';
+                                const allowed = allowedSlots[pi]; const dis = !allowed ? 'disabled' : '';
+                                const reason = pp.isFP ? ' [★FP]' : !allowed ? ' [min SP/RP]' : '';
                                 h += `<option value="p_${pi}" ${dis}>${pp.name} (${pp.role})${reason}</option>`;
                             });
                         }
                         h += `</select><button class="btn-amber btn-sm" onclick="acquirePlayer(${idx},true)">Acquire</button></div>`;
-                    }
-                    else { h += `<div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">Need ${p._acqCost} pts</div>`; }
+                    } else { h += `<div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">Need ${p._acqCost} pts</div>`; }
                     h += `</div>`;
                 });
                 h += `</div>`;
-
-                // RIGHT: Transactions log + standings
                 h += `<div>`;
                 h += `<div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--green0);margin-bottom:8px">Transactions</div>`;
                 h += `<div class="txn-log" id="deadline-txn-log" style="max-height:200px;margin-bottom:12px"><div style="color:var(--tx3);font-size:11px">No transactions yet.</div></div>`;
-                // Mini standings for division
                 const myDiv = TEAM_META[SEASON.playerTeam].division;
                 const divTeams = Object.keys(TEAM_META).filter(t => TEAM_META[t].division === myDiv);
                 divTeams.sort((a, b) => seasonWinPct(b) - seasonWinPct(a));
@@ -3320,11 +3187,8 @@
                 h += `<table class="standings-table"><thead><tr><th class="team-th">Team</th><th class="num">W</th><th class="num">L</th><th class="num">GB</th></tr></thead><tbody>`;
                 const ldr = seasonWinPct(divTeams[0]);
                 divTeams.forEach((t, i) => { const rec = SEASON.records[t]; const gb = i === 0 ? '—' : (((ldr - seasonWinPct(t)) * (rec.w + rec.l || 162)) / 2).toFixed(1); h += `<tr${t === SEASON.playerTeam ? ' class="player-row"' : ''}><td>${t === SEASON.playerTeam ? '▶ ' : ''}<strong>${t.split(' ').slice(-1)[0]}</strong></td><td class="num">${rec.w}</td><td class="num">${rec.l}</td><td class="num">${gb}</td></tr>`; });
-                h += `</tbody></table>`;
-                h += `</div>`;// end right col
-                h += `</div>`;// end three-col
+                h += `</tbody></table></div></div>`;
             }
-
             h += `<div style="margin-top:16px;text-align:right"><button class="btn-gold" style="font-size:14px;padding:10px 24px" onclick="closeDeadline()">Set Lineup &amp; Continue →</button></div>`;
             el.innerHTML = h;
         }
@@ -3336,16 +3200,12 @@
             const s = assessTeamStrength(G.you);
             const gradeBonus = { 'E': 0.00, 'D': 0.00, 'C': 0.02, 'B': 0.04, 'A': 0.06, 'S': 0.08 };
             const grade = gradeBonus[s.grade] ?? 0.00;
-
             const diffOdds = { "Easy": 0.51, "Normal": 0.49, "Hard": 0.47, "All-Star": 0.45 };
             const playerWin = Math.random() < ((diffOdds[SEASON.difficulty] ?? 0.50) + grade);
-
             if (playerWin) SEASON.records[SEASON.playerTeam].w++; else SEASON.records[SEASON.playerTeam].l++;
             ALL_TEAMS_FLAT.forEach(t => { if (t === SEASON.playerTeam) return; const r = SEASON.records[t]; if (r.w + r.l < SEASON_TOTAL) { if (Math.random() < 0.5) r.w++; else r.l++; } });
             SEASON.gamesPlayed++; if (SEASON.managerCooldown > 0) SEASON.managerCooldown--;
             const r = SEASON.records[SEASON.playerTeam]; SEASON.seasonLog.unshift({ g: SEASON.gamesPlayed, result: r.w > (r.w + r.l - 1) ? 'W' : 'L' });
-
-            // determine win based on increment
             const wasWin = playerWin; SEASON.seasonLog[0].result = wasWin ? 'W' : 'L';
             return { playerWin };
         }
@@ -3426,7 +3286,6 @@
             document.getElementById('season-div-mini').innerHTML = `<table class="standings-table" style="font-size:11px"><thead><tr><th class="team-th">Team</th><th class="num">W</th><th class="num">L</th><th class="num">GB</th></tr></thead><tbody>${teamsInDiv.map((t, i) => { const rec = SEASON.records[t]; const gb = i === 0 ? '—' : (((lead - seasonWinPct(t)) * (rec.w + rec.l || 162)) / 2).toFixed(1); return `<tr${t === pTeam ? ' class="player-row"' : ''}><td>${t === pTeam ? '★ ' + t : t}</td><td class="num">${rec.w}</td><td class="num">${rec.l}</td><td class="num">${gb}</td></tr>`; }).join('')}</tbody></table>`;
         }
         function finishSeason() {
-            // Save roster for potential re-sign next season
             saveRosterForResign(SEASON.playerTeam);
             ALL_TEAMS_FLAT.forEach(t => { const r = SEASON.records[t]; const rem = SEASON_TOTAL - (r.w + r.l); for (let i = 0; i < rem; i++) { if (Math.random() < 0.5) r.w++; else r.l++; } });
             computePlayoffs(); const inPlayoffs = isPlayerInPlayoffs();
@@ -3462,8 +3321,21 @@
             });
             return playoffTeams;
         }
-        const HOME_PATTERNS = { wc: [true, true, true], div: [true, true, false, false, true], lcs: [true, true, false, false, false, true, true], ws: [true, true, false, false, false, true, true] };
-        function makeSeriesObj(home, away, format, round) { return { home, away, wins: { home: 0, away: 0 }, done: false, winner: null, format, homePattern: HOME_PATTERNS[round] || HOME_PATTERNS.wc }; }
+
+        // ── CHANGE 3: Home game patterns per round (verified correct per spec) ──────
+        // WC  (Bo3): better seed all 3 home → [T, T, T]
+        // DIV (Bo5): better 2, worse 2, better 1 → [T, T, F, F, T]
+        // LCS (Bo7): better 2, worse 3, better 2 → [T, T, F, F, F, T, T]
+        // WS  (Bo7): same as LCS → [T, T, F, F, F, T, T]
+        // "home" refers to the higher seed (home = first arg in makeSeriesObj)
+        const HOME_PATTERNS = {
+            wc: [true, true, true],
+            div: [true, true, false, false, true],
+            lcs: [true, true, false, false, false, true, true],
+            ws: [true, true, false, false, false, true, true]
+        };
+
+        function makeSeriesObj(home, away, format, round) { return { home, away, wins: { home: 0, away: 0 }, done: false, winner: null, format, homePattern: HOME_PATTERNS[round] || HOME_PATTERNS.div }; }
         function computePlayoffs() { const pt = getPlayoffTeams(); SEASON.playoffs = { pt, bracket: {} }; Object.keys(LEAGUE_STRUCTURE).forEach(lg => { const seeds = []; const { divWinners, wildcards } = pt[lg]; divWinners.forEach((t, i) => seeds.push({ seed: i + 1, name: t.name, div: t.div, record: seasonRecord(t.name), bye: i < 2 })); wildcards.forEach((t, i) => seeds.push({ seed: 4 + i, name: t.name, div: t.div, record: seasonRecord(t.name), bye: false })); SEASON.playoffs.bracket[lg] = { seeds, wcSeries: [], divSeries: [], lcs: null, champion: null }; const s = SEASON.playoffs.bracket[lg].seeds; SEASON.playoffs.bracket[lg].wcSeries = [makeSeriesObj(s[2], s[5], 3, 'wc'), makeSeriesObj(s[3], s[4], 3, 'wc')]; }); }
         function isPlayerInPlayoffs() { if (!SEASON.playoffs) return false; for (const lg of Object.keys(SEASON.playoffs.bracket)) { const seeds = SEASON.playoffs.bracket[lg].seeds; if (seeds.find(s => s.name === SEASON.playerTeam)) return true; } return false; }
 

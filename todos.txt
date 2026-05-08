@@ -533,16 +533,18 @@ _____________________
 
 3. reweight ops
 
+4. Caps on manager prestige bonuses - after like 150 all the same?
+
 5. Make sure all stats Cells shown
  - standardize num digits everywhere --> bb and k rate and speed leading 0 digit
  - offseason resign needs bb and k hand and make speed color
  - trade deadline needs bb k and spd 
 
-6. Home order
+6. Home games ordering
 
 7. Re weight the trade deadline costs BY DIFFICULTY************* more expensivde offseasons
 
-
+8. 
 POSITIONS NEEDED -
 OF
 INF
@@ -558,3 +560,33 @@ acquisiton can only replace someone of same position group or a slot 10-13
 
 LOWK check if acqusitio s actually work for RP SP
 Make lineup constrint position group
+
+_________
+
+TODOs
+
+POSITION UPDATES
+1. Remove contraint on accessing POSITION PLAYERS HAVE IT JUST FOR pitchers
+2. Then as a caveat add a flag that linups that have less than 3 OF and 4 INF and a C will have an error likelihood bonus
+UTIL can be counted towards either but not both at the same time.
+3. +5 % error likelihood per any of the conditions not met, Catcher, 3 OF, 4 INF in the lineup.
+
+FIX HOME GAME ORDERING - currently it JUST give the better seed all the home games for the series.
+WILD CARD - better seed 3 home games
+DIVISION - better seed 2 home games, then worse seed 2 home games, then better seed 1 home game
+LCS AND WORLD SERIES BOTH - better seed 2 home games, worse seed 3 home games, better seed 2 home games
+
+STANDARDIZE DIGITS SHOWN FOR STATS Cells
+Can you make the OPS, Batting AVG, ERA, WHIP show 2 decimal places always. 
+Can you make the SPEED (spd), K %, and BB % show 2 digits even if the number is less than 10 then have a leading zero.
+
+___ 
+
+Rewieght costs by diff
+Reweight OPS
+Orderby stats
+Move up cap on 150 prestige
+Standardize all cells to show either 2 decimal places OR be a two digit whole number if 
+
+Some still no 0 in linups
+My stats and opp stats no zeros
