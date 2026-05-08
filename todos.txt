@@ -587,13 +587,32 @@ Orderby stats
 Move up cap on 150 prestige
 ____________________
 
+TODOs
 
-Fix deadline just going to slot 1 not slots actual seleected
+TRADE DEADLINE acquisitions
+The current trade deadline acquisitions only replace the first slot for players in either pitchers or hitters
+Can you make it such that the player from the drop down that is selected is the one that gets replaced not just the first slot always
 
-max prestige 10000
 
-Leading zeros for set linups
+LINEUPS stats
+Can you give the BB K and SPD statistics in this section a leading zero if they are less than 10.
+This will make all numbers have 2 digits. This functionality is already in other places but missing in others.
 
+
+CONFETTI
+When clicking to collect championship has confetti rain animation. Add that
+addB('View Championship', 'btn-gold', () => showScreen('seriesover')); 
+
+
+AI Starting pitcher
+Can you ensure that the starting pitcher chosen to start each game for the opposing pitcher is the with the highest stamina
+and then with tiebreaker for lower ERA. EX 2 at 100%. Pick 2 era over 3 era.
+
+
+
+
+
+_____
 OPS WEIGHT
 
 Confetti for champs
