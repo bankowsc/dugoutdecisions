@@ -590,3 +590,8 @@ Standardize all cells to show either 2 decimal places OR be a two digit whole nu
 
 Some still no 0 in linups
 My stats and opp stats no zeros
+
+____________________
+
+Fix deadline just going to slot 1 not slots actual seleected
+
