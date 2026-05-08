@@ -587,10 +587,17 @@ Orderby stats
 Move up cap on 150 prestige
 ____________________
 
+
 Fix deadline just going to slot 1 not slots actual seleected
+
+max prestige 10000
 
 Leading zeros for set linups
 
 OPS WEIGHT
 
-Costs higher on harder mode
+Confetti for champs
+
+HOF
+
+AI smart pitching choices? - Healthiest SP to start then only RPS and only SPS? Know your handedness?
