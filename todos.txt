@@ -583,15 +583,14 @@ Can you make the SPEED (spd), K %, and BB % show 2 digits even if the number is 
 ___ 
 
 Rewieght costs by diff
-Reweight OPS
 Orderby stats
 Move up cap on 150 prestige
-Standardize all cells to show either 2 decimal places OR be a two digit whole number if 
-
-Some still no 0 in linups
-My stats and opp stats no zeros
-
 ____________________
 
 Fix deadline just going to slot 1 not slots actual seleected
 
+Leading zeros for set linups
+
+OPS WEIGHT
+
+Costs higher on harder mode

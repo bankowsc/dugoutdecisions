@@ -2892,15 +2892,19 @@
         const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
         function genAcqHitter(tier) {
+            const diffMultiplier = SEASON.difficulty === 'Easy' ? 1.0 : SEASON.difficulty === 'Normal' ? 1.1 : SEASON.difficulty === 'Hard' ? 1.3 : SEASON.difficulty === 'All-Star' ? 1.5 : 1.5;
+
             const tiers = { elite: { avgMin: .310, avgMax: .345, opsMin: .950, opsMax: 1.100, spdMin: 70, spdMax: 98, costMin: 40, costMax: 55 }, solid: { avgMin: .275, avgMax: .309, opsMin: .800, opsMax: .949, spdMin: 45, spdMax: 89, costMin: 20, costMax: 35 }, depth: { avgMin: .240, avgMax: .274, opsMin: .680, opsMax: .799, spdMin: 25, spdMax: 75, costMin: 8, costMax: 18 } };
             const t = tiers[tier]; const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
             const pos = pick(['OF', 'OF', 'INF', 'INF', 'C', 'UTIL']); const fn = pick(NF), ln = pick(NL_NAMES);
-            return { id: Math.floor(Math.random() * 90000) + 10000, name: fn[0] + '. ' + ln, hand, num: rndI(1, 99), pos, spd: rndI(t.spdMin, t.spdMax), bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .28)), avg: r3(rnd(t.avgMin, t.avgMax)), ops: r3(rnd(t.opsMin, t.opsMax)), active: true, inGame: false, isFP: false, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }, _acqTier: tier, _acqCost: rndI(t.costMin, t.costMax), _acqType: 'hitter' };
+            return { id: Math.floor(Math.random() * 90000) + 10000, name: fn[0] + '. ' + ln, hand, num: rndI(1, 99), pos, spd: rndI(t.spdMin, t.spdMax), bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .28)), avg: r3(rnd(t.avgMin, t.avgMax)), ops: r3(rnd(t.opsMin, t.opsMax)), active: true, inGame: false, isFP: false, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }, _acqTier: tier, _acqCost: rndI(t.costMin * diffMultiplier, t.costMax * diffMultiplier), _acqType: 'hitter' };
         }
         function genAcqPitcher(tier) {
+            const diffMultiplier = SEASON.difficulty === 'Easy' ? 1.0 : SEASON.difficulty === 'Normal' ? 1.1 : SEASON.difficulty === 'Hard' ? 1.3 : SEASON.difficulty === 'All-Star' ? 1.5 : 1.5;
+
             const tiers = { aceSP: { eraMin: 2.3, eraMax: 3.0, whipMin: .80, whipMax: 1.00, kMin: .28, kMax: .34, bbMin: .05, bbMax: .10, costMin: 45, costMax: 60, sp: true }, midSP: { eraMin: 3.1, eraMax: 4.2, whipMin: 1.00, whipMax: 1.20, kMin: .18, kMax: .26, bbMin: .06, bbMax: .16, costMin: 20, costMax: 35, sp: true }, qualRP: { eraMin: 2.5, eraMax: 3.5, whipMin: .75, whipMax: 1.05, kMin: .30, kMax: .42, bbMin: .07, bbMax: .15, costMin: 18, costMax: 28, sp: false }, depthRP: { eraMin: 3.6, eraMax: 5.0, whipMin: 1.10, whipMax: 1.40, kMin: .18, kMax: .28, bbMin: .09, bbMax: .22, costMin: 6, costMax: 15, sp: false } };
             const t = tiers[tier]; const hand = Math.random() > .3 ? 'R' : 'L'; const fn = pick(NF), ln = pick(NL_NAMES);
-            return { id: Math.floor(Math.random() * 90000) + 10000, name: fn[0] + '. ' + ln, hand, num: rndI(1, 99), isStarter: t.sp, role: t.sp ? 'SP' : 'RP', era: r2(rnd(t.eraMin, t.eraMax)), whip: r2(rnd(t.whipMin, t.whipMax)), kRate: r2(rnd(t.kMin, t.kMax)), bbRate: r2(rnd(t.bbMin, t.bbMax)), stamina: 100, maxStamina: 100, recoverRate: t.sp ? 8 : 18, drainPerPitch: t.sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false, isFP: false, _acqTier: tier, _acqCost: rndI(t.costMin, t.costMax), _acqType: 'pitcher' };
+            return { id: Math.floor(Math.random() * 90000) + 10000, name: fn[0] + '. ' + ln, hand, num: rndI(1, 99), isStarter: t.sp, role: t.sp ? 'SP' : 'RP', era: r2(rnd(t.eraMin, t.eraMax)), whip: r2(rnd(t.whipMin, t.whipMax)), kRate: r2(rnd(t.kMin, t.kMax)), bbRate: r2(rnd(t.bbMin, t.bbMax)), stamina: 100, maxStamina: 100, recoverRate: t.sp ? 8 : 18, drainPerPitch: t.sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false, isFP: false, _acqTier: tier, _acqCost: rndI(t.costMin * diffMultiplier, t.costMax * diffMultiplier), _acqType: 'pitcher' };
         }
         function genAcqPool(isDeadline) {
             const pool = [];
