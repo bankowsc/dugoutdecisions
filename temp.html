@@ -3046,8 +3046,8 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             const rem = getBudgetRemaining(); if (p._acqCost > rem) { alert('Not enough budget!'); return; }
             const selEl = document.getElementById(isDeadline ? `acq-replace-dl-${poolIdx}` : `acq-replace-os-${poolIdx}`); if (!selEl) return;
             const val = selEl.value; if (!val) return;
-            // console.log(val);
-            // console.log(parseInt(val.split('_')[1]));
+            console.log(val);
+            console.log(parseInt(val.split('_')[1]));
             const isH = p._acqType === 'hitter'; const idx = parseInt(val.split('_')[1]);
 
             if (isH) {

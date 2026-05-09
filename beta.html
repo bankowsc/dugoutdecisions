@@ -2664,20 +2664,8 @@
         applyDark();
 
         // ══ STAT FORMATTING HELPERS ════════════════════════════════════════════════
-        // CHANGE 4: Standardized stat display
-        // AVG / OPS → .XXX  (3 decimals, always show leading zeros after dot)
-        // ERA / WHIP → X.XX  (2 decimal places)
-        // K% / BB% → XX%    (2 digits, leading zero if <10)
-        // spd       → XX     (2 digits, leading zero if <10)
-        function fmtAVG(v) {
-            // ".289" or ".000"
-            return '.' + String(Math.round((v || 0) * 1000)).padStart(3, '0');
-        }
-        function fmtOPS(v) {
-            // ".950" or "1.023"
-            const s = (v || 0).toFixed(3);
-            return s.startsWith('0.') ? s.slice(1) : s;
-        }
+        function fmtAVG(v) { return '.' + String(Math.round((v || 0) * 1000)).padStart(3, '0'); }
+        function fmtOPS(v) { const s = (v || 0).toFixed(3); return s.startsWith('0.') ? s.slice(1) : s; }
         function fmtERA(v) { return (v || 0).toFixed(2); }
         function fmtWHIP(v) { return (v || 0).toFixed(2); }
         function fmtPct(v) { return String(Math.round((v || 0) * 100)).padStart(2, '0') + '%'; }
@@ -2831,7 +2819,7 @@
                     if (isH) {
                         h += `<span class="chip chip-blue" style="font-size:9px">${p.pos || '—'}</span>`;
                         h += `<span class="chip ${(p.avg || 0) >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtAVG(p.avg)} AVG</span>`;
-                        h += `<span class="chip ${(p.ops || 0) >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`; // 
+                        h += `<span class="chip ${(p.ops || 0) >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
                         h += `<span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>`;
                         h += `<span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>`;
                         h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>`;
@@ -2841,7 +2829,7 @@
                         h += `<span class="chip ${p.era <= 3.5 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">ERA ${fmtERA(p.era)}</span>`;
                         h += `<span class="chip ${p.whip <= 1.0 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${fmtWHIP(p.whip)}</span>`;
                         h += `<span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${fmtPct(p.kRate)}</span>`;
-                        h += `<span class="chip ${p.bbRate <= .08 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">BB ${fmtPct(p.bbRate)}</span>`; // FLAG
+                        h += `<span class="chip ${p.bbRate <= .08 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">BB ${fmtPct(p.bbRate)}</span>`;
                         h += `<span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span>`;
                     }
                     if (isMax && !isSel) h += `<span style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">Slots full</span>`;
@@ -2898,7 +2886,6 @@
 
         function genAcqHitter(tier) {
             const diffMultiplier = SEASON.difficulty === 'Easy' ? 1.0 : SEASON.difficulty === 'Normal' ? 1.1 : SEASON.difficulty === 'Hard' ? 1.3 : SEASON.difficulty === 'All-Star' ? 1.5 : 1.5;
-
             const tiers = { elite: { avgMin: .310, avgMax: .345, opsMin: .950, opsMax: 1.100, spdMin: 70, spdMax: 98, costMin: 40, costMax: 55 }, solid: { avgMin: .275, avgMax: .309, opsMin: .800, opsMax: .949, spdMin: 45, spdMax: 89, costMin: 20, costMax: 35 }, depth: { avgMin: .240, avgMax: .274, opsMin: .680, opsMax: .799, spdMin: 25, spdMax: 75, costMin: 8, costMax: 18 } };
             const t = tiers[tier]; const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
             const pos = pick(['OF', 'OF', 'INF', 'INF', 'C', 'UTIL']); const fn = pick(NF), ln = pick(NL_NAMES);
@@ -2906,7 +2893,6 @@
         }
         function genAcqPitcher(tier) {
             const diffMultiplier = SEASON.difficulty === 'Easy' ? 1.0 : SEASON.difficulty === 'Normal' ? 1.1 : SEASON.difficulty === 'Hard' ? 1.3 : SEASON.difficulty === 'All-Star' ? 1.5 : 1.5;
-
             const tiers = { aceSP: { eraMin: 2.3, eraMax: 3.0, whipMin: .80, whipMax: 1.00, kMin: .28, kMax: .34, bbMin: .05, bbMax: .10, costMin: 45, costMax: 60, sp: true }, midSP: { eraMin: 3.1, eraMax: 4.2, whipMin: 1.00, whipMax: 1.20, kMin: .18, kMax: .26, bbMin: .06, bbMax: .16, costMin: 20, costMax: 35, sp: true }, qualRP: { eraMin: 2.5, eraMax: 3.5, whipMin: .75, whipMax: 1.05, kMin: .30, kMax: .42, bbMin: .07, bbMax: .15, costMin: 18, costMax: 28, sp: false }, depthRP: { eraMin: 3.6, eraMax: 5.0, whipMin: 1.10, whipMax: 1.40, kMin: .18, kMax: .28, bbMin: .09, bbMax: .22, costMin: 6, costMax: 15, sp: false } };
             const t = tiers[tier]; const hand = Math.random() > .3 ? 'R' : 'L'; const fn = pick(NF), ln = pick(NL_NAMES);
             return { id: Math.floor(Math.random() * 90000) + 10000, name: fn[0] + '. ' + ln, hand, num: rndI(1, 99), isStarter: t.sp, role: t.sp ? 'SP' : 'RP', era: r2(rnd(t.eraMin, t.eraMax)), whip: r2(rnd(t.whipMin, t.whipMax)), kRate: r2(rnd(t.kMin, t.kMax)), bbRate: r2(rnd(t.bbMin, t.bbMax)), stamina: 100, maxStamina: 100, recoverRate: t.sp ? 8 : 18, drainPerPitch: t.sp ? r2(rnd(1.2, 3.8)) : r2(rnd(4.8, 6.0)), pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false, isFP: false, _acqTier: tier, _acqCost: rndI(t.costMin * diffMultiplier, t.costMax * diffMultiplier), _acqType: 'pitcher' };
@@ -2976,7 +2962,6 @@
             const el = document.getElementById('offseason-roster'); let h = '<div class="section-label" style="margin-bottom:5px">Hitters</div>';
             G.you.hitters.slice(0, 13).forEach((p, i) => {
                 const fp = p.isFP;
-                // CHANGE 4: use formatting helpers
                 h += `<div style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:.5px solid var(--bdr);font-size:11px;flex-wrap:wrap">
 <span style="color:var(--tx3);width:14px;font-size:10px;font-family:'DM Mono',monospace">${i + 1}</span>
 <span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${p.pos}</span>
@@ -3028,14 +3013,12 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                     h += `<span class="chip ${p.era < 3.0 ? 'chip-green' : p.era < 5.0 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">ERA ${fmtERA(p.era)}</span>`;
                     h += `<span class="chip ${p.whip < 1.0 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${fmtWHIP(p.whip)}</span>`;
                     h += `<span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${fmtPct(p.kRate)}</span>`;
-                    h += `<span class="chip ${p.bbRate <= .08 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">BB ${fmtPct(p.bbRate)}</span>`; // FLAG
+                    h += `<span class="chip ${p.bbRate <= .08 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">BB ${fmtPct(p.bbRate)}</span>`;
                     h += `<span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span>`;
-
                 }
                 h += `</div>`;
                 if (canAfford) {
-                    // CHANGE 1: No position constraints — any non-FP hitter can be replaced
-                    h += `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select id="acq-replace-${idx}" style="flex:1;min-width:120px;font-size:11px">`;
+                    h += `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select id="acq-replace-os-${idx}" style="flex:1;min-width:120px;font-size:11px">`;
                     if (isH) {
                         G.you.hitters.forEach((hp, hi) => {
                             const dis = hp.isFP ? 'disabled' : '';
@@ -3050,32 +3033,30 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                             h += `<option value="p_${pi}" ${dis}>${pp.name} (${pp.role})${reason}</option>`;
                         });
                     }
-
                     h += `</select><button class="btn-amber btn-sm" onclick="acquirePlayer(${idx},false)">Acquire</button></div>`;
-
                 } else { h += `<div style="font-size:11px;color:var(--tx3);font-family:'DM Mono',monospace">⚠️ Need ${p._acqCost} pts (have ${rem})</div>`; }
                 h += `</div>`;
             });
             h += '</div>'; el.innerHTML = h;
         }
 
+        // FIX 1: acquirePlayer uses unique IDs per context (os vs dl) to avoid DOM collision
         function acquirePlayer(poolIdx, isDeadline) {
             const pool = isDeadline ? _acqDeadlinePool : _acqPool; const p = pool[poolIdx]; if (!p) return;
             const rem = getBudgetRemaining(); if (p._acqCost > rem) { alert('Not enough budget!'); return; }
-            const selEl = document.getElementById(`acq-replace-${poolIdx}`); if (!selEl) return;
+            const selEl = document.getElementById(isDeadline ? `acq-replace-dl-${poolIdx}` : `acq-replace-os-${poolIdx}`); if (!selEl) return;
             const val = selEl.value; if (!val) return;
+            console.log(val);
+            console.log(parseInt(val.split('_')[1]));
             const isH = p._acqType === 'hitter'; const idx = parseInt(val.split('_')[1]);
 
             if (isH) {
-                // CHANGE 1: Only FP check, no positional constraints
                 if (G.you.hitters[idx].isFP) { alert('Franchise players cannot be traded away.'); return; }
                 const out = G.you.hitters[idx];
                 G.you.hitters[idx] = { ...p, id: idx, inGame: out.inGame, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } };
                 const txn = `✓ Acquired ${p.name} (${p.pos}) — replaced ${out.name} · Cost: ${p._acqCost} pts · Remaining: ${rem - p._acqCost}`;
                 SEASON.offseasonLog.push(txn); SEASON.budgetSpent += p._acqCost; pool.splice(poolIdx, 1); addTxnLog(txn, isDeadline);
             } else {
-                const allowed = getReplaceablePitcherSlots(G.you.pitchers, p.isStarter);
-                // if (!allowed[idx]) { alert(`Cannot replace that pitcher — would violate roster minimums (5 SP, 8 RP).`); return; }
                 if (G.you.pitchers[idx].isFP) { alert('Franchise players cannot be traded away.'); return; }
                 const out = G.you.pitchers[idx];
                 G.you.pitchers[idx] = { ...p, id: idx, pitchesThisGame: 0, usedThisGame: false, active: false, currentPitcher: false, stamina: 100, maxStamina: 100 };
@@ -3183,7 +3164,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                     }
                     h += `</div>`;
                     if (canAfford) {
-                        h += `<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap"><select id="acq-replace-${idx}" style="flex:1;min-width:100px;font-size:11px">`;
+                        h += `<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap"><select id="acq-replace-dl-${idx}" style="flex:1;min-width:100px;font-size:11px">`;
                         if (isH) {
                             G.you.hitters.forEach((hp, hi) => {
                                 const dis = hp.isFP ? 'disabled' : '';
@@ -3214,7 +3195,6 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
         // ══ SEASON SIMULATION ══════════════════════════════════════════════════════
         const SEASON_TOTAL = 162;
         function simOneGame() {
-
             const s = assessTeamStrength(G.you);
             const gradeBonus = { 'E': 0.00, 'D': 0.00, 'C': 0.02, 'B': 0.04, 'A': 0.06, 'S': 0.08 };
             const grade = gradeBonus[s.grade] ?? 0.00;
@@ -3340,12 +3320,6 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             return playoffTeams;
         }
 
-        // ── CHANGE 3: Home game patterns per round (verified correct per spec) ──────
-        // WC  (Bo3): better seed all 3 home → [T, T, T]
-        // DIV (Bo5): better 2, worse 2, better 1 → [T, T, F, F, T]
-        // LCS (Bo7): better 2, worse 3, better 2 → [T, T, F, F, F, T, T]
-        // WS  (Bo7): same as LCS → [T, T, F, F, F, T, T]
-        // "home" refers to the higher seed (home = first arg in makeSeriesObj)
         const HOME_PATTERNS = {
             wc: [true, true, true],
             div: [true, true, false, false, true],
@@ -3684,7 +3658,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                 const h = G.you.hitters[hi], d = document.createElement('div'); d.className = 'lineup-slot'; d.draggable = true; d.dataset.slot = slot;
                 const isSel = _selectedLineupSlot === slot; if (isSel) { d.style.background = 'var(--amber2)'; d.style.borderColor = 'var(--amber1)'; d.style.outline = '2px solid var(--amber1)'; }
                 const fpChip = h.isFP ? `<span class="chip chip-purple" style="font-size:9px">★FP</span>` : '';
-                d.innerHTML = `<span style="font-size:10px;color:var(--tx3);width:14px;text-align:right;flex-shrink:0;font-family:'DM Mono',monospace">${slot + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}${isSel ? '<span style="font-size:10px;color:var(--amber0);font-weight:600;flex-shrink:0">SWAP ↕</span>' : ''}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${Math.round(h.kRate * 100)}%</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${Math.round(h.bbRate * 100)}%</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`; //
+                d.innerHTML = `<span style="font-size:10px;color:var(--tx3);width:14px;text-align:right;flex-shrink:0;font-family:'DM Mono',monospace">${slot + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}${isSel ? '<span style="font-size:10px;color:var(--amber0);font-weight:600;flex-shrink:0">SWAP ↕</span>' : ''}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`; //
                 d.addEventListener('click', () => { if (_selectedLineupSlot === null) { _selectedLineupSlot = slot; renderLineup(); } else if (_selectedLineupSlot === slot) { _selectedLineupSlot = null; renderLineup(); } else { const from = _selectedLineupSlot, to = slot;[G.yourLineup[from], G.yourLineup[to]] = [G.yourLineup[to], G.yourLineup[from]]; _selectedLineupSlot = null; renderLineup(); } });
                 d.addEventListener('dragstart', () => { window._ds = slot; window._dsType = 'lineup'; d.style.opacity = '.4'; }); d.addEventListener('dragend', () => d.style.opacity = '1');
                 d.addEventListener('dragover', e => { e.preventDefault(); d.classList.add('dragover'); }); d.addEventListener('dragleave', () => d.classList.remove('dragover'));
@@ -3695,7 +3669,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             G.benchIds.forEach(bi => {
                 const h = G.you.hitters[bi], d = document.createElement('div'); d.className = 'bench-slot'; d.draggable = true; d.dataset.benchIdx = bi;
                 const fpChip = h.isFP ? `<span class="chip chip-purple" style="font-size:9px">★FP</span>` : '';
-                d.innerHTML = `<span style="font-size:9px;color:var(--amber0);background:var(--amber2);padding:1px 4px;border-radius:4px;flex-shrink:0">BENCH</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${Math.round(h.kRate * 100)}%</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${Math.round(h.bbRate * 100)}%</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`;
+                d.innerHTML = `<span style="font-size:9px;color:var(--amber0);background:var(--amber2);padding:1px 4px;border-radius:4px;flex-shrink:0">BENCH</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`;
                 d.addEventListener('click', () => { if (_selectedLineupSlot !== null) { const oi = G.yourLineup[_selectedLineupSlot]; G.yourLineup[_selectedLineupSlot] = bi; G.benchIds = G.benchIds.filter(x => x !== bi); G.benchIds.push(oi); G.you.hitters[oi].inGame = false; G.you.hitters[bi].inGame = true; _selectedLineupSlot = null; renderLineup(); } });
                 d.addEventListener('dragstart', () => { window._ds = bi; window._dsType = 'bench'; d.style.opacity = '.4'; }); d.addEventListener('dragend', () => d.style.opacity = '1');
                 bd.appendChild(d);
@@ -3707,7 +3681,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             if (prevSPVal !== '' && sp.querySelector(`option[value="${prevSPVal}"]`)) sp.value = prevSPVal;
             const usc = () => { const idx = +sp.value; sp.style.color = stamCol(Math.round(G.you.pitchers[idx]?.stamina || 100)); }; usc(); sp.onchange = () => { G.savedSP = +sp.value; usc(); };
             const cp = curPit(G.opp);
-            document.getElementById('opp-lineup-display').innerHTML = `<div style="padding:7px 10px;border-radius:var(--radius-sm);background:var(--amber2);border:1px solid var(--amber3);margin-bottom:8px;font-size:12px;font-family:'DM Mono',monospace"><strong>SP:</strong> ${cp.name} | ERA ${Number(cp.era).toFixed(2)} | WHIP ${Number(cp.whip).toFixed(2)} | K ${Math.round(cp.kRate * 100)}% | BB ${Math.round(cp.bbRate * 100)}% | <span class="chip ${cp.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${cp.hand}HP</span>${cp.isFP ? '<span class="chip chip-purple" style="font-size:9px;margin-left:3px">★FP</span>' : ''}</div>` + G.opp.hitters.slice(0, 9).map((h, i) => `<div style="display:flex;gap:4px;align-items:center;padding:2px 0"><span style="width:14px;color:var(--tx3);font-size:10px;font-family:'DM Mono',monospace">${i + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${h.pos}</span><span style="flex:1;font-weight:500;font-size:11px">${h.isFP ? '★ ' : ''}${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${Math.round(h.kRate * 100)}%</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${Math.round(h.bbRate * 100)}%</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span class="chip chip-blue" style="font-size:9px">${h.hand}</span></div>`).join('');
+            document.getElementById('opp-lineup-display').innerHTML = `<div style="padding:7px 10px;border-radius:var(--radius-sm);background:var(--amber2);border:1px solid var(--amber3);margin-bottom:8px;font-size:12px;font-family:'DM Mono',monospace"><strong>SP:</strong> ${cp.name} | ERA ${Number(cp.era).toFixed(2)} | WHIP ${Number(cp.whip).toFixed(2)} | K ${Math.round(cp.kRate * 100)}% | BB ${Math.round(cp.bbRate * 100)}% | <span class="chip ${cp.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${cp.hand}HP</span>${cp.isFP ? '<span class="chip chip-purple" style="font-size:9px;margin-left:3px">★FP</span>' : ''}</div>` + G.opp.hitters.slice(0, 9).map((h, i) => `<div style="display:flex;gap:4px;align-items:center;padding:2px 0"><span style="width:14px;color:var(--tx3);font-size:10px;font-family:'DM Mono',monospace">${i + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${h.pos}</span><span style="flex:1;font-weight:500;font-size:11px">${h.isFP ? '★ ' : ''}${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span class="chip chip-blue" style="font-size:9px">${h.hand}</span></div>`).join('');
         }
         function startGame() { const si = +document.getElementById('sp-select').value; G.savedSP = si; G.you.pitchers.forEach(p => { p.currentPitcher = false; p.active = false; }); G.you.pitchers[si].currentPitcher = true; G.you.pitchers[si].active = true; showScreen('game'); renderGame(); }
         function curPit(team) { return team.pitchers.find(p => p.currentPitcher) || team.pitchers[0]; }
@@ -4191,8 +4165,8 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
                     <span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span>
                     <span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}">ERA ${p.era}</span>
                     <span class="chip ${p.whip < 1 ? 'chip-green' : 'chip-gray'}">WHIP ${p.whip}</span>
-                    <span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}">K% ${Math.round(p.kRate * 100)}%</span>
-                    <span class="chip ${p.bbRate <= .08 ? 'chip-green' : 'chip-gray'}">BB% ${Math.round(p.bbRate * 100)}%</span>
+                    <span class="chip ${p.kRate >= .28 ? 'chip-green' : 'chip-gray'}">K ${Math.round(p.kRate * 100)}%</span>
+                    <span class="chip ${p.bbRate <= .08 ? 'chip-green' : 'chip-gray'}">BB ${Math.round(p.bbRate * 100)}%</span>
                     ${p.isFP ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                     ${p2 > 0 ? `<span class="chip chip-red" style="font-size:10px">-${Math.round(p2 * 100)}%</span>` : ''}
                 </div>
@@ -4251,7 +4225,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
             const bp = G.opp.pitchers.filter(p => !p.currentPitcher && !p.usedThisGame);
             if (bp.length) {
                 h += '<div class="section-label" style="margin-bottom:5px;margin-top:8px">Opp bullpen</div>';
-                bp.sort((a, b) => b.stamina - a.stamina).forEach(p => { const ps = Math.round(p.stamina); h += `<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;padding:3px 0;border-bottom:.5px solid var(--bdr)"><span style="font-size:11px;font-weight:500;flex:1;font-family:'DM Mono',monospace">${p.name}</span>${p.isFP ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}<span class="chip ${p.role === 'SP' ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span><span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span><span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">ERA ${Number(p.era).toFixed(2)}</span><span class="chip ${p.whip < 1 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${Number(p.whip).toFixed(2)}</span><span class="chip ${p.kRate > 0.25 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${Number(p.kRate * 100).toFixed(0)}%</span><span class="chip ${p.bbRate < 0.08 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">BB ${Number(p.bbRate * 100).toFixed(0)}%</span><span class="chip ${stamCC(ps)}" style="font-size:9px">${ps}%</span></div>`; });
+                bp.sort((a, b) => b.stamina - a.stamina).forEach(p => { const ps = Math.round(p.stamina); h += `<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;padding:3px 0;border-bottom:.5px solid var(--bdr)"><span style="font-size:11px;font-weight:500;flex:1;font-family:'DM Mono',monospace">${p.name}</span>${p.isFP ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}<span class="chip ${p.role === 'SP' ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span><span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span><span class="chip ${p.era < 3.5 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">ERA ${Number(p.era).toFixed(2)}</span><span class="chip ${p.whip < 1 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">WHIP ${Number(p.whip).toFixed(2)}</span><span class="chip ${p.kRate > 0.25 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">K ${fmtPct(p.kRate)}</span><span class="chip ${p.bbRate < 0.08 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">BB ${fmtPct(p.bbRate)}</span><span class="chip ${stamCC(ps)}" style="font-size:9px">${ps}%</span></div>`; });
                 const used = G.opp.pitchers.filter(p => p.usedThisGame && !p.currentPitcher);
                 if (used.length) h += `<div style="font-size:10px;color:var(--tx3);margin-top:4px;font-family:'DM Mono',monospace">Used: ${used.map(p => p.name).join(', ')}</div>`;
             }
