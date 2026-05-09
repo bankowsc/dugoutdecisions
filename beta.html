@@ -2168,6 +2168,24 @@
             gap: 6px;
             flex-wrap: wrap
         }
+
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 16px;
+            top: -20px;
+            opacity: 0.9;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -3465,7 +3483,16 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                 if (CURRENT_SERIES.round === 'ws') { MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 15); savePrestige(); TOTAL_CHAMPS++; saveChamps(TOTAL_CHAMPS); LAST_CHAMP = SEASON.playerTeam; award('champion'); if (HISTORY.length >= 1 && HISTORY[HISTORY.length - 1] === 'w') award('backtback'); HISTORY.push('w'); if (HISTORY.length >= 5 && HISTORY.slice(-5).filter(x => x === 'w').length >= 3) award('dynasty'); saveHistory(HISTORY); document.getElementById('series-final-line').textContent = '🏆 World Series Champions!'; document.getElementById('series-result-line').textContent = `${SEASON.playerTeam} wins the World Series!`; renderChampCounter('champ-counter-so'); renderBadges('seriesover-badges'); addB('View Championship', 'btn-gold', () => showScreen('seriesover')); }
                 else { if (CURRENT_SERIES.round === 'lcs') { award('pennant'); MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 5); savePrestige(); } else { MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 5); savePrestige(); } addB('Play Next Series', 'btn-green', () => { recoverPitchersBetweenSeries(CURRENT_SERIES.series); advancePlayoffRound(); autoSimNonPlayerSeries(); const next = findNextPlayerSeries(); if (next) startPlayoffSeries(next); else goToPlayoffs(); }); }
             } else { HISTORY.push('l'); saveHistory(HISTORY); advancePlayoffRound(); addB('View Final Bracket', 'btn-primary', () => goToPlayoffs()); addB('New Franchise', 'btn-amber', () => startNewFranchise()); }
-            document.getElementById('sop-champ').innerHTML = ''; renderChampCounter('champ-counter-go'); showScreen('seriesover-playoff');
+            document.getElementById('sop-champ').innerHTML = ''; 
+
+            renderChampCounter('champ-counter-go');
+
+            // Trigger confetti for World Series win
+            if (playerWon && CURRENT_SERIES.round === 'ws') {
+                launchConfetti();
+            }
+
+            showScreen('seriesover-playoff');
         }
 
         // ══ GAME ENGINE ════════════════════════════════════════════════════════════
@@ -3785,12 +3812,12 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
         function dblSteal() {
             const r1 = G.bases[0], r2 = G.bases[1]; if (!r1 && !r2) return;
             let msgs = [], done = false;
-            if (r2 && !G.bases[2]) { if (Math.random() < 1.00 * (0.55 + (r2.spd / 100) * 0.45)) { G.bases[2] = r2; G.bases[1] = null; msgs.push(`${ini(r2.name)} 2nd→3rd ✓`); } else { G.bases[1] = null; G.outs++; msgs.push(`${ini(r2.name)} caught @ 3rd`); if (G.outs >= 3) done = true; } }
-            if (!done && r1 && !G.bases[1]) { if (Math.random() < 0.70 * (0.45 + (r1.spd / 100) * 0.45)) { G.bases[1] = r1; G.bases[0] = null; msgs.push(`${ini(r1.name)} 1st→2nd ✓`); } else { G.bases[0] = null; G.outs++; msgs.push(`${ini(r1.name)} caught @ 2nd`); if (G.outs >= 3) done = true; } }
+            if (r2 && !G.bases[2]) { if (Math.random() < 0.70 * (0.45 + (r2.spd / 100) * 0.45)) { G.bases[2] = r2; G.bases[1] = null; msgs.push(`${ini(r2.name)} 2nd→3rd ✓`); } else { G.bases[1] = null; G.outs++; msgs.push(`${ini(r2.name)} caught @ 3rd`); if (G.outs >= 3) done = true; } }
+            if (!done && r1 && !G.bases[1]) { if (Math.random() < 1.00 * (0.55 + (r1.spd / 100) * 0.45)) { G.bases[1] = r1; G.bases[0] = null; msgs.push(`${ini(r1.name)} 1st→2nd ✓`); } else { G.bases[0] = null; G.outs++; msgs.push(`${ini(r1.name)} caught @ 2nd`); if (G.outs >= 3) done = true; } }
             G.log.unshift({ msg: `Double steal: ${msgs.join(' · ')}`, isSteal: true });
             if (done) { endHalf(); renderGame(); return; } renderGame();
         }
-        function dblStealOdds(r1, r2) { const p1 = 1.00 * (0.55 + (r2.spd / 100) * 0.45), p2 = 0.70 * (0.45 + (r1.spd / 100) * 0.45); return { both: Math.round(p1 * p2 * 100), r2: Math.round(p1 * 100), r1: Math.round(p2 * 100) }; }
+        function dblStealOdds(r1, r2) { const p1 = 0.70 * (0.45 + (r2.spd / 100) * 0.45), p2 = 1.00 * (0.55 + (r1.spd / 100) * 0.45); return { both: Math.round(p1 * p2 * 100), r2: Math.round(p1 * 100), r1: Math.round(p2 * 100) }; }
 
         function isYouBatting() { return G.homeTeam === 'you' ? (G.half === 'bottom') : (G.half === 'top'); }
 
@@ -4355,6 +4382,51 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
         // Init
         renderBadges('setup-badges');
         renderChampCounter('champ-counter-setup');
+
+
+        const colors = [
+            "#ff4d6d",
+            "#ffd166",
+            "#06d6a0",
+            "#118ab2",
+            "#8338ec",
+            "#ffffff"
+        ];
+
+        function createConfettiPiece() {
+            const confetti = document.createElement("div");
+            confetti.classList.add("confetti");
+
+            confetti.style.left = Math.random() * window.innerWidth + "px";
+            confetti.style.backgroundColor =
+                colors[Math.floor(Math.random() * colors.length)];
+
+            confetti.style.width = 6 + Math.random() * 8 + "px";
+            confetti.style.height = 10 + Math.random() * 14 + "px";
+
+            const duration = 3 + Math.random() * 3;
+            confetti.style.animationDuration = duration + "s";
+
+            confetti.style.transform = `translateX(${Math.random() * 200 - 100}px)`;
+
+            document.body.appendChild(confetti);
+
+            setTimeout(() => {
+                confetti.remove();
+            }, duration * 1000);
+        }
+
+        function launchConfetti() {
+            for (let i = 0; i < 220; i++) {
+                setTimeout(() => {
+                    createConfettiPiece();
+                }, i * 8);
+            }
+        }
+
+        // document
+        //     .getElementById("confettiBtn")
+        //     .addEventListener("click", launchConfetti);
     </script>
 </body>
 
