@@ -2900,7 +2900,7 @@
                     if (isH) {
                         h += `<span class="chip chip-blue" style="font-size:9px">${p.pos || '—'}</span>`;
                         h += `<span class="chip ${(p.avg || 0) >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtAVG(p.avg)} AVG</span>`;
-                        h += `<span class="chip ${(p.ops || 0) >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
+                        h += `<span class="chip ${(p.ops || 0) >= .800 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
                         h += `<span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>`;
                         h += `<span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>`;
                         h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>`;
@@ -2967,7 +2967,7 @@
 
         function genAcqHitter(tier) {
             const diffMultiplier = SEASON.difficulty === 'Easy' ? 1.0 : SEASON.difficulty === 'Normal' ? 1.1 : SEASON.difficulty === 'Hard' ? 1.3 : SEASON.difficulty === 'All-Star' ? 1.5 : 1.5;
-            const tiers = { elite: { avgMin: .310, avgMax: .345, opsMin: .950, opsMax: 1.100, spdMin: 70, spdMax: 98, costMin: 40, costMax: 55 }, solid: { avgMin: .275, avgMax: .309, opsMin: .800, opsMax: .949, spdMin: 45, spdMax: 89, costMin: 20, costMax: 35 }, depth: { avgMin: .240, avgMax: .274, opsMin: .680, opsMax: .799, spdMin: 25, spdMax: 75, costMin: 8, costMax: 18 } };
+            const tiers = { elite: { avgMin: .300, avgMax: .325, opsMin: .850, opsMax: 1.050, spdMin: 60, spdMax: 98, costMin: 40, costMax: 55 }, solid: { avgMin: .270, avgMax: .309, opsMin: .700, opsMax: .849, spdMin: 45, spdMax: 89, costMin: 20, costMax: 35 }, depth: { avgMin: .240, avgMax: .274, opsMin: .580, opsMax: .699, spdMin: 25, spdMax: 75, costMin: 8, costMax: 18 } };
             const t = tiers[tier]; const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
             const pos = pick(['OF', 'OF', 'INF', 'INF', 'C', 'UTIL']); const fn = pick(NF), ln = pick(NL_NAMES);
             return { id: Math.floor(Math.random() * 90000) + 10000, name: fn[0] + '. ' + ln, hand, num: rndI(1, 99), pos, spd: rndI(t.spdMin, t.spdMax), bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .28)), avg: r3(rnd(t.avgMin, t.avgMax)), ops: r3(rnd(t.opsMin, t.opsMax)), active: true, inGame: false, isFP: false, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }, _acqTier: tier, _acqCost: rndI(t.costMin * diffMultiplier, t.costMax * diffMultiplier), _acqType: 'hitter' };
@@ -2992,7 +2992,7 @@
             const lu = team.hitters.slice(0, 13); const sps = team.pitchers.filter(p => p.isStarter); const rps = team.pitchers.filter(p => !p.isStarter);
             const offenseAVG = lu.reduce((a, h) => a + (h.avg || 0), 0) / lu.length;
             const offenseOPS = lu.reduce((a, h) => a + (h.ops || 0), 0) / lu.length;
-            const offScore = Math.round(clamp(((offenseOPS - 0.600) / 0.600 * 100) + ((offenseAVG - 0.220) / 0.2) * 100, 0, 100));
+            const offScore = Math.round(clamp(((offenseOPS - 0.550) / 0.550 * 100) + ((offenseAVG - 0.220) / 0.2) * 100, 0, 100));
             const spERA = sps.length ? sps.reduce((a, p) => a + (p.era || 4.5), 0) / sps.length : 5.0;
             const spWHIP = sps.length ? sps.reduce((a, p) => a + (p.whip || 2.0), 0) / sps.length : 2.0;
             const spCommand = sps.length ? sps.reduce((a, p) => a + (p.bbRate - p.kRate || 0.1), 0) / sps.length : 0.2;
@@ -3049,7 +3049,7 @@
 <span style="flex:1;font-weight:500;font-family:'DM Mono',monospace">${fp ? '★ ' : ''}${p.name}</span>
 ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
 <span class="chip ${p.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtAVG(p.avg)}</span>
-<span class="chip ${p.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>
+<span class="chip ${p.ops >= .800 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>
 <span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>
 <span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>
 <span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>
@@ -3084,7 +3084,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                 if (isH) {
                     h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span>`;
                     h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : p.avg >= .250 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${fmtAVG(p.avg)}</span>`;
-                    h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : p.ops >= .700 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
+                    h += `<span class="chip ${p.ops >= .800 ? 'chip-green' : p.ops >= .650 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
                     h += `<span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>`;
                     h += `<span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>`;
                     h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>`;
@@ -3192,7 +3192,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                     h += `<span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px;flex-shrink:0">${p.pos}</span>`;
                     h += `<span style="flex:1;font-weight:500;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fp ? '★ ' : resigned ? '📋 ' : ''}${p.name}</span>`;
                     h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : p.avg >= .260 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${fmtAVG(p.avg)}</span>`;
-                    h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : p.ops >= .750 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${fmtOPS(p.ops)}</span>`;
+                    h += `<span class="chip ${p.ops >= .800 ? 'chip-green' : p.ops >= .650 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${fmtOPS(p.ops)}</span>`;
                     h += `<span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>`;
                     h += `<span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>`;
                     h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>`;
@@ -3227,7 +3227,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                     if (isH) {
                         h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span>`;
                         h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtAVG(p.avg)}</span>`;
-                        h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
+                        h += `<span class="chip ${p.ops >= .800 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
                         h += `<span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>`;
                         h += `<span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>`;
                         h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>`;
@@ -3569,12 +3569,12 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
         // FRANCHISE PLAYERS
         const FRANCHISE_PLAYERS = {
             'Lakewood Pilgrims': { name: 'J. Pilgrim', hand: 'R', num: 99, pos: 'C', spd: 60, avg: .320, ops: .815, bbRate: .07, kRate: .24 },
-            'Springfield Crabs': { name: 'T. Crabman', hand: 'S', num: 45, pos: 'INF', spd: 85, avg: .270, ops: 1.077, bbRate: .19, kRate: .11 },
+            'Springfield Crabs': { name: 'T. Crabman', hand: 'S', num: 45, pos: 'INF', spd: 85, avg: .265, ops: 1.077, bbRate: .19, kRate: .11 },
             'Oakburg Beavers': { name: 'D. Bober', hand: 'L', num: 67, pos: 'OF', spd: 94, avg: .309, ops: .971, bbRate: .12, kRate: .14 },
             'Millard Pioneers': { name: 'C. Trail', hand: 'R', num: 29, pos: 'OF', spd: 97, avg: .278, ops: .752, bbRate: .07, kRate: .26 },
             'Millport Machines': { name: 'S. Torque', hand: 'R', num: 88, pos: 'INF', spd: 40, avg: .210, ops: 1.334, bbRate: .12, kRate: .20 },
             'Centertown Blizzard': { name: 'F. Chill', hand: 'L', num: 34, pos: 'INF', spd: 65, avg: .330, ops: .821, bbRate: .14, kRate: .19 },
-            'Lemonte Bolts': { name: 'V. Sparks', hand: 'S', num: 90, pos: 'UTIL', spd: 41, avg: .265, ops: 1.770, bbRate: .13, kRate: .21 },
+            'Lemonte Bolts': { name: 'V. Sparks', hand: 'S', num: 90, pos: 'UTIL', spd: 41, avg: .265, ops: 1.670, bbRate: .13, kRate: .21 },
             'Sunnydale Herons': { name: 'A. Wing', hand: 'R', num: 76, pos: 'C', spd: 48, avg: .348, ops: .510, bbRate: .18, kRate: .20 },
             'Summit Phantoms': { name: 'N. Shade', hand: 'R', num: 97, pos: 'OF', spd: 92, avg: .315, ops: .920, bbRate: .18, kRate: .18 },
             'Washborough Ostrich Riders': { name: 'P. Stride', hand: 'L', num: 38, pos: 'OF', spd: 115, avg: .285, ops: .603, bbRate: .18, kRate: .16 },
@@ -3620,8 +3620,8 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                 active: true, inGame: i < 9,
                 stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }
             };
-            if (ai) { b.avg = r3(rnd(.230, .335)); b.ops = r3(rnd(.620, .999)); }
-            else { b.avg = r3(rnd(.215, .325)); b.ops = r3(rnd(.640, .980)); }
+            if (ai) { b.avg = r3(rnd(.230, .335)); b.ops = r3(rnd(.520, .929)); } // TODO
+            else { b.avg = r3(rnd(.215, .325)); b.ops = r3(rnd(.540, .940)); }
             return b;
         }
 
@@ -3743,7 +3743,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                 const h = G.you.hitters[hi], d = document.createElement('div'); d.className = 'lineup-slot'; d.draggable = true; d.dataset.slot = slot;
                 const isSel = _selectedLineupSlot === slot; if (isSel) { d.style.background = 'var(--amber2)'; d.style.borderColor = 'var(--amber1)'; d.style.outline = '2px solid var(--amber1)'; }
                 const fpChip = h.isFP ? `<span class="chip chip-purple" style="font-size:9px">★FP</span>` : '';
-                d.innerHTML = `<span style="font-size:10px;color:var(--tx3);width:14px;text-align:right;flex-shrink:0;font-family:'DM Mono',monospace">${slot + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}${isSel ? '<span style="font-size:10px;color:var(--amber0);font-weight:600;flex-shrink:0">SWAP ↕</span>' : ''}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`; //
+                d.innerHTML = `<span style="font-size:10px;color:var(--tx3);width:14px;text-align:right;flex-shrink:0;font-family:'DM Mono',monospace">${slot + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}${isSel ? '<span style="font-size:10px;color:var(--amber0);font-weight:600;flex-shrink:0">SWAP ↕</span>' : ''}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .800 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`; //
                 d.addEventListener('click', () => { if (_selectedLineupSlot === null) { _selectedLineupSlot = slot; renderLineup(); } else if (_selectedLineupSlot === slot) { _selectedLineupSlot = null; renderLineup(); } else { const from = _selectedLineupSlot, to = slot;[G.yourLineup[from], G.yourLineup[to]] = [G.yourLineup[to], G.yourLineup[from]]; _selectedLineupSlot = null; renderLineup(); } });
                 d.addEventListener('dragstart', () => { window._ds = slot; window._dsType = 'lineup'; d.style.opacity = '.4'; }); d.addEventListener('dragend', () => d.style.opacity = '1');
                 d.addEventListener('dragover', e => { e.preventDefault(); d.classList.add('dragover'); }); d.addEventListener('dragleave', () => d.classList.remove('dragover'));
@@ -3754,7 +3754,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             G.benchIds.forEach(bi => {
                 const h = G.you.hitters[bi], d = document.createElement('div'); d.className = 'bench-slot'; d.draggable = true; d.dataset.benchIdx = bi;
                 const fpChip = h.isFP ? `<span class="chip chip-purple" style="font-size:9px">★FP</span>` : '';
-                d.innerHTML = `<span style="font-size:9px;color:var(--amber0);background:var(--amber2);padding:1px 4px;border-radius:4px;flex-shrink:0">BENCH</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`;
+                d.innerHTML = `<span style="font-size:9px;color:var(--amber0);background:var(--amber2);padding:1px 4px;border-radius:4px;flex-shrink:0">BENCH</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .800 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`;
                 d.addEventListener('click', () => { if (_selectedLineupSlot !== null) { const oi = G.yourLineup[_selectedLineupSlot]; G.yourLineup[_selectedLineupSlot] = bi; G.benchIds = G.benchIds.filter(x => x !== bi); G.benchIds.push(oi); G.you.hitters[oi].inGame = false; G.you.hitters[bi].inGame = true; _selectedLineupSlot = null; renderLineup(); } });
                 d.addEventListener('dragstart', () => { window._ds = bi; window._dsType = 'bench'; d.style.opacity = '.4'; }); d.addEventListener('dragend', () => d.style.opacity = '1');
                 bd.appendChild(d);
@@ -3766,13 +3766,13 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             if (prevSPVal !== '' && sp.querySelector(`option[value="${prevSPVal}"]`)) sp.value = prevSPVal;
             const usc = () => { const idx = +sp.value; sp.style.color = stamCol(Math.round(G.you.pitchers[idx]?.stamina || 100)); }; usc(); sp.onchange = () => { G.savedSP = +sp.value; usc(); };
             const cp = curPit(G.opp);
-            document.getElementById('opp-lineup-display').innerHTML = `<div style="padding:7px 10px;border-radius:var(--radius-sm);background:var(--amber2);border:1px solid var(--amber3);margin-bottom:8px;font-size:12px;font-family:'DM Mono',monospace"><strong>SP:</strong> ${cp.name} | ERA ${Number(cp.era).toFixed(2)} | WHIP ${Number(cp.whip).toFixed(2)} | K ${Math.round(cp.kRate * 100)}% | BB ${Math.round(cp.bbRate * 100)}% | <span class="chip ${cp.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${cp.hand}HP</span>${cp.isFP ? '<span class="chip chip-purple" style="font-size:9px;margin-left:3px">★FP</span>' : ''}</div>` + G.opp.hitters.slice(0, 9).map((h, i) => `<div style="display:flex;gap:4px;align-items:center;padding:2px 0"><span style="width:14px;color:var(--tx3);font-size:10px;font-family:'DM Mono',monospace">${i + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${h.pos}</span><span style="flex:1;font-weight:500;font-size:11px">${h.isFP ? '★ ' : ''}${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span class="chip chip-blue" style="font-size:9px">${h.hand}</span></div>`).join('');
+            document.getElementById('opp-lineup-display').innerHTML = `<div style="padding:7px 10px;border-radius:var(--radius-sm);background:var(--amber2);border:1px solid var(--amber3);margin-bottom:8px;font-size:12px;font-family:'DM Mono',monospace"><strong>SP:</strong> ${cp.name} | ERA ${Number(cp.era).toFixed(2)} | WHIP ${Number(cp.whip).toFixed(2)} | K ${Math.round(cp.kRate * 100)}% | BB ${Math.round(cp.bbRate * 100)}% | <span class="chip ${cp.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${cp.hand}HP</span>${cp.isFP ? '<span class="chip chip-purple" style="font-size:9px;margin-left:3px">★FP</span>' : ''}</div>` + G.opp.hitters.slice(0, 9).map((h, i) => `<div style="display:flex;gap:4px;align-items:center;padding:2px 0"><span style="width:14px;color:var(--tx3);font-size:10px;font-family:'DM Mono',monospace">${i + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${h.pos}</span><span style="flex:1;font-weight:500;font-size:11px">${h.isFP ? '★ ' : ''}${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .800 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span class="chip chip-blue" style="font-size:9px">${h.hand}</span></div>`).join('');
         }
         function startGame() { const si = +document.getElementById('sp-select').value; G.savedSP = si; G.you.pitchers.forEach(p => { p.currentPitcher = false; p.active = false; }); G.you.pitchers[si].currentPitcher = true; G.you.pitchers[si].active = true; showScreen('game'); renderGame(); }
         function curPit(team) { return team.pitchers.find(p => p.currentPitcher) || team.pitchers[0]; }
         function curBat(isYou) { const team = isYou ? G.you : G.opp, lu = isYou ? G.yourLineup : G.oppLineup; return team.hitters[lu[(isYou ? G.biYou : G.biOpp) % 9]]; }
         function handBonus(bat, pit) { if (bat.hand === 'S') return 0.020; if ((bat.hand === 'L' && pit.hand === 'R') || (bat.hand === 'R' && pit.hand === 'L')) return 0.030; return 0; }
-        function hitType(bat) { const pw = clamp((bat.ops - 0.700) / 0.300, -1, 5), hr = 0.03 + pw * 0.08, d = 0.18 + pw * 0.05, t = 0.02 + pw * 0.02, r = Math.random(); if (r < hr) return 'HR'; if (r < hr + d) return '2B'; if (r < hr + d + t) return '3B'; return '1B'; }
+        function hitType(bat) { const pw = clamp((bat.ops - 0.600) / 0.300, -1, 5), hr = 0.03 + pw * 0.08, d = 0.18 + pw * 0.05, t = 0.02 + pw * 0.02, r = Math.random(); if (r < hr) return 'HR'; if (r < hr + d) return '2B'; if (r < hr + d + t) return '3B'; return '1B'; }
         function getRes(bat, pit) {
             const pen = stamPen(pit), bon = handBonus(bat, pit);
             const k = clamp((bat.kRate * 0.6 + pit.kRate * 0.6) - pen * 0.15, 0.01, 0.99);
@@ -4222,7 +4222,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
                     const badge = at ? '<span class="chip chip-green" style="font-size:9px">AB</span>' : deck ? '<span class="chip chip-blue" style="font-size:9px">Deck</span>' : due ? '<span class="chip chip-amber" style="font-size:9px">Due</span>' : '';
                     // FIX: Display h/ab only (bb is separate, doesn't count as AB)
                     const abLine = `${h.stats.h}-${h.stats.ab}`;
-                    return `<div class="order-row ${cls}"><span class="ord-num">${i + 1}</span><span class="ord-pos">${h.pos}</span><span class="ord-name">${h.name}</span>${badge}<span class="chip chip-blue" style="font-size:9px">${h.hand}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span style="font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace">${abLine}</span><span style="font-size:10px;color:var(--blue0);font-weight:500;font-family:'DM Mono',monospace">${h.stats.r}R</span></div>`;
+                    return `<div class="order-row ${cls}"><span class="ord-num">${i + 1}</span><span class="ord-pos">${h.pos}</span><span class="ord-name">${h.name}</span>${badge}<span class="chip chip-blue" style="font-size:9px">${h.hand}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .800 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span style="font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace">${abLine}</span><span style="font-size:10px;color:var(--blue0);font-weight:500;font-family:'DM Mono',monospace">${h.stats.r}R</span></div>`;
                 }).join('');
             }
             const yb = isYouBatting(), ob = !yb;
@@ -4262,7 +4262,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
             const hb = G.you.hitters[bi]; if (!hb) { el.innerHTML = ''; return; }
             const bon = handBonus(hb, op), adj = Math.round((hb.avg + bon) * 1000);
             const ac = hb.avg >= .290 ? 'chip-green' : hb.avg >= .250 ? 'chip-gray' : 'chip-amber';
-            const oc = hb.ops >= .900 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
+            const oc = hb.ops >= .800 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
             el.innerHTML = `<div style="padding:7px 10px;border-radius:var(--radius-sm);background:var(--bg2);border:1px solid var(--bdr);font-size:12px"><div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:3px"><span style="font-weight:500;font-family:'DM Mono',monospace">OPS ${hb.ops}</span><span class="chip chip-blue" style="font-size:10px">${hb.hand}</span><span class="chip ${ac}" style="font-size:10px">.${Math.round(hb.avg * 1000)}${bon > 0 ? ` → <strong>.${adj}★</strong>` : ''}</span><span class="chip ${oc}" style="font-size:10px">OPS ${hb.ops}</span><span class="chip ${spdChip(hb.spd)}" style="font-size:10px">${hb.spd}spd</span></div>${bon > 0 ? `<div style="font-size:10px;color:var(--green1);font-weight:500">★ +${bon} AVG bonus vs ${op.name} (${op.hand}HP)</div>` : '<div style="font-size:10px;color:var(--tx3)">Same handedness — no bonus</div>'}</div>`;
         }
         function makeSub() {
@@ -4330,7 +4330,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
                 const hb = G.you.hitters[hi], bon = handBonus(hb, pit), adj = Math.round((hb.avg + bon) * 1000);
                 const kPct = Math.round(hb.kRate * 100), bbPct = Math.round(hb.bbRate * 100);
                 const avgDisp = bon > 0 ? `<span style="color:var(--green0);font-weight:600">.${adj}★</span>` : `<span style="color:${hb.avg >= .290 ? 'var(--green0)' : hb.avg >= .250 ? 'var(--tx0)' : 'var(--amber0)'}">.${Math.round(hb.avg * 1000)}</span>`;
-                const opsCol = hb.ops >= .900 ? 'var(--green0)' : hb.ops >= .720 ? 'var(--tx0)' : 'var(--amber0)';
+                const opsCol = hb.ops >= .800 ? 'var(--green0)' : hb.ops >= .650 ? 'var(--tx0)' : 'var(--amber0)';
                 const kCol = hb.kRate <= .15 ? 'var(--red0)' : hb.kRate <= .16 ? 'var(--green0)' : 'var(--tx0)';
                 const bbCol = hb.bbRate >= .14 ? 'var(--green0)' : hb.bbRate <= .08 ? 'var(--amber0)' : 'var(--tx0)';
 
@@ -4370,7 +4370,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
                 const kPct = Math.round(hb.kRate * 100), bbPct = Math.round(hb.bbRate * 100);
                 // Handedness bonus shown as threat (red = higher adjusted avg = harder to get out)
                 const avgDisp = bon > 0 ? `<span style="color:var(--red0);font-weight:600">.${adj}★</span>` : `<span style="color:${hb.avg >= .290 ? 'var(--red0)' : hb.avg >= .250 ? 'var(--tx0)' : 'var(--green0)'}">.${Math.round(hb.avg * 1000)}</span>`;
-                const opsCol = hb.ops >= .900 ? 'var(--red0)' : hb.ops >= .720 ? 'var(--tx0)' : 'var(--green0)';
+                const opsCol = hb.ops >= .800 ? 'var(--red0)' : hb.ops >= .650 ? 'var(--tx0)' : 'var(--green0)';
                 const kCol = hb.kRate <= .15 ? 'var(--green0)' : hb.kRate <= .16 ? 'var(--red0)' : 'var(--tx0)';
                 const bbCol = hb.bbRate >= .14 ? 'var(--red0)' : hb.bbRate <= .08 ? 'var(--green0)' : 'var(--tx0)';
 
