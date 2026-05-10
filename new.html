@@ -1142,7 +1142,10 @@
 
         .champ-counter {
             text-align: center;
-            padding: 10px 0 4px
+            padding: 10px 0 4px;
+            position: relative;
+            display: inline-block;
+            cursor: default
         }
 
         .champ-count-num {
@@ -1161,6 +1164,41 @@
             margin-top: 2px;
             font-family: 'DM Mono', monospace;
             letter-spacing: .5px
+        }
+
+        .champ-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1510;
+            color: #f0ede8;
+            font-size: 11px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            white-space: nowrap;
+            z-index: 999;
+            pointer-events: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
+            font-family: 'DM Mono', monospace;
+            line-height: 1.8;
+            text-align: left;
+            border: 1px solid var(--amber3)
+        }
+
+        .champ-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--amber3)
+        }
+
+        .champ-counter:hover .champ-tooltip {
+            display: block
         }
 
         .badge-grid {
@@ -2229,7 +2267,7 @@
                     <div class="hero-baseball right">⚾</div>
                 </div>
                 <div class="card" style="margin-top:12px">
-                    <div id="champ-counter-setup"></div>
+                    <div id="champ-counter-setup" style="text-align:center"></div>
                     <div class="section-label" style="margin-top:8px">Achievements</div>
                     <div id="setup-badges"></div>
                 </div>
@@ -2720,11 +2758,35 @@
         // ══ BADGE SYSTEM ═══════════════════════════════════════════════════════════
         function award(id) { if (BADGES[id]) return false; BADGES[id] = true; saveBadges(BADGES); const d = BADGE_DEFS.find(b => b.id === id); if (d && G.log) G.log.unshift({ msg: `🏅 BADGE: "${d.label}" — ${d.desc}`, isBadge: true }); return true; }
         function renderBadges(elId) { const el = document.getElementById(elId); if (!el) return; const cats = [...new Set(BADGE_DEFS.map(b => b.cat))]; let h = '<div class="badge-grid">'; cats.forEach(cat => { h += `<div class="badge-cat-label">${cat}</div>`; BADGE_DEFS.filter(b => b.cat === cat).forEach(b => { const e = !!BADGES[b.id]; h += `<div class="badge-cell"><div class="badge-icon ${e ? 'earned' : ''}">${b.icon}</div><div class="badge-label ${e ? 'earned' : ''}">${b.label}</div>${e ? '<span class="badge-star">★</span>' : ''}<div class="badge-tooltip">${e ? '✓ ' : ''}${b.desc}</div></div>`; }); }); h += '</div>'; el.innerHTML = h; }
-        function renderChampCounter(elId) { const el = document.getElementById(elId); if (!el) return; if (!TOTAL_CHAMPS) { el.innerHTML = ''; return; } el.innerHTML = `<div class="champ-counter"><div class="champ-count-num">🏆 ${TOTAL_CHAMPS}×</div><div class="champ-count-label">${TOTAL_CHAMPS === 1 ? 'Championship' : 'Championships'} won all-time</div></div>`; }
+
+        // ── FIX 2: Championship counter with year+difficulty tooltip ──
+        function renderChampCounter(elId) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            if (!TOTAL_CHAMPS) { el.innerHTML = ''; return; }
+            // Build tooltip lines from win history — support both old string format and new object format
+            const wins = HISTORY.filter(x => x && (x.r === 'w' || x === 'w'));
+            let tipLines = '';
+            if (wins.length > 0) {
+                tipLines = wins.slice().reverse().map((x, i) => {
+                    if (typeof x === 'object') {
+                        const diffLabel = { 'Easy': '🟢 Easy', 'Normal': '🔵 Normal', 'Hard': '🟠 Hard', 'All-Star': '🔴 All-Star' }[x.diff] || x.diff || 'Normal';
+                        return `🏆 ${x.year || '?'} &nbsp;·&nbsp; ${diffLabel}`;
+                    }
+                    return `🏆 (legacy win)`;
+                }).join('<br>');
+            }
+            el.innerHTML = `<div class="champ-counter">
+                <div class="champ-count-num">🏆 ${TOTAL_CHAMPS}×</div>
+                <div class="champ-count-label">${TOTAL_CHAMPS === 1 ? 'Championship' : 'Championships'} won · hover for details</div>
+                ${tipLines ? `<div class="champ-tooltip"><div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--amber3);margin-bottom:6px">Championship History</div>${tipLines}</div>` : ''}
+            </div>`;
+        }
 
         // ══ SEASON STATE ═══════════════════════════════════════════════════════════
         const _ss = loadSeasonState();
-        let SEASON = { year: _ss ? _ss.year : 2025, playerTeam: null, records: {}, playoffs: null, simRunning: false, gamesPlayed: _ss ? _ss.gamesPlayed : 0, seasonLog: [], managerCooldown: 0, successfulMoves: 0, difficulty: 'Normal', acquisitionBudget: 10, budgetSpent: 0, offseasonLog: [], deadlineTriggered: false, postseasonBannedTeams: null };
+        // ── FIX 1: Always parse year as integer so +1 increments, not concatenates ──
+        let SEASON = { year: _ss ? parseInt(_ss.year, 10) : 2025, playerTeam: null, records: {}, playoffs: null, simRunning: false, gamesPlayed: _ss ? _ss.gamesPlayed : 0, seasonLog: [], managerCooldown: 0, successfulMoves: 0, difficulty: 'Normal', acquisitionBudget: 10, budgetSpent: 0, offseasonLog: [], deadlineTriggered: false, postseasonBannedTeams: null };
 
         let CURRENT_SERIES = null; let CURRENT_GAME_SERIES = null; let LAST_CHAMP = null;
         const _sp = loadPrestige(); let MANAGER_PRESTIGE = _sp.p; let LAST_MANAGED_TEAM = _sp.team; let LAST_MANAGED_MADE_PLAYOFFS = _sp.playoffs;
@@ -2752,7 +2814,8 @@
         function startNewFranchise() {
             if (SEASON.playerTeam) { LAST_MANAGED_TEAM = SEASON.playerTeam; savePrestige(); }
             saveSeasonState();
-            SEASON.year = (SEASON.year || 2024) + 1;
+            // ── FIX 1: Ensure year is always an integer before incrementing ──
+            SEASON.year = (parseInt(SEASON.year, 10) || 2025) + 1;
             SEASON.records = {}; ALL_TEAMS_FLAT.forEach(t => SEASON.records[t] = { w: 0, l: 0 });
             SEASON.playoffs = null; SEASON.gamesPlayed = 0; SEASON.seasonLog = []; SEASON.simRunning = false; SEASON.managerCooldown = 0;
             SEASON.postseasonBannedTeams = null; SEASON.acquisitionBudget = MANAGER_PRESTIGE; SEASON.budgetSpent = 0; SEASON.offseasonLog = []; SEASON.deadlineTriggered = false;
@@ -3058,14 +3121,11 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             h += '</div>'; el.innerHTML = h;
         }
 
-        // FIX 1: acquirePlayer uses unique IDs per context (os vs dl) to avoid DOM collision
         function acquirePlayer(poolIdx, isDeadline) {
             const pool = isDeadline ? _acqDeadlinePool : _acqPool; const p = pool[poolIdx]; if (!p) return;
             const rem = getBudgetRemaining(); if (p._acqCost > rem) { alert('Not enough budget!'); return; }
             const selEl = document.getElementById(isDeadline ? `acq-replace-dl-${poolIdx}` : `acq-replace-os-${poolIdx}`); if (!selEl) return;
             const val = selEl.value; if (!val) return;
-            console.log(val);
-            console.log(parseInt(val.split('_')[1]));
             const isH = p._acqType === 'hitter'; const idx = parseInt(val.split('_')[1]);
 
             if (isH) {
@@ -3483,7 +3543,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                 if (CURRENT_SERIES.round === 'ws') { MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 15); savePrestige(); TOTAL_CHAMPS++; saveChamps(TOTAL_CHAMPS); LAST_CHAMP = SEASON.playerTeam; award('champion'); if (HISTORY.length >= 1 && HISTORY[HISTORY.length - 1] === 'w') award('backtback'); HISTORY.push('w'); if (HISTORY.length >= 5 && HISTORY.slice(-5).filter(x => x === 'w').length >= 3) award('dynasty'); saveHistory(HISTORY); document.getElementById('series-final-line').textContent = '🏆 World Series Champions!'; document.getElementById('series-result-line').textContent = `${SEASON.playerTeam} wins the World Series!`; renderChampCounter('champ-counter-so'); renderBadges('seriesover-badges'); addB('View Championship', 'btn-gold', () => showScreen('seriesover')); }
                 else { if (CURRENT_SERIES.round === 'lcs') { award('pennant'); MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 5); savePrestige(); } else { MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 5); savePrestige(); } addB('Play Next Series', 'btn-green', () => { recoverPitchersBetweenSeries(CURRENT_SERIES.series); advancePlayoffRound(); autoSimNonPlayerSeries(); const next = findNextPlayerSeries(); if (next) startPlayoffSeries(next); else goToPlayoffs(); }); }
             } else { HISTORY.push('l'); saveHistory(HISTORY); advancePlayoffRound(); addB('View Final Bracket', 'btn-primary', () => goToPlayoffs()); addB('New Franchise', 'btn-amber', () => startNewFranchise()); }
-            document.getElementById('sop-champ').innerHTML = ''; 
+            document.getElementById('sop-champ').innerHTML = '';
 
             renderChampCounter('champ-counter-go');
 
@@ -3779,12 +3839,61 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             const bt = iy ? G.you : G.opp, k = G.inning + '_' + (iy ? 'you' : 'opp');
             bt.score[k] = (bt.score[k] || 0) + sc; bt.runs += sc; if (!isE) bat.stats.rbi += sc;
         }
-        function oppAutoSub() { // TODO
+
+        function oppAutoSub() {
             const cp = curPit(G.opp);
-            if ((cp.stamina < 65 && cp.isStarter) || (cp.stamina < 75 && !cp.isStarter)) {
-                const av = G.opp.pitchers.filter(p => !p.currentPitcher && !p.usedThisGame && p.stamina > cp.stamina + 5);
-                if (av.length) { const b = av.sort((a, c) => c.stamina - a.stamina)[0]; cp.currentPitcher = false; cp.usedThisGame = true; b.currentPitcher = true; b.active = true; G.log.unshift({ msg: `AI: ${b.name} replaces ${cp.name} (${Math.round(b.stamina)}% stam).`, isSub: true }); }
+            const needsSub = (cp.stamina < 65 && cp.isStarter) || (cp.stamina < 75 && !cp.isStarter);
+            if (!needsSub) return;
+
+            const av = G.opp.pitchers.filter(p => !p.currentPitcher && !p.usedThisGame && p.stamina > cp.stamina + 5);
+            if (!av.length) return;
+
+            // Look ahead at next 3 batters in YOUR lineup (opp is pitching against you)
+            const upcomingHands = [];
+            for (let i = 0; i < 3; i++) {
+                const idx = (G.biYou + i) % 9;
+                const batter = G.you.hitters[G.yourLineup[idx]];
+                if (batter) upcomingHands.push(batter.hand);
             }
+
+            // Score each candidate pitcher
+            // Pitching handedness advantage: opposite hand to batter = favorable matchup
+            // R pitcher vs L batter = good, L pitcher vs R batter = good
+            // Switch hitters (S) = slight neutral advantage to any pitcher
+            function pitcherMatchupScore(pit) {
+                let score = pit.stamina * 0.5;             // base weight: stamina matters
+                score += (5.0 - (pit.era || 4.5)) * 8;    // lower ERA = better
+                score += (2.0 - (pit.whip || 1.5)) * 6;   // lower WHIP = better
+
+                // Handedness matchup vs upcoming batters
+                upcomingHands.forEach(hand => {
+                    if (hand === 'S') {
+                        score -= 3; // switch hitters — slight diss to any pitcher
+                    } else if ((pit.hand === 'R' && hand === 'L') || (pit.hand === 'L' && hand === 'R')) {
+                        score -= 15; // unfavorable opposite-hand matchup
+                    } else {
+                        score += 4; // same-hand matchup, advantage
+                    }
+                });
+
+                return score;
+            }
+
+            const best = av.slice().sort((a, b) => pitcherMatchupScore(b) - pitcherMatchupScore(a))[0];
+
+            const matchupNote = upcomingHands.length
+                ? ` (next: ${upcomingHands.join('')} — chose ${best.hand}HP)`
+                : '';
+
+            cp.currentPitcher = false;
+            cp.usedThisGame = true;
+            best.currentPitcher = true;
+            best.active = true;
+
+            G.log.unshift({
+                msg: `AI: ${best.name} (${best.hand}HP) replaces ${cp.name}${matchupNote}.`,
+                isSub: true
+            });
         }
 
         function canTagUp(bi) { if (!G.bases[bi] || !G.tagPending[bi]) return false; if (bi === 2) return true; return !G.bases[bi + 1]; }

@@ -2168,6 +2168,24 @@
             gap: 6px;
             flex-wrap: wrap
         }
+
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 16px;
+            top: -20px;
+            opacity: 0.9;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -2672,14 +2690,14 @@
         function fmtSpd(v) { return String(v || 0).padStart(2, '0'); }
 
         // ══ CONSTANTS ══════════════════════════════════════════════════════════════
-        const LEAGUE_STRUCTURE = { 'Realistic League': { 'RL East': ['Lakewood Pilgrims', 'Springfield Crabs', 'Riverdale Redbirds', 'Oakburg Beavers', 'Eastville Barracudas'], 'RL Central': ['Millard Pioneers', 'Millport Machines', 'Centertown Blizzard', 'Hendersonville Seals', 'Lemonte Bolts'], 'RL West': ['Sunnydale Herons', 'Westgate Firespitters', 'Summit Phantoms', 'Seaport Ironclads', 'Washborough Ostrich Riders'] }, 'Fantasy League': { 'FL East': ['Quartz Hollow Craftsmen', 'Crestmere Firehawks', 'Mystridge Princes', 'Norwyn Bay Seacats', 'Stonefall Fairies'], 'FL Central': ['Silverkeep Doves', 'Ashbourne Wizards', 'Frostford Freeze', 'Mooncliff Dreamers', 'Stormhaven Igniters'], 'FL West': ['Zandria Gladiators', 'Brickmoor Serpents', 'Atlantica Hammerheads', 'Farlands Keepers', 'Portaltown Tungsten Cubes'] } };
+        const LEAGUE_STRUCTURE = { 'Realistic League': { 'RL East': ['Lakewood Pilgrims', 'Springfield Crabs', 'Riverdale Redbirds', 'Oakburg Beavers', 'Eastville Barracudas'], 'RL Central': ['Millard Pioneers', 'Millport Machines', 'Centertown Blizzard', 'Hendersonville Seals', 'Lemonte Bolts'], 'RL West': ['Sunnydale Herons', 'Westgate Waterspitters', 'Summit Phantoms', 'Seaport Ironclads', 'Washborough Ostrich Riders'] }, 'Fantasy League': { 'FL East': ['Quartz Hollow Craftsmen', 'Crestmere Firehawks', 'Mystridge Princes', 'Norwyn Bay Seacats', 'Stonefall Fairies'], 'FL Central': ['Silverkeep Doves', 'Ashbourne Wizards', 'Frostford Freeze', 'Mooncliff Dreamers', 'Stormhaven Igniters'], 'FL West': ['Zandria Gladiators', 'Brickmoor Serpents', 'Atlantica Hammerheads', 'Farlands Keepers', 'Portaltown Tungsten Cubes'] } };
         const ALL_TEAMS_FLAT = []; const TEAM_META = {};
         Object.entries(LEAGUE_STRUCTURE).forEach(([lg, divs]) => { Object.entries(divs).forEach(([div, teams]) => { teams.forEach(t => { ALL_TEAMS_FLAT.push(t); TEAM_META[t] = { league: lg, division: div }; }); }); });
 
         const BATTER_POSITIONS = ['OF', 'OF', 'OF', 'INF', 'INF', 'INF', 'INF', 'C', 'UTIL', 'UTIL', 'UTIL', 'UTIL', 'UTIL'];
 
         const NF = ['Carter', 'Eric', 'James', 'Tung', 'Mason', 'Morgan', 'Rickey', 'William', 'Davis', 'Wilson', 'Jack', 'Thompson', 'Robinson', 'Hayes', 'Parker', 'Jackson', 'Miguel', 'Ivan', 'Rodrigo', 'Sam', 'Bob', 'Douglass', 'Archibald', 'Stu', 'Zack', 'Quinn', 'Barry', 'Kevin', 'Johnathan', 'Yung', 'David', 'Andruw', 'Barney', 'Drake', 'Easton', 'Fred', 'Gino', 'Harvey', 'Jesus', 'Zeke', 'Tristan', 'Russell', 'Steven', 'Liam', 'Willie', 'Alvin', 'Denzel', 'Elliot', 'Glenn', 'Yon', 'Ike', 'Perry', 'Trevor', 'Uma', 'Kirby'];
-        const NL_NAMES = ['Smith', 'Johnson', 'Sahur', 'Brown', 'Lee', 'Garcia', 'Rivera', 'Miller', 'Chen', 'Moore', 'Williams', 'Taylor', 'Anderson', 'Thomas', 'Torres', 'Nguyen', 'White', 'Martinez', 'Harris', 'Clark', 'Andrevski', 'Walker', 'Perez', 'Black', 'McCormick', 'Turner', 'Patel', 'Schmirkovski', 'Mrokonov', 'Yao', 'Ling', 'Hardson', 'Malianno', 'Torilli', 'Park', 'Kim', 'Hayes', 'Colon', 'Rodriguez', 'McDonald', 'Suit', 'Dickson', 'Sawyer', 'Blueburn', 'Novak', 'Rossi', 'Dubois', 'Dadapoulous', 'Conway', 'Biggie-Sorensen', 'Stevenson', 'Thomas', 'DeRosa', 'Stallions', 'Aziz', 'Sato', 'Choi', 'Zhao', 'Jahari', 'Mensah', 'Onyango', 'Svensson', 'Holm', 'Fjelstad', 'Borbavic', 'Plantovic', 'Drummond', 'Goodman', 'Badman', 'Okayman', 'Delamarion'];
+        const NL_NAMES = ['Smith', 'Johnson', 'Sahur', 'Brown', 'Lee', 'Garcia', 'Rivera', 'Miller', 'Chen', 'Moore', 'Williams', 'Taylor', 'Anderson', 'Thomas', 'Torres', 'Nguyen', 'White', 'Martinez', 'Harris', 'Clark', 'Andrevski', 'Walker', 'Perez', 'Black', 'McCormick', 'Turner', 'Patel', 'Schmirkovski', 'Mrokonov', 'Yao', 'Ling', 'Hardson', 'Malianno', 'Torilli', 'Park', 'Kim', 'Hayes', 'Colon', 'Rodriguez', 'McDonald', 'Suit', 'Dickson', 'Sawyer', 'Blueburn', 'Novak', 'Rossi', 'Dubois', 'Dadapoulous', 'Conway', 'Biggie-Sorensen', 'Stevenson', 'Thomas', 'DeRosa', 'Stallions', 'Aziz', 'Sato', 'Choi', 'Zhao', 'Jahari', 'Mensah', 'Onyango', 'Svensson', 'Holm', 'Fjelstad', 'Borbavic', 'Plantovic', 'Drummond', 'Goodman', 'Badman', 'Okayman', 'Delamarion', 'Ercegrec', 'Toni-Stone', 'Al-Farooq', 'Spiro', 'Flango', 'Jalaska', 'Jorth-Dakota', 'McBasketball'];
 
         const BADGE_DEFS = [{ id: 'champion', icon: '🏆', label: 'Champion', desc: 'Win the World Series', cat: 'Series' }, { id: 'dynasty', icon: '👑', label: 'Dynasty', desc: 'Win 3 championships in any 5 seasons', cat: 'Series' }, { id: 'backtback', icon: '🔗', label: 'Back-to-Back', desc: 'Win championships in consecutive seasons', cat: 'Series' }, { id: 'pennant', icon: '🚩', label: 'Pennant', desc: 'Win your league championship', cat: 'Series' }, { id: 'rivalwinner', icon: '⚔️', label: 'Rival Winner', desc: 'Win a playoff series vs same-division team', cat: 'Series' }, { id: 'cardiac', icon: '❤️', label: 'Cardiac', desc: 'Win after trailing by 4+ runs', cat: 'Game' }, { id: 'blowout', icon: '💥', label: 'Blow-Out', desc: 'Win a game by 7+ runs', cat: 'Game' }, { id: 'maddux', icon: '🎯', label: 'Maddux', desc: 'Win without making a pitching change', cat: 'Game' }, { id: 'shutout', icon: '🔒', label: 'Shutout', desc: 'Win without allowing a run', cat: 'Game' }, { id: 'walkoff', icon: '⚡', label: 'Walk-Off', desc: 'Win in a walkoff', cat: 'Game' }, { id: 'guardball', icon: '🤦', label: 'GuardsBall', desc: 'Score a run off an error', cat: 'Play' }, { id: 'salami', icon: '🌭', label: 'Salami', desc: 'Hit a grand slam', cat: 'Play' }, { id: 'threebag', icon: '👜', label: 'Three Bag', desc: 'Hit a triple', cat: 'Play' }, { id: 'onpatrol', icon: '🔄', label: 'On Patrol', desc: 'Turn a double play', cat: 'Play' }, { id: 'tagged', icon: '🏃', label: 'Tagged', desc: 'Score a run by tagging up', cat: 'Play' }, { id: 'goodcall', icon: '📣', label: 'Good Call', desc: 'Make a successful manager move', cat: 'Manager' }, { id: 'luckyskipper', icon: '🍀', label: 'Lucky Skipper', desc: 'Make 7 successful manager moves in one season', cat: 'Manager' }, { id: 'moneyball', icon: '💰', label: 'Moneyball', desc: 'Pinch hit in a playoff game', cat: 'Manager' }, { id: 'trashcan', icon: '🗑️', label: 'Trash Can', desc: "Successfully pull off 'Steal the Signs'", cat: 'Manager' }, { id: 'hofmanager', icon: '🎖️', label: 'HOF Manager', desc: 'Manage a 90+ prestige team', cat: 'Manager' }];
 
@@ -3465,7 +3483,16 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                 if (CURRENT_SERIES.round === 'ws') { MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 15); savePrestige(); TOTAL_CHAMPS++; saveChamps(TOTAL_CHAMPS); LAST_CHAMP = SEASON.playerTeam; award('champion'); if (HISTORY.length >= 1 && HISTORY[HISTORY.length - 1] === 'w') award('backtback'); HISTORY.push('w'); if (HISTORY.length >= 5 && HISTORY.slice(-5).filter(x => x === 'w').length >= 3) award('dynasty'); saveHistory(HISTORY); document.getElementById('series-final-line').textContent = '🏆 World Series Champions!'; document.getElementById('series-result-line').textContent = `${SEASON.playerTeam} wins the World Series!`; renderChampCounter('champ-counter-so'); renderBadges('seriesover-badges'); addB('View Championship', 'btn-gold', () => showScreen('seriesover')); }
                 else { if (CURRENT_SERIES.round === 'lcs') { award('pennant'); MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 5); savePrestige(); } else { MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 5); savePrestige(); } addB('Play Next Series', 'btn-green', () => { recoverPitchersBetweenSeries(CURRENT_SERIES.series); advancePlayoffRound(); autoSimNonPlayerSeries(); const next = findNextPlayerSeries(); if (next) startPlayoffSeries(next); else goToPlayoffs(); }); }
             } else { HISTORY.push('l'); saveHistory(HISTORY); advancePlayoffRound(); addB('View Final Bracket', 'btn-primary', () => goToPlayoffs()); addB('New Franchise', 'btn-amber', () => startNewFranchise()); }
-            document.getElementById('sop-champ').innerHTML = ''; renderChampCounter('champ-counter-go'); showScreen('seriesover-playoff');
+            document.getElementById('sop-champ').innerHTML = ''; 
+
+            renderChampCounter('champ-counter-go');
+
+            // Trigger confetti for World Series win
+            if (playerWon && CURRENT_SERIES.round === 'ws') {
+                launchConfetti();
+            }
+
+            showScreen('seriesover-playoff');
         }
 
         // ══ GAME ENGINE ════════════════════════════════════════════════════════════
@@ -3484,33 +3511,31 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             'Lakewood Pilgrims': { name: 'J. Pilgrim', hand: 'R', num: 99, pos: 'C', spd: 60, avg: .320, ops: .815, bbRate: .07, kRate: .24 },
             'Springfield Crabs': { name: 'T. Crabman', hand: 'S', num: 45, pos: 'INF', spd: 85, avg: .270, ops: 1.077, bbRate: .19, kRate: .11 },
             'Oakburg Beavers': { name: 'D. Bober', hand: 'L', num: 67, pos: 'OF', spd: 94, avg: .309, ops: .971, bbRate: .12, kRate: .14 },
-            'Millard Pioneers': { name: 'C. Trail', hand: 'R', num: 29, pos: 'OF', spd: 95, avg: .278, ops: .752, bbRate: .07, kRate: .26 },
+            'Millard Pioneers': { name: 'C. Trail', hand: 'R', num: 29, pos: 'OF', spd: 97, avg: .278, ops: .752, bbRate: .07, kRate: .26 },
             'Millport Machines': { name: 'S. Torque', hand: 'R', num: 88, pos: 'INF', spd: 40, avg: .210, ops: 1.334, bbRate: .12, kRate: .20 },
             'Centertown Blizzard': { name: 'F. Chill', hand: 'L', num: 34, pos: 'INF', spd: 65, avg: .330, ops: .821, bbRate: .14, kRate: .19 },
             'Lemonte Bolts': { name: 'V. Sparks', hand: 'S', num: 90, pos: 'UTIL', spd: 41, avg: .265, ops: 1.770, bbRate: .13, kRate: .21 },
             'Sunnydale Herons': { name: 'A. Wing', hand: 'R', num: 76, pos: 'C', spd: 48, avg: .348, ops: .510, bbRate: .18, kRate: .20 },
             'Summit Phantoms': { name: 'N. Shade', hand: 'R', num: 97, pos: 'OF', spd: 92, avg: .315, ops: .920, bbRate: .18, kRate: .18 },
             'Washborough Ostrich Riders': { name: 'P. Stride', hand: 'L', num: 38, pos: 'OF', spd: 115, avg: .285, ops: .603, bbRate: .18, kRate: .16 },
-            'Crestmere Firehawks': { name: 'E. Fuego', hand: 'R', num: 54, pos: 'INF', spd: 91, avg: .281, ops: .720, bbRate: .12, kRate: .21 },
-            'Mystridge Princes': { name: 'L. Crown', hand: 'L', num: 44, pos: 'C', spd: 25, avg: .265, ops: 1.195, bbRate: .13, kRate: .18 },
+            'Crestmere Firehawks': { name: 'E. Fuego', hand: 'R', num: 54, pos: 'INF', spd: 101, avg: .281, ops: .720, bbRate: .12, kRate: .21 },
+            'Mystridge Princes': { name: 'L. Crown', hand: 'L', num: 44, pos: 'C', spd: 25, avg: .271, ops: 1.195, bbRate: .13, kRate: .18 },
             'Norwyn Bay Seacats': { name: 'T. Tide', hand: 'R', num: 99, pos: 'INF', spd: 55, avg: .341, ops: .963, bbRate: .11, kRate: .19 },
             'Silverkeep Doves': { name: 'S. Peace', hand: 'R', num: 21, pos: 'OF', spd: 42, avg: .335, ops: .643, bbRate: .28, kRate: .20 },
             'Ashbourne Wizards': { name: 'Z. Hex', hand: 'R', num: 69, pos: 'C', spd: 37, avg: .299, ops: .909, bbRate: .24, kRate: .09 },
             'Mooncliff Dreamers': { name: 'D. Lune', hand: 'R', num: 61, pos: 'OF', spd: 92, avg: .294, ops: .884, bbRate: .17, kRate: .19 },
             'Stormhaven Igniters': { name: 'K. Surge', hand: 'R', num: 90, pos: 'INF', spd: 61, avg: .408, ops: .790, bbRate: .21, kRate: .11 },
-            'Atlantica Hammerheads': { name: 'B. Crush', hand: 'R', num: 49, pos: 'UTIL', spd: 33, avg: .247, ops: 1.317, bbRate: .14, kRate: .14 },
+            'Atlantica Hammerheads': { name: 'B. Crush', hand: 'R', num: 49, pos: 'UTIL', spd: 33, avg: .257, ops: 1.317, bbRate: .14, kRate: .14 },
             'Farlands Keepers': { name: 'G. Watchman', hand: 'R', num: 94, pos: 'INF', spd: 72, avg: .350, ops: .803, bbRate: .16, kRate: .06 },
             'Portaltown Tungsten Cubes': { name: 'Q. Cubert', hand: 'L', num: 67, pos: 'UTIL', spd: 4, avg: .151, ops: .350, bbRate: 5.98, kRate: .01 }
         };
         function getFranchisePlayer(teamName, slotId) { const fp = FRANCHISE_PLAYERS[teamName]; if (!fp) return null; return { id: slotId, name: fp.name, hand: fp.hand, num: fp.num, pos: fp.pos, spd: fp.spd, bbRate: fp.bbRate, kRate: fp.kRate, active: true, inGame: true, isFP: true, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }, avg: fp.avg, ops: fp.ops }; }
 
         const FRANCHISE_PITCHERS = {
-            'Riverdale Redbirds': {
-                name: 'R. Warbler', hand: 'R', num: 18, isStarter: true, role: 'SP', era: 2.69, whip: .95, kRate: .25, bbRate: .09, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.4
-            },
+            'Riverdale Redbirds': { name: 'R. Warbler', hand: 'R', num: 18, isStarter: true, role: 'SP', era: 2.69, whip: .95, kRate: .25, bbRate: .09, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.4 },
             'Eastville Barracudas': { name: 'E. Fisher', hand: 'L', num: 16, isStarter: true, role: 'SP', era: 2.52, whip: .87, kRate: .34, bbRate: .05, stamina: 110, maxStamina: 110, recoverRate: 9, drainPerPitch: 1.4 },
             'Hendersonville Seals': { name: 'B. Harbor', hand: 'L', num: 47, isStarter: false, role: 'RP', era: 2.87, whip: .84, kRate: .42, bbRate: .12, stamina: 100, maxStamina: 105, recoverRate: 18, drainPerPitch: 4.9 },
-            'Westgate Firespitters': { name: 'D. Blaze', hand: 'R', num: 90, isStarter: false, role: 'RP', era: 3.88, whip: .91, kRate: .51, bbRate: .10, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 4.9 },
+            'Westgate Waterspitters': { name: 'D. Splash', hand: 'R', num: 90, isStarter: false, role: 'RP', era: 3.88, whip: .91, kRate: .51, bbRate: .10, stamina: 100, maxStamina: 100, recoverRate: 18, drainPerPitch: 4.9 },
             'Seaport Ironclads': { name: 'H. Steel', hand: 'R', num: 74, isStarter: true, role: 'SP', era: 2.71, whip: .86, kRate: .28, bbRate: .04, stamina: 100, maxStamina: 105, recoverRate: 18, drainPerPitch: 4.9 },
             'Quartz Hollow Craftsmen': { name: 'E. Chisel', hand: 'L', num: 2, isStarter: true, role: 'SP', era: 3.25, whip: 1.09, kRate: .31, bbRate: .07, stamina: 100, maxStamina: 100, recoverRate: 8, drainPerPitch: 1.5 },
             'Stonefall Fairies': { name: 'F. Dust', hand: 'R', num: 33, isStarter: false, role: 'RP', era: 2.12, whip: 0.75, kRate: 0.48, bbRate: 0.14, stamina: 100, maxStamina: 110, recoverRate: 18, drainPerPitch: 4.1 },
@@ -3754,7 +3779,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             const bt = iy ? G.you : G.opp, k = G.inning + '_' + (iy ? 'you' : 'opp');
             bt.score[k] = (bt.score[k] || 0) + sc; bt.runs += sc; if (!isE) bat.stats.rbi += sc;
         }
-        function oppAutoSub() {
+        function oppAutoSub() { // TODO
             const cp = curPit(G.opp);
             if ((cp.stamina < 65 && cp.isStarter) || (cp.stamina < 75 && !cp.isStarter)) {
                 const av = G.opp.pitchers.filter(p => !p.currentPitcher && !p.usedThisGame && p.stamina > cp.stamina + 5);
@@ -3787,12 +3812,12 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
         function dblSteal() {
             const r1 = G.bases[0], r2 = G.bases[1]; if (!r1 && !r2) return;
             let msgs = [], done = false;
-            if (r2 && !G.bases[2]) { if (Math.random() < 1.00 * (0.55 + (r2.spd / 100) * 0.45)) { G.bases[2] = r2; G.bases[1] = null; msgs.push(`${ini(r2.name)} 2nd→3rd ✓`); } else { G.bases[1] = null; G.outs++; msgs.push(`${ini(r2.name)} caught @ 3rd`); if (G.outs >= 3) done = true; } }
-            if (!done && r1 && !G.bases[1]) { if (Math.random() < 0.70 * (0.45 + (r1.spd / 100) * 0.45)) { G.bases[1] = r1; G.bases[0] = null; msgs.push(`${ini(r1.name)} 1st→2nd ✓`); } else { G.bases[0] = null; G.outs++; msgs.push(`${ini(r1.name)} caught @ 2nd`); if (G.outs >= 3) done = true; } }
+            if (r2 && !G.bases[2]) { if (Math.random() < 0.70 * (0.45 + (r2.spd / 100) * 0.45)) { G.bases[2] = r2; G.bases[1] = null; msgs.push(`${ini(r2.name)} 2nd→3rd ✓`); } else { G.bases[1] = null; G.outs++; msgs.push(`${ini(r2.name)} caught @ 3rd`); if (G.outs >= 3) done = true; } }
+            if (!done && r1 && !G.bases[1]) { if (Math.random() < 1.00 * (0.55 + (r1.spd / 100) * 0.45)) { G.bases[1] = r1; G.bases[0] = null; msgs.push(`${ini(r1.name)} 1st→2nd ✓`); } else { G.bases[0] = null; G.outs++; msgs.push(`${ini(r1.name)} caught @ 2nd`); if (G.outs >= 3) done = true; } }
             G.log.unshift({ msg: `Double steal: ${msgs.join(' · ')}`, isSteal: true });
             if (done) { endHalf(); renderGame(); return; } renderGame();
         }
-        function dblStealOdds(r1, r2) { const p1 = 1.00 * (0.55 + (r2.spd / 100) * 0.45), p2 = 0.70 * (0.45 + (r1.spd / 100) * 0.45); return { both: Math.round(p1 * p2 * 100), r2: Math.round(p1 * 100), r1: Math.round(p2 * 100) }; }
+        function dblStealOdds(r1, r2) { const p1 = 0.70 * (0.45 + (r2.spd / 100) * 0.45), p2 = 1.00 * (0.55 + (r1.spd / 100) * 0.45); return { both: Math.round(p1 * p2 * 100), r2: Math.round(p1 * 100), r1: Math.round(p2 * 100) }; }
 
         function isYouBatting() { return G.homeTeam === 'you' ? (G.half === 'bottom') : (G.half === 'top'); }
 
@@ -4141,7 +4166,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
             renderMgr(); renderGame();
         }
 
-        function renderPitchP() { // FLAG
+        function renderPitchP() {
             const el = document.getElementById('mgr-pitch'), cp = curPit(G.you), sc = Math.round(cp.stamina), pen = stamPen(cp), tired = sc < 75;
             let h = tired ? `<div class="tired-warn">★ ${cp.name} is ${stamLbl(sc)} (${sc}%) — eff. -${Math.round(pen * 100)}%</div>` : '';
             h += `<div class="alert-info" style="margin-bottom:10px"><div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
@@ -4357,6 +4382,51 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
         // Init
         renderBadges('setup-badges');
         renderChampCounter('champ-counter-setup');
+
+
+        const colors = [
+            "#ff4d6d",
+            "#ffd166",
+            "#06d6a0",
+            "#118ab2",
+            "#8338ec",
+            "#ffffff"
+        ];
+
+        function createConfettiPiece() {
+            const confetti = document.createElement("div");
+            confetti.classList.add("confetti");
+
+            confetti.style.left = Math.random() * window.innerWidth + "px";
+            confetti.style.backgroundColor =
+                colors[Math.floor(Math.random() * colors.length)];
+
+            confetti.style.width = 6 + Math.random() * 8 + "px";
+            confetti.style.height = 10 + Math.random() * 14 + "px";
+
+            const duration = 3 + Math.random() * 3;
+            confetti.style.animationDuration = duration + "s";
+
+            confetti.style.transform = `translateX(${Math.random() * 200 - 100}px)`;
+
+            document.body.appendChild(confetti);
+
+            setTimeout(() => {
+                confetti.remove();
+            }, duration * 1000);
+        }
+
+        function launchConfetti() {
+            for (let i = 0; i < 220; i++) {
+                setTimeout(() => {
+                    createConfettiPiece();
+                }, i * 8);
+            }
+        }
+
+        // document
+        //     .getElementById("confettiBtn")
+        //     .addEventListener("click", launchConfetti);
     </script>
 </body>
 

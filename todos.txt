@@ -613,6 +613,20 @@ and then with tiebreaker for lower ERA. EX 2 at 100%. Pick 2 era over 3 era.
 
 
 _____
+
+TODOs
+
+Can you fix an issue with the way the year is stored? CUrrently it just adds a 1 to the end instead of incrementing and saving
+
+For championships can you add that now the year of the season it was won AND the difficulty are stored. And then hovering over the trophy icon shows the details of the championships won with years and difficulties.
+
+Can you add smarter AI pitching decisions. When a sub needs to be made it looks ahead at the coming linup to be faced and picks a pitcher that has the better Left on Right matchup.
+
+
+____________
+
+
+
 OPS  meh
 
 HOF
