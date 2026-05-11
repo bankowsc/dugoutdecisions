@@ -411,7 +411,7 @@
 
         .chip-gold {
             background: var(--gold2);
-            color: var(#0a0800);
+            color: #0a0800;
             border-color: var(--gold);
             font-weight: 700
         }
@@ -1142,7 +1142,10 @@
 
         .champ-counter {
             text-align: center;
-            padding: 10px 0 4px
+            padding: 10px 0 4px;
+            position: relative;
+            display: inline-block;
+            cursor: default
         }
 
         .champ-count-num {
@@ -1161,6 +1164,41 @@
             margin-top: 2px;
             font-family: 'DM Mono', monospace;
             letter-spacing: .5px
+        }
+
+        .champ-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1510;
+            color: #f0ede8;
+            font-size: 11px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            white-space: nowrap;
+            z-index: 999;
+            pointer-events: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
+            font-family: 'DM Mono', monospace;
+            line-height: 1.8;
+            text-align: left;
+            border: 1px solid var(--amber3)
+        }
+
+        .champ-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--amber3)
+        }
+
+        .champ-counter:hover .champ-tooltip {
+            display: block
         }
 
         .badge-grid {
@@ -1900,7 +1938,6 @@
             font-size: 11px
         }
 
-        /* ── ACQUISITION / DEADLINE STYLES ── */
         .acq-topbar-gold {
             background: linear-gradient(135deg, #1a1000, #2a1a00);
             border-bottom: 2px solid var(--gold)
@@ -2032,7 +2069,6 @@
             color: var(--red0)
         }
 
-        /* ── DEADLINE OVERLAY ── */
         .deadline-overlay {
             position: fixed;
             inset: 0;
@@ -2110,7 +2146,6 @@
             border-color: var(--teal3)
         }
 
-        /* ── RE-SIGN SCREEN ── */
         .resign-player-card {
             border: 1px solid var(--bdr);
             border-radius: var(--radius-sm);
@@ -2121,7 +2156,7 @@
             cursor: pointer
         }
 
-        .resign-player-card:hover:not(.already-signed):not(.fp-protected) {
+        .resign-player-card:hover:not(.already-signed):not(.fp-protected):not(.too-expensive) {
             border-color: var(--green3);
             background: var(--green2);
             transform: translateX(2px)
@@ -2142,6 +2177,11 @@
         .resign-player-card.already-signed {
             opacity: .6;
             cursor: default
+        }
+
+        .resign-player-card.too-expensive {
+            opacity: .55;
+            cursor: not-allowed
         }
 
         .resign-slot-empty {
@@ -2169,7 +2209,6 @@
             flex-wrap: wrap
         }
 
-
         .confetti {
             position: fixed;
             width: 10px;
@@ -2177,18 +2216,32 @@
             top: -20px;
             opacity: 0.9;
             animation: fall linear forwards;
-            pointer-events: none;
+            pointer-events: none
         }
 
         @keyframes fall {
             to {
                 transform: translateY(110vh) rotate(720deg);
-                opacity: 1;
+                opacity: 1
+            }
+        }
+
+        /* Mystery badge pulsing border for unearned */
+        .badge-cell.mystery-cell {
+            animation: mystPulse 3s ease-in-out infinite alternate
+        }
+
+        @keyframes mystPulse {
+            from {
+                box-shadow: 0 0 0 0 rgba(58, 40, 120, 0)
+            }
+
+            to {
+                box-shadow: 0 0 8px 2px rgba(58, 40, 120, 0.18)
             }
         }
     </style>
 </head>
-
 
 <body>
     <div class="wrap">
@@ -2229,7 +2282,7 @@
                     <div class="hero-baseball right">⚾</div>
                 </div>
                 <div class="card" style="margin-top:12px">
-                    <div id="champ-counter-setup"></div>
+                    <div id="champ-counter-setup" style="text-align:center"></div>
                     <div class="section-label" style="margin-top:8px">Achievements</div>
                     <div id="setup-badges"></div>
                 </div>
@@ -2699,7 +2752,36 @@
         const NF = ['Carter', 'Eric', 'James', 'Tung', 'Mason', 'Morgan', 'Rickey', 'William', 'Davis', 'Wilson', 'Jack', 'Thompson', 'Robinson', 'Hayes', 'Parker', 'Jackson', 'Miguel', 'Ivan', 'Rodrigo', 'Sam', 'Bob', 'Douglass', 'Archibald', 'Stu', 'Zack', 'Quinn', 'Barry', 'Kevin', 'Johnathan', 'Yung', 'David', 'Andruw', 'Barney', 'Drake', 'Easton', 'Fred', 'Gino', 'Harvey', 'Jesus', 'Zeke', 'Tristan', 'Russell', 'Steven', 'Liam', 'Willie', 'Alvin', 'Denzel', 'Elliot', 'Glenn', 'Yon', 'Ike', 'Perry', 'Trevor', 'Uma', 'Kirby'];
         const NL_NAMES = ['Smith', 'Johnson', 'Sahur', 'Brown', 'Lee', 'Garcia', 'Rivera', 'Miller', 'Chen', 'Moore', 'Williams', 'Taylor', 'Anderson', 'Thomas', 'Torres', 'Nguyen', 'White', 'Martinez', 'Harris', 'Clark', 'Andrevski', 'Walker', 'Perez', 'Black', 'McCormick', 'Turner', 'Patel', 'Schmirkovski', 'Mrokonov', 'Yao', 'Ling', 'Hardson', 'Malianno', 'Torilli', 'Park', 'Kim', 'Hayes', 'Colon', 'Rodriguez', 'McDonald', 'Suit', 'Dickson', 'Sawyer', 'Blueburn', 'Novak', 'Rossi', 'Dubois', 'Dadapoulous', 'Conway', 'Biggie-Sorensen', 'Stevenson', 'Thomas', 'DeRosa', 'Stallions', 'Aziz', 'Sato', 'Choi', 'Zhao', 'Jahari', 'Mensah', 'Onyango', 'Svensson', 'Holm', 'Fjelstad', 'Borbavic', 'Plantovic', 'Drummond', 'Goodman', 'Badman', 'Okayman', 'Delamarion', 'Ercegrec', 'Toni-Stone', 'Al-Farooq', 'Spiro', 'Flango', 'Jalaska', 'Jorth-Dakota', 'McBasketball'];
 
-        const BADGE_DEFS = [{ id: 'champion', icon: '🏆', label: 'Champion', desc: 'Win the World Series', cat: 'Series' }, { id: 'dynasty', icon: '👑', label: 'Dynasty', desc: 'Win 3 championships in any 5 seasons', cat: 'Series' }, { id: 'backtback', icon: '🔗', label: 'Back-to-Back', desc: 'Win championships in consecutive seasons', cat: 'Series' }, { id: 'pennant', icon: '🚩', label: 'Pennant', desc: 'Win your league championship', cat: 'Series' }, { id: 'rivalwinner', icon: '⚔️', label: 'Rival Winner', desc: 'Win a playoff series vs same-division team', cat: 'Series' }, { id: 'cardiac', icon: '❤️', label: 'Cardiac', desc: 'Win after trailing by 4+ runs', cat: 'Game' }, { id: 'blowout', icon: '💥', label: 'Blow-Out', desc: 'Win a game by 7+ runs', cat: 'Game' }, { id: 'maddux', icon: '🎯', label: 'Maddux', desc: 'Win without making a pitching change', cat: 'Game' }, { id: 'shutout', icon: '🔒', label: 'Shutout', desc: 'Win without allowing a run', cat: 'Game' }, { id: 'walkoff', icon: '⚡', label: 'Walk-Off', desc: 'Win in a walkoff', cat: 'Game' }, { id: 'guardball', icon: '🤦', label: 'GuardsBall', desc: 'Score a run off an error', cat: 'Play' }, { id: 'salami', icon: '🌭', label: 'Salami', desc: 'Hit a grand slam', cat: 'Play' }, { id: 'threebag', icon: '👜', label: 'Three Bag', desc: 'Hit a triple', cat: 'Play' }, { id: 'onpatrol', icon: '🔄', label: 'On Patrol', desc: 'Turn a double play', cat: 'Play' }, { id: 'tagged', icon: '🏃', label: 'Tagged', desc: 'Score a run by tagging up', cat: 'Play' }, { id: 'goodcall', icon: '📣', label: 'Good Call', desc: 'Make a successful manager move', cat: 'Manager' }, { id: 'luckyskipper', icon: '🍀', label: 'Lucky Skipper', desc: 'Make 7 successful manager moves in one season', cat: 'Manager' }, { id: 'moneyball', icon: '💰', label: 'Moneyball', desc: 'Pinch hit in a playoff game', cat: 'Manager' }, { id: 'trashcan', icon: '🗑️', label: 'Trash Can', desc: "Successfully pull off 'Steal the Signs'", cat: 'Manager' }, { id: 'hofmanager', icon: '🎖️', label: 'HOF Manager', desc: 'Manage a 90+ prestige team', cat: 'Manager' }];
+        // ── BADGE DEFINITIONS ─────────────────────────────────────────────────────
+        // Standard badges
+        const BADGE_DEFS = [
+            { id: 'champion', icon: '🏆', label: 'Champion', desc: 'Win the World Series', cat: 'Series' },
+            { id: 'dynasty', icon: '👑', label: 'Dynasty', desc: 'Win 3 championships in any 5 seasons', cat: 'Series' },
+            { id: 'backtback', icon: '🔗', label: 'Back-to-Back', desc: 'Win championships in consecutive seasons', cat: 'Series' },
+            { id: 'pennant', icon: '🚩', label: 'Pennant', desc: 'Win your league championship', cat: 'Series' },
+            { id: 'rivalwinner', icon: '⚔️', label: 'Rival Winner', desc: 'Win a playoff series vs same-division team', cat: 'Series' },
+            { id: 'cardiac', icon: '❤️', label: 'Cardiac', desc: 'Win after trailing by 4+ runs', cat: 'Game' },
+            { id: 'blowout', icon: '💥', label: 'Blow-Out', desc: 'Win a game by 7+ runs', cat: 'Game' },
+            { id: 'maddux', icon: '🎯', label: 'Maddux', desc: 'Win without making a pitching change', cat: 'Game' },
+            { id: 'shutout', icon: '🔒', label: 'Shutout', desc: 'Win without allowing a run', cat: 'Game' },
+            { id: 'walkoff', icon: '⚡', label: 'Walk-Off', desc: 'Win in a walkoff', cat: 'Game' },
+            { id: 'guardball', icon: '🤦', label: 'GuardsBall', desc: 'Score a run off an error', cat: 'Play' },
+            { id: 'salami', icon: '🌭', label: 'Salami', desc: 'Hit a grand slam', cat: 'Play' },
+            { id: 'threebag', icon: '👜', label: 'Three Bag', desc: 'Hit a triple', cat: 'Play' },
+            { id: 'onpatrol', icon: '🔄', label: 'On Patrol', desc: 'Turn a double play', cat: 'Play' },
+            { id: 'tagged', icon: '🏃', label: 'Tagged', desc: 'Score a run by tagging up', cat: 'Play' },
+            { id: 'goodcall', icon: '📣', label: 'Good Call', desc: 'Make a successful manager move', cat: 'Manager' },
+            { id: 'luckyskipper', icon: '🍀', label: 'Lucky Skipper', desc: 'Make 7 successful manager moves in one season', cat: 'Manager' },
+            { id: 'moneyball', icon: '💰', label: 'Moneyball', desc: 'Pinch hit in a playoff game', cat: 'Manager' },
+            { id: 'trashcan', icon: '🗑️', label: 'Trash Can', desc: "Successfully pull off 'Steal the Signs'", cat: 'Manager' },
+            { id: 'hofmanager', icon: '🎖️', label: 'HOF Manager', desc: 'Manage a 90+ prestige team', cat: 'Manager' },
+            // ── MYSTERY BADGES ──
+            { id: 'triplet', icon: '🎭', label: 'Triple T', desc: 'Pinch hit with a player named T. Sahur', cat: 'Mystery', mystery: true },
+            { id: 'sixtyseven', icon: '🎱', label: '67', desc: 'End a game with a 6–7 final score (either side)', cat: 'Mystery', mystery: true },
+            { id: 'thriller', icon: '🕺', label: 'Thriller', desc: '0–0 after 9 innings (game went to extras)', cat: 'Mystery', mystery: true },
+            { id: 'justabitoutside', icon: '🎳', label: 'Just a Bit Outside', desc: 'Throw or draw 4 walks in a row', cat: 'Mystery', mystery: true },
+            { id: 'underdog', icon: '🐕', label: 'Underdog', desc: 'Win the World Series with a C or worse team', cat: 'Mystery', mystery: true },
+        ];
 
         // ══ PERSISTENCE ════════════════════════════════════════════════════════════
         function loadBadges() { try { return JSON.parse(localStorage.getItem('bbm_b') || '{}') } catch { return {} } }
@@ -2718,18 +2800,80 @@
         let BADGES = loadBadges(); let HISTORY = loadHistory(); let TOTAL_CHAMPS = loadChamps();
 
         // ══ BADGE SYSTEM ═══════════════════════════════════════════════════════════
-        function award(id) { if (BADGES[id]) return false; BADGES[id] = true; saveBadges(BADGES); const d = BADGE_DEFS.find(b => b.id === id); if (d && G.log) G.log.unshift({ msg: `🏅 BADGE: "${d.label}" — ${d.desc}`, isBadge: true }); return true; }
-        function renderBadges(elId) { const el = document.getElementById(elId); if (!el) return; const cats = [...new Set(BADGE_DEFS.map(b => b.cat))]; let h = '<div class="badge-grid">'; cats.forEach(cat => { h += `<div class="badge-cat-label">${cat}</div>`; BADGE_DEFS.filter(b => b.cat === cat).forEach(b => { const e = !!BADGES[b.id]; h += `<div class="badge-cell"><div class="badge-icon ${e ? 'earned' : ''}">${b.icon}</div><div class="badge-label ${e ? 'earned' : ''}">${b.label}</div>${e ? '<span class="badge-star">★</span>' : ''}<div class="badge-tooltip">${e ? '✓ ' : ''}${b.desc}</div></div>`; }); }); h += '</div>'; el.innerHTML = h; }
-        function renderChampCounter(elId) { const el = document.getElementById(elId); if (!el) return; if (!TOTAL_CHAMPS) { el.innerHTML = ''; return; } el.innerHTML = `<div class="champ-counter"><div class="champ-count-num">🏆 ${TOTAL_CHAMPS}×</div><div class="champ-count-label">${TOTAL_CHAMPS === 1 ? 'Championship' : 'Championships'} won all-time</div></div>`; }
+        function award(id) {
+            if (BADGES[id]) return false;
+            BADGES[id] = true; saveBadges(BADGES);
+            const d = BADGE_DEFS.find(b => b.id === id);
+            if (d && G.log) G.log.unshift({ msg: `🏅 BADGE: "${d.label}" — ${d.desc}`, isBadge: true });
+            return true;
+        }
+
+        function renderBadges(elId) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            const cats = [...new Set(BADGE_DEFS.map(b => b.cat))];
+            let h = '<div class="badge-grid">';
+            cats.forEach(cat => {
+                const catLabel = cat === 'Mystery' ? '🔮 Mystery' : cat;
+                h += `<div class="badge-cat-label">${catLabel}</div>`;
+                BADGE_DEFS.filter(b => b.cat === cat).forEach(b => {
+                    const e = !!BADGES[b.id];
+                    const isMystery = !!b.mystery;
+                    const icon = (isMystery && !e) ? '❓' : b.icon;
+                    const label = (isMystery && !e) ? '???' : b.label;
+                    const tooltip = (isMystery && !e) ? 'Secret achievement — keep playing to discover!' : (e ? '✓ ' + b.desc : b.desc);
+                    let cellStyle = '';
+                    if (isMystery && !e) cellStyle = 'background:var(--purple2);border-color:var(--purple3);';
+                    else if (isMystery && e) cellStyle = 'background:var(--amber2);border-color:var(--amber3);';
+                    const mystClass = (isMystery && !e) ? ' mystery-cell' : '';
+                    h += `<div class="badge-cell${mystClass}" style="${cellStyle}">`;
+                    h += `<div class="badge-icon ${e ? 'earned' : ''}">${icon}</div>`;
+                    h += `<div class="badge-label ${e ? 'earned' : ''}">${label}</div>`;
+                    h += e ? '<span class="badge-star">★</span>' : '';
+                    h += `<div class="badge-tooltip">${tooltip}</div>`;
+                    h += `</div>`;
+                });
+            });
+            h += '</div>';
+            el.innerHTML = h;
+        }
+
+        function renderChampCounter(elId) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            if (!TOTAL_CHAMPS) { el.innerHTML = ''; return; }
+            const wins = HISTORY.filter(x => x && (x.r === 'w' || x === 'w'));
+            let tipLines = '';
+            if (wins.length > 0) {
+                tipLines = wins.slice().reverse().map((x) => {
+                    if (typeof x === 'object') {
+                        const diffLabel = { 'Easy': '🟢 Easy', 'Normal': '🔵 Normal', 'Hard': '🟠 Hard', 'All-Star': '🔴 All-Star' }[x.diff] || x.diff || 'Normal';
+                        return `🏆 ${x.year || '?'} &nbsp;·&nbsp; ${diffLabel}`;
+                    }
+                    return `🏆 (legacy win)`;
+                }).join('<br>');
+            }
+            el.innerHTML = `<div class="champ-counter">
+                <div class="champ-count-num">🏆 ${TOTAL_CHAMPS}×</div>
+                <div class="champ-count-label">${TOTAL_CHAMPS === 1 ? 'Championship' : 'Championships'} won · hover for details</div>
+                ${tipLines ? `<div class="champ-tooltip"><div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--amber3);margin-bottom:6px">Championship History</div>${tipLines}</div>` : ''}
+            </div>`;
+        }
 
         // ══ SEASON STATE ═══════════════════════════════════════════════════════════
         const _ss = loadSeasonState();
-        let SEASON = { year: _ss ? _ss.year : 2025, playerTeam: null, records: {}, playoffs: null, simRunning: false, gamesPlayed: _ss ? _ss.gamesPlayed : 0, seasonLog: [], managerCooldown: 0, successfulMoves: 0, difficulty: 'Normal', acquisitionBudget: 10, budgetSpent: 0, offseasonLog: [], deadlineTriggered: false, postseasonBannedTeams: null };
+        let SEASON = { year: _ss ? parseInt(_ss.year, 10) : 2025, playerTeam: null, records: {}, playoffs: null, simRunning: false, gamesPlayed: _ss ? _ss.gamesPlayed : 0, seasonLog: [], managerCooldown: 0, successfulMoves: 0, difficulty: 'Normal', acquisitionBudget: 10, budgetSpent: 0, resignBudgetSpent: 0, offseasonLog: [], deadlineTriggered: false, postseasonBannedTeams: null };
 
         let CURRENT_SERIES = null; let CURRENT_GAME_SERIES = null; let LAST_CHAMP = null;
         const _sp = loadPrestige(); let MANAGER_PRESTIGE = _sp.p; let LAST_MANAGED_TEAM = _sp.team; let LAST_MANAGED_MADE_PLAYOFFS = _sp.playoffs;
 
         function getResignSlots() { if (MANAGER_PRESTIGE <= 20) return 1; if (MANAGER_PRESTIGE <= 50) return 2; if (MANAGER_PRESTIGE <= 80) return 3; if (MANAGER_PRESTIGE <= 110) return 4; if (MANAGER_PRESTIGE <= 140) return 5; return 6; }
+
+        // Cost to re-sign a player, scales with difficulty
+        function getResignCost() {
+            const costs = { 'Easy': 3, 'Normal': 5, 'Hard': 7, 'All-Star': 10 };
+            return costs[SEASON.difficulty] || 5;
+        }
 
         const TEAM_PRESTIGE = {};
         function generateTeamPrestige(isInit) { const PRESTIGE_TIERS = [1, 18, 47, 68, 91]; Object.entries(LEAGUE_STRUCTURE).forEach(([lg, divs]) => { Object.entries(divs).forEach(([div, teams]) => { teams.forEach((t, i) => { if (isInit || TEAM_PRESTIGE[t] == null) { const base = PRESTIGE_TIERS[i]; const val = i === 0 ? 1 : Math.max(11, Math.min(99, base + Math.floor(Math.random() * 11) - 5)); TEAM_PRESTIGE[t] = val; } else { const cur = TEAM_PRESTIGE[t]; const base = PRESTIGE_TIERS[i]; const drift = Math.floor(Math.random() * 7) - 3; TEAM_PRESTIGE[t] = i === 0 ? 1 : Math.max(Math.max(11, base - 8), Math.min(Math.min(99, base + 8), cur + drift)); } }); }); }); }
@@ -2752,10 +2896,16 @@
         function startNewFranchise() {
             if (SEASON.playerTeam) { LAST_MANAGED_TEAM = SEASON.playerTeam; savePrestige(); }
             saveSeasonState();
-            SEASON.year = (SEASON.year || 2024) + 1;
+            SEASON.year = (parseInt(SEASON.year, 10) || 2025) + 1;
             SEASON.records = {}; ALL_TEAMS_FLAT.forEach(t => SEASON.records[t] = { w: 0, l: 0 });
             SEASON.playoffs = null; SEASON.gamesPlayed = 0; SEASON.seasonLog = []; SEASON.simRunning = false; SEASON.managerCooldown = 0;
-            SEASON.postseasonBannedTeams = null; SEASON.acquisitionBudget = MANAGER_PRESTIGE; SEASON.budgetSpent = 0; SEASON.offseasonLog = []; SEASON.deadlineTriggered = false;
+            const managerBase = Math.min(MANAGER_PRESTIGE, 100);
+            const managerBonus = MANAGER_PRESTIGE > 100 ? Math.round(100 * Math.log10(MANAGER_PRESTIGE / 100) / Math.log10(10)) : 0;
+            const managerContrib = managerBase + managerBonus;
+            const teamContrib = Math.min(TEAM_PRESTIGE[SEASON.playerTeam] || 0, 100);
+            const rawBudget = managerContrib + teamContrib;
+            const budget = Math.round(Math.min(rawBudget, 250));
+            SEASON.postseasonBannedTeams = null; SEASON.acquisitionBudget = budget; SEASON.budgetSpent = 0; SEASON.resignBudgetSpent = 0; SEASON.offseasonLog = []; SEASON.deadlineTriggered = false;
             generateTeamPrestige(false);
             G = {}; CURRENT_SERIES = null; CURRENT_GAME_SERIES = null; _contSimRunning = false; _playoffsStarted = false;
             renderTeamSelect(); showScreen('teamselect'); renderBadges('setup-badges'); renderChampCounter('champ-counter-setup');
@@ -2795,7 +2945,7 @@
 
         function selectTeam(name) {
             SEASON.playerTeam = name; LAST_MANAGED_MADE_PLAYOFFS = false;
-            SEASON.acquisitionBudget = MANAGER_PRESTIGE; SEASON.budgetSpent = 0; SEASON.offseasonLog = []; SEASON.deadlineTriggered = false;
+            SEASON.acquisitionBudget = MANAGER_PRESTIGE; SEASON.budgetSpent = 0; SEASON.resignBudgetSpent = 0; SEASON.offseasonLog = []; SEASON.deadlineTriggered = false;
             if ((TEAM_PRESTIGE[name] || 1) >= 90) { G = {}; if (!BADGES.hofmanager) award('hofmanager'); }
             G.you = genTeam(name, null, false);
             const retained = loadRetainedRoster();
@@ -2807,19 +2957,46 @@
 
         // ══ RE-SIGN SYSTEM ═════════════════════════════════════════════════════════
         let _resignSelected = [];
-        function showResignScreen(teamName, retained) { const slots = getResignSlots(); document.getElementById('resign-team-name').textContent = teamName; document.getElementById('resign-year-pill').textContent = SEASON.year + ' Season'; _resignSelected = []; renderResignContent(teamName, retained, slots); showScreen('resign'); }
+        function showResignScreen(teamName, retained) {
+            const slots = getResignSlots();
+            document.getElementById('resign-team-name').textContent = teamName;
+            document.getElementById('resign-year-pill').textContent = SEASON.year + ' Season';
+            _resignSelected = [];
+            if (SEASON.resignBudgetSpent === undefined) SEASON.resignBudgetSpent = 0;
+            renderResignContent(teamName, retained, slots);
+            showScreen('resign');
+        }
 
         function renderResignContent(teamName, retained, slots) {
             const el = document.getElementById('resign-content');
             const players = retained.players || []; const fpPlayers = retained.fpPlayers || [];
-            let h = `<div style="background:linear-gradient(135deg,var(--bg1),var(--green2));border:1.5px solid var(--green3);border-radius:var(--radius);padding:16px;margin-bottom:14px">`;
+            const costPerPlayer = getResignCost();
+            const totalCost = _resignSelected.length * costPerPlayer;
+            const budgetRemaining = getBudgetRemaining();
+            const canAffordMore = budgetRemaining >= costPerPlayer;
+
+            // Budget display bar at top
+            let h = `<div class="budget-display" style="margin-bottom:14px">
+                <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:1.2px;color:var(--amber1);font-family:'DM Mono',monospace">Front Office Budget</div>
+                <div style="flex:1"></div>
+                <div style="display:flex;align-items:baseline;gap:8px">
+                    <span class="budget-remaining${budgetRemaining < costPerPlayer ? ' low' : ''}">${budgetRemaining}</span>
+                    <span style="font-size:11px;color:var(--tx2);font-family:'DM Mono',monospace">pts remaining</span>
+                    <span style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--tx3)">/ ${SEASON.acquisitionBudget} budget</span>
+                </div>
+                <span class="chip chip-purple" style="margin-left:8px">${costPerPlayer} pts / resign</span>
+            </div>`;
+
+            h += `<div style="background:linear-gradient(135deg,var(--bg1),var(--green2));border:1.5px solid var(--green3);border-radius:var(--radius);padding:16px;margin-bottom:14px">`;
             h += `<div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--green0);margin-bottom:6px">📋 Player Re-Signing</div>`;
-            h += `<div style="font-size:12px;color:var(--tx1);font-family:'DM Mono',monospace;line-height:1.7">You're returning to manage <strong>${teamName}</strong>. Select up to <strong>${slots}</strong> player${slots > 1 ? 's' : ''} from last season's roster to re-sign.</div>`;
-            h += `<div style="margin-top:8px;font-size:11px;color:var(--green0);font-family:'DM Mono',monospace">Manager Prestige: ${MANAGER_PRESTIGE} → ${slots} re-sign slot${slots > 1 ? 's' : ''}</div></div>`;
+            h += `<div style="font-size:12px;color:var(--tx1);font-family:'DM Mono',monospace;line-height:1.7">You're returning to manage <strong>${teamName}</strong>. Select up to <strong>${slots}</strong> player${slots > 1 ? 's' : ''} to re-sign. Each costs <strong>${costPerPlayer} pts</strong> from your Front Office budget.</div>`;
+            h += `<div style="margin-top:8px;font-size:11px;color:var(--green0);font-family:'DM Mono',monospace">Prestige: ${MANAGER_PRESTIGE} → ${slots} slot${slots > 1 ? 's' : ''} · Cost: ${costPerPlayer} pts each · Spent so far: <strong>${totalCost} pts</strong></div></div>`;
+
             h += `<div class="two-col">`;
             h += `<div><div class="card"><div class="section-label" style="margin-bottom:8px">Last Season's Roster — Click to Re-Sign</div>`;
+
             if (fpPlayers.length > 0) {
-                h += `<div style="margin-bottom:8px;font-size:11px;color:var(--purple0);font-family:'DM Mono',monospace;font-weight:600">★ Franchise Players (always retained)</div>`;
+                h += `<div style="margin-bottom:8px;font-size:11px;color:var(--purple0);font-family:'DM Mono',monospace;font-weight:600">★ Franchise Players (always retained — free)</div>`;
                 fpPlayers.forEach(p => {
                     const isH = !p.isPitcher;
                     h += `<div class="resign-player-card fp-protected"><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span class="chip chip-purple" style="font-size:9px">★FP</span><span style="font-weight:600;font-size:12px;flex:1;font-family:'DM Mono',monospace">${p.name}</span>`;
@@ -2828,16 +3005,24 @@
                     h += `<span style="font-size:10px;color:var(--purple0);font-family:'DM Mono',monospace">Auto-retained ✓</span></div></div>`;
                 });
             }
+
             if (players.length > 0) {
-                h += `<div style="margin:10px 0 8px;font-size:11px;color:var(--tx2);font-family:'DM Mono',monospace;font-weight:600">Select up to ${slots} to re-sign (${_resignSelected.length}/${slots} chosen)</div>`;
+                h += `<div style="margin:10px 0 8px;font-size:11px;color:var(--tx2);font-family:'DM Mono',monospace;font-weight:600">Select up to ${slots} to re-sign (${_resignSelected.length}/${slots} chosen · ${costPerPlayer} pts each)</div>`;
+                if (!canAffordMore && _resignSelected.length === 0) {
+                    h += `<div class="alert-danger" style="margin-bottom:8px">⚠️ Not enough budget to re-sign any players (need ${costPerPlayer} pts, have ${budgetRemaining}).</div>`;
+                }
                 players.forEach((p, idx) => {
-                    const isH = !p.isPitcher; const isSel = _resignSelected.includes(idx); const isMax = _resignSelected.length >= slots && !isSel;
-                    h += `<div class="resign-player-card${isSel ? ' selected' : ''}${isMax ? ' too-expensive' : ''}" onclick="toggleResign(${idx},${slots})" id="resign-card-${idx}">`;
+                    const isH = !p.isPitcher;
+                    const isSel = _resignSelected.includes(idx);
+                    const isMax = _resignSelected.length >= slots && !isSel;
+                    const cantAfford = !isSel && budgetRemaining < costPerPlayer;
+                    const blocked = isMax || cantAfford;
+                    h += `<div class="resign-player-card${isSel ? ' selected' : ''}${blocked ? ' too-expensive' : ''}" onclick="toggleResign(${idx},${slots})" id="resign-card-${idx}">`;
                     h += `<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-size:16px">${isSel ? '✅' : '⬜'}</span><span style="font-weight:600;font-size:12px;flex:1;font-family:'DM Mono',monospace">${p.name}</span>`;
                     if (isH) {
                         h += `<span class="chip chip-blue" style="font-size:9px">${p.pos || '—'}</span>`;
                         h += `<span class="chip ${(p.avg || 0) >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtAVG(p.avg)} AVG</span>`;
-                        h += `<span class="chip ${(p.ops || 0) >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
+                        h += `<span class="chip ${(p.ops || 0) >= .800 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
                         h += `<span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>`;
                         h += `<span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>`;
                         h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>`;
@@ -2850,31 +3035,74 @@
                         h += `<span class="chip ${p.bbRate <= .08 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">BB ${fmtPct(p.bbRate)}</span>`;
                         h += `<span class="chip ${p.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${p.hand}HP</span>`;
                     }
-                    if (isMax && !isSel) h += `<span style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">Slots full</span>`;
+                    // Cost/status indicator
+                    if (isSel) h += `<span class="chip chip-green" style="font-size:9px">−${costPerPlayer} pts ✓</span>`;
+                    else if (isMax) h += `<span style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">Slots full</span>`;
+                    else if (cantAfford) h += `<span style="font-size:10px;color:var(--red0);font-family:'DM Mono',monospace;font-weight:600">⚠ Need ${costPerPlayer} pts</span>`;
+                    else h += `<span class="chip chip-purple" style="font-size:9px">${costPerPlayer} pts</span>`;
                     h += `</div></div>`;
                 });
-            } else { h += `<div style="font-size:12px;color:var(--tx3);font-family:'DM Mono',monospace;padding:12px 0">No additional players available to re-sign.</div>`; }
+            } else {
+                h += `<div style="font-size:12px;color:var(--tx3);font-family:'DM Mono',monospace;padding:12px 0">No additional players available to re-sign.</div>`;
+            }
             h += `</div></div>`;
+
             h += `<div>`;
-            h += `<div class="card"><div class="section-label" style="margin-bottom:8px">Re-Sign Slots (${_resignSelected.length}/${slots} used)</div>`;
+            h += `<div class="card"><div class="section-label" style="margin-bottom:8px">Re-Sign Slots (${_resignSelected.length}/${slots} used · ${totalCost} pts committed)</div>`;
             for (let i = 0; i < slots; i++) {
-                if (i < _resignSelected.length) { const p = players[_resignSelected[i]]; const isH = !p.isPitcher; h += `<div class="resign-slot-filled"><span style="font-size:14px">✅</span><span style="font-weight:600;font-family:'DM Mono',monospace;flex:1">${p.name}</span>${isH ? `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span>` : `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span>`}<button class="btn-sm btn-red" style="font-size:10px;padding:2px 6px" onclick="removeResign(${i})">✕</button></div>`; }
-                else { h += `<div class="resign-slot-empty">Slot ${i + 1} — Empty</div>`; }
+                if (i < _resignSelected.length) {
+                    const p = players[_resignSelected[i]]; const isH = !p.isPitcher;
+                    h += `<div class="resign-slot-filled"><span style="font-size:14px">✅</span><span style="font-weight:600;font-family:'DM Mono',monospace;flex:1">${p.name}</span>${isH ? `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span>` : `<span class="chip ${p.isStarter ? 'chip-amber' : 'chip-blue'}" style="font-size:9px">${p.role}</span>`}<span class="chip chip-purple" style="font-size:9px">−${costPerPlayer} pts</span><button class="btn-sm btn-red" style="font-size:10px;padding:2px 6px" onclick="removeResign(${i})">✕</button></div>`;
+                } else {
+                    h += `<div class="resign-slot-empty">Slot ${i + 1} — Empty (${costPerPlayer} pts)</div>`;
+                }
             }
             h += `</div>`;
-            h += `<div class="card" style="background:linear-gradient(135deg,var(--bg1),var(--amber2));border-color:var(--amber3)"><div class="section-label" style="margin-bottom:6px">What happens next</div><div style="font-size:11px;color:var(--tx1);font-family:'DM Mono',monospace;line-height:1.8">★ FP players stay — always<br>✅ Re-signed players — kept on roster<br>⬜ Others — replaced by new players<br>📋 Then: Offseason acquisitions window</div></div>`;
+            h += `<div class="card" style="background:linear-gradient(135deg,var(--bg1),var(--amber2));border-color:var(--amber3)">
+                <div class="section-label" style="margin-bottom:6px">What happens next</div>
+                <div style="font-size:11px;color:var(--tx1);font-family:'DM Mono',monospace;line-height:1.8">
+                    ★ FP players stay — always free<br>
+                    ✅ Re-signed — costs ${costPerPlayer} pts each<br>
+                    ⬜ Others — replaced by new players<br>
+                    📋 Then: Offseason acquisitions window
+                </div>
+            </div>`;
             h += `<div class="btn-row"><button class="btn-gold" style="font-size:15px;padding:11px 28px" onclick="confirmResigns()">Confirm &amp; Go to Front Office →</button><button onclick="skipResigns()">Skip Re-Signing</button></div>`;
             h += `</div></div>`;
             el.innerHTML = h;
         }
 
-        function toggleResign(idx, slots) { const i = _resignSelected.indexOf(idx); if (i >= 0) { _resignSelected.splice(i, 1); } else if (_resignSelected.length < slots) { _resignSelected.push(idx); } const retained = loadRetainedRoster(); renderResignContent(SEASON.playerTeam, retained, slots); }
-        function removeResign(slotIdx) { _resignSelected.splice(slotIdx, 1); const retained = loadRetainedRoster(); renderResignContent(SEASON.playerTeam, retained, getResignSlots()); }
+        function toggleResign(idx, slots) {
+            const i = _resignSelected.indexOf(idx);
+            if (i >= 0) {
+                _resignSelected.splice(i, 1);
+            } else {
+                const costPerPlayer = getResignCost();
+                const budgetRemaining = getBudgetRemaining();
+                if (_resignSelected.length >= slots) return; // slots full
+                if (budgetRemaining < costPerPlayer) return;  // can't afford
+                _resignSelected.push(idx);
+            }
+            const retained = loadRetainedRoster();
+            renderResignContent(SEASON.playerTeam, retained, slots);
+        }
+
+        function removeResign(slotIdx) {
+            _resignSelected.splice(slotIdx, 1);
+            const retained = loadRetainedRoster();
+            renderResignContent(SEASON.playerTeam, retained, getResignSlots());
+        }
 
         function confirmResigns() {
             const retained = loadRetainedRoster(); if (!retained) return skipResigns();
             const players = retained.players || []; const resignedPlayers = _resignSelected.map(i => players[i]);
-            const resignedHitters = resignedPlayers.filter(p => !p.isPitcher); const resignedPitchers = resignedPlayers.filter(p => p.isPitcher);
+            // Deduct resign costs from budget
+            const costPerPlayer = getResignCost();
+            const totalCost = resignedPlayers.length * costPerPlayer;
+            SEASON.budgetSpent = (SEASON.budgetSpent || 0) + totalCost;
+
+            const resignedHitters = resignedPlayers.filter(p => !p.isPitcher);
+            const resignedPitchers = resignedPlayers.filter(p => p.isPitcher);
             let hitterReplaceIdx = 0;
             for (const p of resignedHitters) { while (hitterReplaceIdx < G.you.hitters.length && G.you.hitters[hitterReplaceIdx].isFP) hitterReplaceIdx++; if (hitterReplaceIdx < G.you.hitters.length) { G.you.hitters[hitterReplaceIdx] = { ...p, id: hitterReplaceIdx, inGame: hitterReplaceIdx < 9, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } }; hitterReplaceIdx++; } }
             for (const p of resignedPitchers) {
@@ -2904,7 +3132,7 @@
 
         function genAcqHitter(tier) {
             const diffMultiplier = SEASON.difficulty === 'Easy' ? 1.0 : SEASON.difficulty === 'Normal' ? 1.1 : SEASON.difficulty === 'Hard' ? 1.3 : SEASON.difficulty === 'All-Star' ? 1.5 : 1.5;
-            const tiers = { elite: { avgMin: .310, avgMax: .345, opsMin: .950, opsMax: 1.100, spdMin: 70, spdMax: 98, costMin: 40, costMax: 55 }, solid: { avgMin: .275, avgMax: .309, opsMin: .800, opsMax: .949, spdMin: 45, spdMax: 89, costMin: 20, costMax: 35 }, depth: { avgMin: .240, avgMax: .274, opsMin: .680, opsMax: .799, spdMin: 25, spdMax: 75, costMin: 8, costMax: 18 } };
+            const tiers = { elite: { avgMin: .300, avgMax: .325, opsMin: .850, opsMax: 1.050, spdMin: 60, spdMax: 98, costMin: 40, costMax: 55 }, solid: { avgMin: .270, avgMax: .309, opsMin: .700, opsMax: .849, spdMin: 45, spdMax: 89, costMin: 20, costMax: 35 }, depth: { avgMin: .240, avgMax: .274, opsMin: .580, opsMax: .699, spdMin: 25, spdMax: 75, costMin: 8, costMax: 18 } };
             const t = tiers[tier]; const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
             const pos = pick(['OF', 'OF', 'INF', 'INF', 'C', 'UTIL']); const fn = pick(NF), ln = pick(NL_NAMES);
             return { id: Math.floor(Math.random() * 90000) + 10000, name: fn[0] + '. ' + ln, hand, num: rndI(1, 99), pos, spd: rndI(t.spdMin, t.spdMax), bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .28)), avg: r3(rnd(t.avgMin, t.avgMax)), ops: r3(rnd(t.opsMin, t.opsMax)), active: true, inGame: false, isFP: false, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }, _acqTier: tier, _acqCost: rndI(t.costMin * diffMultiplier, t.costMax * diffMultiplier), _acqType: 'hitter' };
@@ -2929,7 +3157,7 @@
             const lu = team.hitters.slice(0, 13); const sps = team.pitchers.filter(p => p.isStarter); const rps = team.pitchers.filter(p => !p.isStarter);
             const offenseAVG = lu.reduce((a, h) => a + (h.avg || 0), 0) / lu.length;
             const offenseOPS = lu.reduce((a, h) => a + (h.ops || 0), 0) / lu.length;
-            const offScore = Math.round(clamp(((offenseOPS - 0.600) / 0.600 * 100) + ((offenseAVG - 0.220) / 0.2) * 100, 0, 100));
+            const offScore = Math.round(clamp(((offenseOPS - 0.550) / 0.550 * 100) + ((offenseAVG - 0.220) / 0.2) * 100, 0, 100));
             const spERA = sps.length ? sps.reduce((a, p) => a + (p.era || 4.5), 0) / sps.length : 5.0;
             const spWHIP = sps.length ? sps.reduce((a, p) => a + (p.whip || 2.0), 0) / sps.length : 2.0;
             const spCommand = sps.length ? sps.reduce((a, p) => a + (p.bbRate - p.kRate || 0.1), 0) / sps.length : 0.2;
@@ -2986,7 +3214,7 @@
 <span style="flex:1;font-weight:500;font-family:'DM Mono',monospace">${fp ? '★ ' : ''}${p.name}</span>
 ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
 <span class="chip ${p.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtAVG(p.avg)}</span>
-<span class="chip ${p.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>
+<span class="chip ${p.ops >= .800 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>
 <span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>
 <span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>
 <span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>
@@ -3021,7 +3249,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                 if (isH) {
                     h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span>`;
                     h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : p.avg >= .250 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${fmtAVG(p.avg)}</span>`;
-                    h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : p.ops >= .700 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
+                    h += `<span class="chip ${p.ops >= .800 ? 'chip-green' : p.ops >= .650 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
                     h += `<span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>`;
                     h += `<span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>`;
                     h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>`;
@@ -3037,20 +3265,8 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                 h += `</div>`;
                 if (canAfford) {
                     h += `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select id="acq-replace-os-${idx}" style="flex:1;min-width:120px;font-size:11px">`;
-                    if (isH) {
-                        G.you.hitters.forEach((hp, hi) => {
-                            const dis = hp.isFP ? 'disabled' : '';
-                            const reason = hp.isFP ? ' [★FP]' : '';
-                            h += `<option value="h_${hi}" ${dis}>${hp.name} (${hp.pos})${reason}</option>`;
-                        });
-                    } else {
-                        const allowedSlots = getReplaceablePitcherSlots(G.you.pitchers, p.isStarter);
-                        G.you.pitchers.forEach((pp, pi) => {
-                            const allowed = allowedSlots[pi]; const dis = !allowed ? 'disabled' : '';
-                            const reason = pp.isFP ? ' [★FP]' : !allowed ? ' [min SP/RP]' : '';
-                            h += `<option value="p_${pi}" ${dis}>${pp.name} (${pp.role})${reason}</option>`;
-                        });
-                    }
+                    if (isH) { G.you.hitters.forEach((hp, hi) => { const dis = hp.isFP ? 'disabled' : ''; const reason = hp.isFP ? ' [★FP]' : ''; h += `<option value="h_${hi}" ${dis}>${hp.name} (${hp.pos})${reason}</option>`; }); }
+                    else { const allowedSlots = getReplaceablePitcherSlots(G.you.pitchers, p.isStarter); G.you.pitchers.forEach((pp, pi) => { const allowed = allowedSlots[pi]; const dis = !allowed ? 'disabled' : ''; const reason = pp.isFP ? ' [★FP]' : !allowed ? ' [min SP/RP]' : ''; h += `<option value="p_${pi}" ${dis}>${pp.name} (${pp.role})${reason}</option>`; }); }
                     h += `</select><button class="btn-amber btn-sm" onclick="acquirePlayer(${idx},false)">Acquire</button></div>`;
                 } else { h += `<div style="font-size:11px;color:var(--tx3);font-family:'DM Mono',monospace">⚠️ Need ${p._acqCost} pts (have ${rem})</div>`; }
                 h += `</div>`;
@@ -3058,16 +3274,12 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             h += '</div>'; el.innerHTML = h;
         }
 
-        // FIX 1: acquirePlayer uses unique IDs per context (os vs dl) to avoid DOM collision
         function acquirePlayer(poolIdx, isDeadline) {
             const pool = isDeadline ? _acqDeadlinePool : _acqPool; const p = pool[poolIdx]; if (!p) return;
             const rem = getBudgetRemaining(); if (p._acqCost > rem) { alert('Not enough budget!'); return; }
             const selEl = document.getElementById(isDeadline ? `acq-replace-dl-${poolIdx}` : `acq-replace-os-${poolIdx}`); if (!selEl) return;
             const val = selEl.value; if (!val) return;
-            console.log(val);
-            console.log(parseInt(val.split('_')[1]));
             const isH = p._acqType === 'hitter'; const idx = parseInt(val.split('_')[1]);
-
             if (isH) {
                 if (G.you.hitters[idx].isFP) { alert('Franchise players cannot be traded away.'); return; }
                 const out = G.you.hitters[idx];
@@ -3132,7 +3344,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                     h += `<span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px;flex-shrink:0">${p.pos}</span>`;
                     h += `<span style="flex:1;font-weight:500;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fp ? '★ ' : resigned ? '📋 ' : ''}${p.name}</span>`;
                     h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : p.avg >= .260 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${fmtAVG(p.avg)}</span>`;
-                    h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : p.ops >= .750 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${fmtOPS(p.ops)}</span>`;
+                    h += `<span class="chip ${p.ops >= .800 ? 'chip-green' : p.ops >= .650 ? 'chip-gray' : 'chip-amber'}" style="font-size:9px">${fmtOPS(p.ops)}</span>`;
                     h += `<span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>`;
                     h += `<span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>`;
                     h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>`;
@@ -3167,7 +3379,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                     if (isH) {
                         h += `<span class="chip chip-blue" style="font-size:9px">${p.pos}</span>`;
                         h += `<span class="chip ${p.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">${fmtAVG(p.avg)}</span>`;
-                        h += `<span class="chip ${p.ops >= .900 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
+                        h += `<span class="chip ${p.ops >= .800 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">OPS ${fmtOPS(p.ops)}</span>`;
                         h += `<span class="chip ${p.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(p.kRate)}</span>`;
                         h += `<span class="chip ${p.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(p.bbRate)}</span>`;
                         h += `<span class="chip ${spdChip(p.spd)}" style="font-size:9px">${fmtSpd(p.spd)}spd</span>`;
@@ -3183,27 +3395,13 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                     h += `</div>`;
                     if (canAfford) {
                         h += `<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap"><select id="acq-replace-dl-${idx}" style="flex:1;min-width:100px;font-size:11px">`;
-                        if (isH) {
-                            G.you.hitters.forEach((hp, hi) => {
-                                const dis = hp.isFP ? 'disabled' : '';
-                                const reason = hp.isFP ? ' [★FP]' : '';
-                                h += `<option value="h_${hi}" ${dis}>${hp.name} (${hp.pos})${reason}</option>`;
-                            });
-                        } else {
-                            G.you.pitchers.forEach((pp, pi) => {
-                                const sameRole = p.isStarter === pp.isStarter;
-                                const dis = (pp.isFP || !sameRole) ? 'disabled' : '';
-                                const reason = pp.isFP ? ' [★FP]' : !sameRole ? ' [wrong role]' : '';
-                                h += `<option value="p_${pi}" ${dis}>${pp.name} (${pp.role})${reason}</option>`;
-                            });
-                        }
+                        if (isH) { G.you.hitters.forEach((hp, hi) => { const dis = hp.isFP ? 'disabled' : ''; const reason = hp.isFP ? ' [★FP]' : ''; h += `<option value="h_${hi}" ${dis}>${hp.name} (${hp.pos})${reason}</option>`; }); }
+                        else { G.you.pitchers.forEach((pp, pi) => { const sameRole = p.isStarter === pp.isStarter; const dis = (pp.isFP || !sameRole) ? 'disabled' : ''; const reason = pp.isFP ? ' [★FP]' : !sameRole ? ' [wrong role]' : ''; h += `<option value="p_${pi}" ${dis}>${pp.name} (${pp.role})${reason}</option>`; }); }
                         h += `</select><button class="btn-amber btn-sm" onclick="acquirePlayer(${idx},true)">Acquire</button></div>`;
                     } else { h += `<div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace">Need ${p._acqCost} pts</div>`; }
                     h += `</div>`;
                 });
-                h += `</div>`;
-                h += `</div>`;
-                h += `</div>`;
+                h += `</div></div></div>`;
             }
             h += `<div style="margin-top:16px;text-align:right"><button class="btn-gold" style="font-size:14px;padding:10px 24px" onclick="closeDeadline()">Set Lineup &amp; Continue →</button></div>`;
             el.innerHTML = h;
@@ -3338,13 +3536,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             return playoffTeams;
         }
 
-        const HOME_PATTERNS = {
-            wc: [true, true, true],
-            div: [true, true, false, false, true],
-            lcs: [true, true, false, false, false, true, true],
-            ws: [true, true, false, false, false, true, true]
-        };
-
+        const HOME_PATTERNS = { wc: [true, true, true], div: [true, true, false, false, true], lcs: [true, true, false, false, false, true, true], ws: [true, true, false, false, false, true, true] };
         function makeSeriesObj(home, away, format, round) { return { home, away, wins: { home: 0, away: 0 }, done: false, winner: null, format, homePattern: HOME_PATTERNS[round] || HOME_PATTERNS.div }; }
         function computePlayoffs() { const pt = getPlayoffTeams(); SEASON.playoffs = { pt, bracket: {} }; Object.keys(LEAGUE_STRUCTURE).forEach(lg => { const seeds = []; const { divWinners, wildcards } = pt[lg]; divWinners.forEach((t, i) => seeds.push({ seed: i + 1, name: t.name, div: t.div, record: seasonRecord(t.name), bye: i < 2 })); wildcards.forEach((t, i) => seeds.push({ seed: 4 + i, name: t.name, div: t.div, record: seasonRecord(t.name), bye: false })); SEASON.playoffs.bracket[lg] = { seeds, wcSeries: [], divSeries: [], lcs: null, champion: null }; const s = SEASON.playoffs.bracket[lg].seeds; SEASON.playoffs.bracket[lg].wcSeries = [makeSeriesObj(s[2], s[5], 3, 'wc'), makeSeriesObj(s[3], s[4], 3, 'wc')]; }); }
         function isPlayerInPlayoffs() { if (!SEASON.playoffs) return false; for (const lg of Object.keys(SEASON.playoffs.bracket)) { const seeds = SEASON.playoffs.bracket[lg].seeds; if (seeds.find(s => s.name === SEASON.playerTeam)) return true; } return false; }
@@ -3483,7 +3675,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                 if (CURRENT_SERIES.round === 'ws') { MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 15); savePrestige(); TOTAL_CHAMPS++; saveChamps(TOTAL_CHAMPS); LAST_CHAMP = SEASON.playerTeam; award('champion'); if (HISTORY.length >= 1 && HISTORY[HISTORY.length - 1] === 'w') award('backtback'); HISTORY.push('w'); if (HISTORY.length >= 5 && HISTORY.slice(-5).filter(x => x === 'w').length >= 3) award('dynasty'); saveHistory(HISTORY); document.getElementById('series-final-line').textContent = '🏆 World Series Champions!'; document.getElementById('series-result-line').textContent = `${SEASON.playerTeam} wins the World Series!`; renderChampCounter('champ-counter-so'); renderBadges('seriesover-badges'); addB('View Championship', 'btn-gold', () => showScreen('seriesover')); }
                 else { if (CURRENT_SERIES.round === 'lcs') { award('pennant'); MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 5); savePrestige(); } else { MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 5); savePrestige(); } addB('Play Next Series', 'btn-green', () => { recoverPitchersBetweenSeries(CURRENT_SERIES.series); advancePlayoffRound(); autoSimNonPlayerSeries(); const next = findNextPlayerSeries(); if (next) startPlayoffSeries(next); else goToPlayoffs(); }); }
             } else { HISTORY.push('l'); saveHistory(HISTORY); advancePlayoffRound(); addB('View Final Bracket', 'btn-primary', () => goToPlayoffs()); addB('New Franchise', 'btn-amber', () => startNewFranchise()); }
-            document.getElementById('sop-champ').innerHTML = ''; 
+            document.getElementById('sop-champ').innerHTML = '';
 
             renderChampCounter('champ-counter-go');
 
@@ -3509,12 +3701,12 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
         // FRANCHISE PLAYERS
         const FRANCHISE_PLAYERS = {
             'Lakewood Pilgrims': { name: 'J. Pilgrim', hand: 'R', num: 99, pos: 'C', spd: 60, avg: .320, ops: .815, bbRate: .07, kRate: .24 },
-            'Springfield Crabs': { name: 'T. Crabman', hand: 'S', num: 45, pos: 'INF', spd: 85, avg: .270, ops: 1.077, bbRate: .19, kRate: .11 },
+            'Springfield Crabs': { name: 'T. Crabman', hand: 'S', num: 45, pos: 'INF', spd: 85, avg: .265, ops: 1.077, bbRate: .19, kRate: .11 },
             'Oakburg Beavers': { name: 'D. Bober', hand: 'L', num: 67, pos: 'OF', spd: 94, avg: .309, ops: .971, bbRate: .12, kRate: .14 },
             'Millard Pioneers': { name: 'C. Trail', hand: 'R', num: 29, pos: 'OF', spd: 97, avg: .278, ops: .752, bbRate: .07, kRate: .26 },
             'Millport Machines': { name: 'S. Torque', hand: 'R', num: 88, pos: 'INF', spd: 40, avg: .210, ops: 1.334, bbRate: .12, kRate: .20 },
             'Centertown Blizzard': { name: 'F. Chill', hand: 'L', num: 34, pos: 'INF', spd: 65, avg: .330, ops: .821, bbRate: .14, kRate: .19 },
-            'Lemonte Bolts': { name: 'V. Sparks', hand: 'S', num: 90, pos: 'UTIL', spd: 41, avg: .265, ops: 1.770, bbRate: .13, kRate: .21 },
+            'Lemonte Bolts': { name: 'V. Sparks', hand: 'S', num: 90, pos: 'UTIL', spd: 41, avg: .265, ops: 1.670, bbRate: .13, kRate: .21 },
             'Sunnydale Herons': { name: 'A. Wing', hand: 'R', num: 76, pos: 'C', spd: 48, avg: .348, ops: .510, bbRate: .18, kRate: .20 },
             'Summit Phantoms': { name: 'N. Shade', hand: 'R', num: 97, pos: 'OF', spd: 92, avg: .315, ops: .920, bbRate: .18, kRate: .18 },
             'Washborough Ostrich Riders': { name: 'P. Stride', hand: 'L', num: 38, pos: 'OF', spd: 115, avg: .285, ops: .603, bbRate: .18, kRate: .16 },
@@ -3547,21 +3739,50 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
 
         function genH(i, ai) {
             const roll = Math.random(), hand = roll < 0.11 ? 'S' : roll < 0.35 ? 'L' : 'R';
-            const num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES), spd = rndI(15, 98);
+            const num = rndI(1, 99), fn = pick(NF), ln = pick(NL_NAMES), spd = rndI(15, 98)
+
             // Assign position group based on slot index
             let pos;
             if (i < 3) pos = 'OF';
             else if (i < 7) pos = 'INF';
             else if (i === 7) pos = 'C';
             else pos = pick(['OF', 'INF', 'C', 'UTIL']);  // bench/flex slots
-            const b = {
-                id: i, name: fn[0] + '. ' + ln, hand, num, pos, spd,
-                bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .30)),
-                active: true, inGame: i < 9,
-                stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }
-            };
-            if (ai) { b.avg = r3(rnd(.230, .335)); b.ops = r3(rnd(.620, .999)); }
-            else { b.avg = r3(rnd(.215, .325)); b.ops = r3(rnd(.640, .980)); }
+
+            const b = { id: i, name: fn[0] + '. ' + ln, hand, num, pos, spd, bbRate: r2(rnd(.07, .18)), kRate: r2(rnd(.14, .30)), active: true, inGame: i < 9, stats: { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 } };
+
+            if (SEASON.difficulty == 'Easy') {
+                if (ai) {
+                    b.avg = r3(rnd(.210, .320)); b.ops = r3(rnd(.615, .970));
+                }
+                else {
+                    b.avg = r3(rnd(.215, .325)); b.ops = r3(rnd(.640, .980));
+                }
+            }
+            else if (SEASON.difficulty == 'Normal') {
+                if (ai) {
+                    b.avg = r3(rnd(.225, .330)); b.ops = r3(rnd(.630, .985));
+                }
+                else {
+                    b.avg = r3(rnd(.225, .330)); b.ops = r3(rnd(.630, .985));
+                }
+            }
+            else if (SEASON.difficulty == 'Hard') {
+                if (ai) {
+                    b.avg = r3(rnd(.235, .335)); b.ops = r3(rnd(.635, .990));
+                }
+                else {
+                    b.avg = r3(rnd(.220, .320)); b.ops = r3(rnd(.620, .975));
+                }
+            }
+            else {
+                if (ai) {
+                    b.avg = r3(rnd(.240, .335)); b.ops = r3(rnd(.640, .995));
+                }
+                else {
+                    b.avg = r3(rnd(.215, .315)); b.ops = r3(rnd(.615, .970));
+                }
+            }
+
             return b;
         }
 
@@ -3683,7 +3904,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
                 const h = G.you.hitters[hi], d = document.createElement('div'); d.className = 'lineup-slot'; d.draggable = true; d.dataset.slot = slot;
                 const isSel = _selectedLineupSlot === slot; if (isSel) { d.style.background = 'var(--amber2)'; d.style.borderColor = 'var(--amber1)'; d.style.outline = '2px solid var(--amber1)'; }
                 const fpChip = h.isFP ? `<span class="chip chip-purple" style="font-size:9px">★FP</span>` : '';
-                d.innerHTML = `<span style="font-size:10px;color:var(--tx3);width:14px;text-align:right;flex-shrink:0;font-family:'DM Mono',monospace">${slot + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}${isSel ? '<span style="font-size:10px;color:var(--amber0);font-weight:600;flex-shrink:0">SWAP ↕</span>' : ''}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`; //
+                d.innerHTML = `<span style="font-size:10px;color:var(--tx3);width:14px;text-align:right;flex-shrink:0;font-family:'DM Mono',monospace">${slot + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}${isSel ? '<span style="font-size:10px;color:var(--amber0);font-weight:600;flex-shrink:0">SWAP ↕</span>' : ''}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .800 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`; //
                 d.addEventListener('click', () => { if (_selectedLineupSlot === null) { _selectedLineupSlot = slot; renderLineup(); } else if (_selectedLineupSlot === slot) { _selectedLineupSlot = null; renderLineup(); } else { const from = _selectedLineupSlot, to = slot;[G.yourLineup[from], G.yourLineup[to]] = [G.yourLineup[to], G.yourLineup[from]]; _selectedLineupSlot = null; renderLineup(); } });
                 d.addEventListener('dragstart', () => { window._ds = slot; window._dsType = 'lineup'; d.style.opacity = '.4'; }); d.addEventListener('dragend', () => d.style.opacity = '1');
                 d.addEventListener('dragover', e => { e.preventDefault(); d.classList.add('dragover'); }); d.addEventListener('dragleave', () => d.classList.remove('dragover'));
@@ -3694,7 +3915,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             G.benchIds.forEach(bi => {
                 const h = G.you.hitters[bi], d = document.createElement('div'); d.className = 'bench-slot'; d.draggable = true; d.dataset.benchIdx = bi;
                 const fpChip = h.isFP ? `<span class="chip chip-purple" style="font-size:9px">★FP</span>` : '';
-                d.innerHTML = `<span style="font-size:9px;color:var(--amber0);background:var(--amber2);padding:1px 4px;border-radius:4px;flex-shrink:0">BENCH</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`;
+                d.innerHTML = `<span style="font-size:9px;color:var(--amber0);background:var(--amber2);padding:1px 4px;border-radius:4px;flex-shrink:0">BENCH</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 4px;border-radius:4px;flex-shrink:0">${h.pos}</span><span style="font-weight:500;font-size:12px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h.isFP ? '★ ' : ''}${h.name}</span>${fpChip}<span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .800 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}">${h.spd}spd</span><span class="chip chip-blue">${h.hand}</span>`;
                 d.addEventListener('click', () => { if (_selectedLineupSlot !== null) { const oi = G.yourLineup[_selectedLineupSlot]; G.yourLineup[_selectedLineupSlot] = bi; G.benchIds = G.benchIds.filter(x => x !== bi); G.benchIds.push(oi); G.you.hitters[oi].inGame = false; G.you.hitters[bi].inGame = true; _selectedLineupSlot = null; renderLineup(); } });
                 d.addEventListener('dragstart', () => { window._ds = bi; window._dsType = 'bench'; d.style.opacity = '.4'; }); d.addEventListener('dragend', () => d.style.opacity = '1');
                 bd.appendChild(d);
@@ -3706,13 +3927,13 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             if (prevSPVal !== '' && sp.querySelector(`option[value="${prevSPVal}"]`)) sp.value = prevSPVal;
             const usc = () => { const idx = +sp.value; sp.style.color = stamCol(Math.round(G.you.pitchers[idx]?.stamina || 100)); }; usc(); sp.onchange = () => { G.savedSP = +sp.value; usc(); };
             const cp = curPit(G.opp);
-            document.getElementById('opp-lineup-display').innerHTML = `<div style="padding:7px 10px;border-radius:var(--radius-sm);background:var(--amber2);border:1px solid var(--amber3);margin-bottom:8px;font-size:12px;font-family:'DM Mono',monospace"><strong>SP:</strong> ${cp.name} | ERA ${Number(cp.era).toFixed(2)} | WHIP ${Number(cp.whip).toFixed(2)} | K ${Math.round(cp.kRate * 100)}% | BB ${Math.round(cp.bbRate * 100)}% | <span class="chip ${cp.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${cp.hand}HP</span>${cp.isFP ? '<span class="chip chip-purple" style="font-size:9px;margin-left:3px">★FP</span>' : ''}</div>` + G.opp.hitters.slice(0, 9).map((h, i) => `<div style="display:flex;gap:4px;align-items:center;padding:2px 0"><span style="width:14px;color:var(--tx3);font-size:10px;font-family:'DM Mono',monospace">${i + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${h.pos}</span><span style="flex:1;font-weight:500;font-size:11px">${h.isFP ? '★ ' : ''}${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span class="chip chip-blue" style="font-size:9px">${h.hand}</span></div>`).join('');
+            document.getElementById('opp-lineup-display').innerHTML = `<div style="padding:7px 10px;border-radius:var(--radius-sm);background:var(--amber2);border:1px solid var(--amber3);margin-bottom:8px;font-size:12px;font-family:'DM Mono',monospace"><strong>SP:</strong> ${cp.name} | ERA ${Number(cp.era).toFixed(2)} | WHIP ${Number(cp.whip).toFixed(2)} | K ${Math.round(cp.kRate * 100)}% | BB ${Math.round(cp.bbRate * 100)}% | <span class="chip ${cp.hand === 'R' ? 'chip-purple' : 'chip-teal'}">${cp.hand}HP</span>${cp.isFP ? '<span class="chip chip-purple" style="font-size:9px;margin-left:3px">★FP</span>' : ''}</div>` + G.opp.hitters.slice(0, 9).map((h, i) => `<div style="display:flex;gap:4px;align-items:center;padding:2px 0"><span style="width:14px;color:var(--tx3);font-size:10px;font-family:'DM Mono',monospace">${i + 1}</span><span style="font-size:9px;color:var(--blue0);background:var(--blue2);padding:1px 3px;border-radius:3px">${h.pos}</span><span style="flex:1;font-weight:500;font-size:11px">${h.isFP ? '★ ' : ''}${h.name}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .800 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${h.kRate <= .15 ? 'chip-green' : 'chip-gray'}">K ${fmtPct(h.kRate)}</span><span class="chip ${h.bbRate >= .14 ? 'chip-green' : 'chip-gray'}">BB ${fmtPct(h.bbRate)}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span class="chip chip-blue" style="font-size:9px">${h.hand}</span></div>`).join('');
         }
         function startGame() { const si = +document.getElementById('sp-select').value; G.savedSP = si; G.you.pitchers.forEach(p => { p.currentPitcher = false; p.active = false; }); G.you.pitchers[si].currentPitcher = true; G.you.pitchers[si].active = true; showScreen('game'); renderGame(); }
         function curPit(team) { return team.pitchers.find(p => p.currentPitcher) || team.pitchers[0]; }
         function curBat(isYou) { const team = isYou ? G.you : G.opp, lu = isYou ? G.yourLineup : G.oppLineup; return team.hitters[lu[(isYou ? G.biYou : G.biOpp) % 9]]; }
         function handBonus(bat, pit) { if (bat.hand === 'S') return 0.020; if ((bat.hand === 'L' && pit.hand === 'R') || (bat.hand === 'R' && pit.hand === 'L')) return 0.030; return 0; }
-        function hitType(bat) { const pw = clamp((bat.ops - 0.700) / 0.300, -1, 5), hr = 0.03 + pw * 0.08, d = 0.18 + pw * 0.05, t = 0.02 + pw * 0.02, r = Math.random(); if (r < hr) return 'HR'; if (r < hr + d) return '2B'; if (r < hr + d + t) return '3B'; return '1B'; }
+        function hitType(bat) { const pw = clamp((bat.ops - 0.600) / 0.300, -1, 5), hr = 0.03 + pw * 0.08, d = 0.18 + pw * 0.05, t = 0.02 + pw * 0.02, r = Math.random(); if (r < hr) return 'HR'; if (r < hr + d) return '2B'; if (r < hr + d + t) return '3B'; return '1B'; }
         function getRes(bat, pit) {
             const pen = stamPen(pit), bon = handBonus(bat, pit);
             const k = clamp((bat.kRate * 0.6 + pit.kRate * 0.6) - pen * 0.15, 0.01, 0.99);
@@ -3779,12 +4000,61 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             const bt = iy ? G.you : G.opp, k = G.inning + '_' + (iy ? 'you' : 'opp');
             bt.score[k] = (bt.score[k] || 0) + sc; bt.runs += sc; if (!isE) bat.stats.rbi += sc;
         }
-        function oppAutoSub() { // TODO
+
+        function oppAutoSub() {
             const cp = curPit(G.opp);
-            if ((cp.stamina < 65 && cp.isStarter) || (cp.stamina < 75 && !cp.isStarter)) {
-                const av = G.opp.pitchers.filter(p => !p.currentPitcher && !p.usedThisGame && p.stamina > cp.stamina + 5);
-                if (av.length) { const b = av.sort((a, c) => c.stamina - a.stamina)[0]; cp.currentPitcher = false; cp.usedThisGame = true; b.currentPitcher = true; b.active = true; G.log.unshift({ msg: `AI: ${b.name} replaces ${cp.name} (${Math.round(b.stamina)}% stam).`, isSub: true }); }
+            const needsSub = (cp.stamina < 65 && cp.isStarter) || (cp.stamina < 75 && !cp.isStarter);
+            if (!needsSub) return;
+
+            const av = G.opp.pitchers.filter(p => !p.currentPitcher && !p.usedThisGame && p.stamina > cp.stamina + 5);
+            if (!av.length) return;
+
+            // Look ahead at next 3 batters in YOUR lineup (opp is pitching against you)
+            const upcomingHands = [];
+            for (let i = 0; i < 3; i++) {
+                const idx = (G.biYou + i) % 9;
+                const batter = G.you.hitters[G.yourLineup[idx]];
+                if (batter) upcomingHands.push(batter.hand);
             }
+
+            // Score each candidate pitcher
+            // Pitching handedness advantage: opposite hand to batter = favorable matchup
+            // R pitcher vs L batter = good, L pitcher vs R batter = good
+            // Switch hitters (S) = slight neutral advantage to any pitcher
+            function pitcherMatchupScore(pit) {
+                let score = pit.stamina * 0.5;             // base weight: stamina matters
+                score += (5.0 - (pit.era || 4.5)) * 8;    // lower ERA = better
+                score += (2.0 - (pit.whip || 1.5)) * 6;   // lower WHIP = better
+
+                // Handedness matchup vs upcoming batters
+                upcomingHands.forEach(hand => {
+                    if (hand === 'S') {
+                        score -= 3; // switch hitters — slight diss to any pitcher
+                    } else if ((pit.hand === 'R' && hand === 'L') || (pit.hand === 'L' && hand === 'R')) {
+                        score -= 15; // unfavorable opposite-hand matchup
+                    } else {
+                        score += 4; // same-hand matchup, advantage
+                    }
+                });
+
+                return score;
+            }
+
+            const best = av.slice().sort((a, b) => pitcherMatchupScore(b) - pitcherMatchupScore(a))[0];
+
+            const matchupNote = upcomingHands.length
+                ? ` (next: ${upcomingHands.join('')} — chose ${best.hand}HP)`
+                : '';
+
+            cp.currentPitcher = false;
+            cp.usedThisGame = true;
+            best.currentPitcher = true;
+            best.active = true;
+
+            G.log.unshift({
+                msg: `AI: ${best.name} (${best.hand}HP) replaces ${cp.name}${matchupNote}.`,
+                isSub: true
+            });
         }
 
         function canTagUp(bi) { if (!G.bases[bi] || !G.tagPending[bi]) return false; if (bi === 2) return true; return !G.bases[bi + 1]; }
@@ -4113,7 +4383,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
                     const badge = at ? '<span class="chip chip-green" style="font-size:9px">AB</span>' : deck ? '<span class="chip chip-blue" style="font-size:9px">Deck</span>' : due ? '<span class="chip chip-amber" style="font-size:9px">Due</span>' : '';
                     // FIX: Display h/ab only (bb is separate, doesn't count as AB)
                     const abLine = `${h.stats.h}-${h.stats.ab}`;
-                    return `<div class="order-row ${cls}"><span class="ord-num">${i + 1}</span><span class="ord-pos">${h.pos}</span><span class="ord-name">${h.name}</span>${badge}<span class="chip chip-blue" style="font-size:9px">${h.hand}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .900 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span style="font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace">${abLine}</span><span style="font-size:10px;color:var(--blue0);font-weight:500;font-family:'DM Mono',monospace">${h.stats.r}R</span></div>`;
+                    return `<div class="order-row ${cls}"><span class="ord-num">${i + 1}</span><span class="ord-pos">${h.pos}</span><span class="ord-name">${h.name}</span>${badge}<span class="chip chip-blue" style="font-size:9px">${h.hand}</span><span class="chip ${h.avg >= .290 ? 'chip-green' : 'chip-gray'}" style="font-size:9px">.${Math.round(h.avg * 1000)}</span><span class="chip ${h.ops >= .800 ? 'chip-green' : 'chip-gray'}">OPS ${h.ops}</span><span class="chip ${spdChip(h.spd)}" style="font-size:9px">${h.spd}spd</span><span style="font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace">${abLine}</span><span style="font-size:10px;color:var(--blue0);font-weight:500;font-family:'DM Mono',monospace">${h.stats.r}R</span></div>`;
                 }).join('');
             }
             const yb = isYouBatting(), ob = !yb;
@@ -4153,7 +4423,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
             const hb = G.you.hitters[bi]; if (!hb) { el.innerHTML = ''; return; }
             const bon = handBonus(hb, op), adj = Math.round((hb.avg + bon) * 1000);
             const ac = hb.avg >= .290 ? 'chip-green' : hb.avg >= .250 ? 'chip-gray' : 'chip-amber';
-            const oc = hb.ops >= .900 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
+            const oc = hb.ops >= .800 ? 'chip-green' : hb.ops >= .720 ? 'chip-gray' : 'chip-amber';
             el.innerHTML = `<div style="padding:7px 10px;border-radius:var(--radius-sm);background:var(--bg2);border:1px solid var(--bdr);font-size:12px"><div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:3px"><span style="font-weight:500;font-family:'DM Mono',monospace">OPS ${hb.ops}</span><span class="chip chip-blue" style="font-size:10px">${hb.hand}</span><span class="chip ${ac}" style="font-size:10px">.${Math.round(hb.avg * 1000)}${bon > 0 ? ` → <strong>.${adj}★</strong>` : ''}</span><span class="chip ${oc}" style="font-size:10px">OPS ${hb.ops}</span><span class="chip ${spdChip(hb.spd)}" style="font-size:10px">${hb.spd}spd</span></div>${bon > 0 ? `<div style="font-size:10px;color:var(--green1);font-weight:500">★ +${bon} AVG bonus vs ${op.name} (${op.hand}HP)</div>` : '<div style="font-size:10px;color:var(--tx3)">Same handedness — no bonus</div>'}</div>`;
         }
         function makeSub() {
@@ -4221,7 +4491,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
                 const hb = G.you.hitters[hi], bon = handBonus(hb, pit), adj = Math.round((hb.avg + bon) * 1000);
                 const kPct = Math.round(hb.kRate * 100), bbPct = Math.round(hb.bbRate * 100);
                 const avgDisp = bon > 0 ? `<span style="color:var(--green0);font-weight:600">.${adj}★</span>` : `<span style="color:${hb.avg >= .290 ? 'var(--green0)' : hb.avg >= .250 ? 'var(--tx0)' : 'var(--amber0)'}">.${Math.round(hb.avg * 1000)}</span>`;
-                const opsCol = hb.ops >= .900 ? 'var(--green0)' : hb.ops >= .720 ? 'var(--tx0)' : 'var(--amber0)';
+                const opsCol = hb.ops >= .800 ? 'var(--green0)' : hb.ops >= .650 ? 'var(--tx0)' : 'var(--amber0)';
                 const kCol = hb.kRate <= .15 ? 'var(--red0)' : hb.kRate <= .16 ? 'var(--green0)' : 'var(--tx0)';
                 const bbCol = hb.bbRate >= .14 ? 'var(--green0)' : hb.bbRate <= .08 ? 'var(--amber0)' : 'var(--tx0)';
 
@@ -4261,7 +4531,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
                 const kPct = Math.round(hb.kRate * 100), bbPct = Math.round(hb.bbRate * 100);
                 // Handedness bonus shown as threat (red = higher adjusted avg = harder to get out)
                 const avgDisp = bon > 0 ? `<span style="color:var(--red0);font-weight:600">.${adj}★</span>` : `<span style="color:${hb.avg >= .290 ? 'var(--red0)' : hb.avg >= .250 ? 'var(--tx0)' : 'var(--green0)'}">.${Math.round(hb.avg * 1000)}</span>`;
-                const opsCol = hb.ops >= .900 ? 'var(--red0)' : hb.ops >= .720 ? 'var(--tx0)' : 'var(--green0)';
+                const opsCol = hb.ops >= .800 ? 'var(--red0)' : hb.ops >= .650 ? 'var(--tx0)' : 'var(--green0)';
                 const kCol = hb.kRate <= .15 ? 'var(--green0)' : hb.kRate <= .16 ? 'var(--red0)' : 'var(--tx0)';
                 const bbCol = hb.bbRate >= .14 ? 'var(--red0)' : hb.bbRate <= .08 ? 'var(--green0)' : 'var(--tx0)';
 

@@ -625,10 +625,19 @@ Can you add smarter AI pitching decisions. When a sub needs to be made it looks 
 
 ____________
 
+NOW COSTS TO RESIGN PLAYERS TOO
+Add costs to resign players that is subtracted from the budget. Thus, have the budget shown on the resign page too.
+Base costs for all players based on difficulty
 
+Easy - Costs 3
+Normal - Costs 5
+Hard - Costs 7
+All-Star - Costs 10
 
-OPS  meh
-
-HOF
-
-AI smart pitching choices? - Healthiest SP to start then only RPS and only SPS? Know your handedness?
+ADD A NEW ROW OF MYSTERY BADGES.
+Before being acheived, Mystery Badges have a ? logo and no description how to be achived. After being achived they say how they got and have an icon.
+1. "Triple T", Pinch Hit with a player named T. Sahur
+2. "67", End a game with a 6 - 7 final score
+3. "Thriller", 0 - 0 after 9 innings
+4. "Just a Bit Outside", throw or draw 4 walks in a row
+5. "Underdog", Win the World Series with a C or worse rated team

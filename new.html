@@ -2818,7 +2818,22 @@
             SEASON.year = (parseInt(SEASON.year, 10) || 2025) + 1;
             SEASON.records = {}; ALL_TEAMS_FLAT.forEach(t => SEASON.records[t] = { w: 0, l: 0 });
             SEASON.playoffs = null; SEASON.gamesPlayed = 0; SEASON.seasonLog = []; SEASON.simRunning = false; SEASON.managerCooldown = 0;
-            SEASON.postseasonBannedTeams = null; SEASON.acquisitionBudget = MANAGER_PRESTIGE; SEASON.budgetSpent = 0; SEASON.offseasonLog = []; SEASON.deadlineTriggered = false;
+            
+            
+            // Manager prestige: 1:1 up to 100, then tapered logarithmically (100–1000 → adds up to ~100 bonus)
+            const managerBase = Math.min(MANAGER_PRESTIGE, 100);
+            const managerBonus = MANAGER_PRESTIGE > 100
+                ? Math.round(100 * Math.log10(MANAGER_PRESTIGE / 100) / Math.log10(10)) : 0;
+            const managerContrib = managerBase + managerBonus; // max ~200 at prestige 1000
+
+            // Team prestige: 1:1 up to 100 (hard cap)
+            const teamContrib = Math.min(TEAM_PRESTIGE[SEASON.playerTeam] || 0, 100);
+
+            // Combine: soft cap around 250 using a slight final dampener
+            const rawBudget = managerContrib + teamContrib;
+            const budget = Math.round(Math.min(rawBudget, 250));
+
+            SEASON.postseasonBannedTeams = null; SEASON.acquisitionBudget = budget; SEASON.budgetSpent = 0; SEASON.offseasonLog = []; SEASON.deadlineTriggered = false;
             generateTeamPrestige(false);
             G = {}; CURRENT_SERIES = null; CURRENT_GAME_SERIES = null; _contSimRunning = false; _playoffsStarted = false;
             renderTeamSelect(); showScreen('teamselect'); renderBadges('setup-badges'); renderChampCounter('champ-counter-setup');
