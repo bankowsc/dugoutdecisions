@@ -641,3 +641,39 @@ Before being acheived, Mystery Badges have a ? logo and no description how to be
 3. "Thriller", 0 - 0 after 9 innings
 4. "Just a Bit Outside", throw or draw 4 walks in a row
 5. "Underdog", Win the World Series with a C or worse rated team
+
+
+_________
+TODOS 
+
+1. Actually code in mystery badges as achivable. Currently they are listed but not awarded for happening. Can you kake the confetti animation go off when a bage is awarded.
+
+2. Show difficulty level in a badge at the top in the regular and post seson
+
+3. *Hard to do* Can you actually make it so that the post season home game ordering follows the mlb ordering
+FIX HOME GAME ORDERING - currently it JUST give the better seed all the home games for the series.
+WILD CARD - better seed 3 home games
+DIVISION - better seed 2 home games, then worse seed 2 home games, then better seed 1 home game
+LCS AND WORLD SERIES BOTH - better seed 2 home games, worse seed 3 home games, better seed 2 home games
+
+Track who is the better seed for the series. and then what game of the series it is in order to calculate whose home game this game should be!
+
+
+2. Water down talent pool. Too easy to get cracked teams...  5 10 15 + 25 resign costs per player?
+Maybe reweight letter grade scale accordingly
+
+Higher resign costs + higher val offseason players way more than deadline?
+
+Normalize the budgets. 50 + log of manager prestige cap 100 + 0.25x team prestige (so like 25 bonus for 100)
+~175ish max
+
+
+
+3. Rename some of the regular season decisions
+
+5. ***OPS and BA standardize 3 digits in lineups
+
+
+6. OPP switches to healthiest starter too for next game?
+
+7. ACTUALLY HAVE HOME AND HOME MID SERIES
