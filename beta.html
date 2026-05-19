@@ -110,7 +110,8 @@
             height: 100%
         }
 
-        html, body {
+        html,
+        body {
             touch-action: manipulation;
         }
 
@@ -2905,7 +2906,7 @@
             { id: 'trashcan', icon: '🗑️', label: 'Trash Can', desc: "Successfully pull off 'Steal the Signs'", cat: 'Manager' },
             { id: 'hofmanager', icon: '🎖️', label: 'HOF Manager', desc: 'Manage a 90+ prestige team', cat: 'Manager' },
             // ── MYSTERY BADGES ──
-            { id: 'triplet', icon: '🎭', label: 'Triple T', desc: 'Pinch hit with a player named T. Sahur', cat: 'Mystery', mystery: true },
+            { id: 'triplet', icon: '🎭', label: 'Triple T', desc: 'Pinch hit with a player named T. Sahur', cat: 'Mystery', mystery: true }, // FLAG
             { id: 'sixtyseven', icon: '🎱', label: '67', desc: 'End a game with a 6–7 final score (either side)', cat: 'Mystery', mystery: true },
             { id: 'thriller', icon: '🕺', label: 'Thriller', desc: '0–0 after 9 innings (game went to extras)', cat: 'Mystery', mystery: true },
             { id: 'justabitoutside', icon: '🎳', label: 'Just a Bit Outside', desc: 'Throw or draw 4 walks in a row', cat: 'Mystery', mystery: true },
@@ -3957,7 +3958,17 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             const addB = (t, cls, fn) => { const b = document.createElement('button'); b.className = cls; b.textContent = t; b.onclick = fn; btns.appendChild(b); };
             if (playerWon && CURRENT_SERIES.round !== 'ws') { const myDiv = TEAM_META[SEASON.playerTeam]?.division; const oppName = CURRENT_SERIES.series.home.name === SEASON.playerTeam ? CURRENT_SERIES.series.away.name : CURRENT_SERIES.series.home.name; if (myDiv && TEAM_META[oppName]?.division === myDiv) award('rivalwinner'); }
             if (playerWon) {
-                if (CURRENT_SERIES.round === 'ws') { MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 15); savePrestige(); TOTAL_CHAMPS++; saveChamps(TOTAL_CHAMPS); LAST_CHAMP = SEASON.playerTeam; award('champion'); if (HISTORY.length >= 1 && HISTORY[HISTORY.length - 1] === 'w') award('backtback'); HISTORY.push('w'); if (HISTORY.length >= 5 && HISTORY.slice(-5).filter(x => x === 'w').length >= 3) award('dynasty'); saveHistory(HISTORY); document.getElementById('series-final-line').textContent = '🏆 World Series Champions!'; document.getElementById('series-result-line').textContent = `${SEASON.playerTeam} wins the World Series!`; renderChampCounter('champ-counter-so'); renderBadges('seriesover-badges'); addB('View Championship', 'btn-gold', () => showScreen('seriesover')); }
+                if (CURRENT_SERIES.round === 'ws') {
+                    MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 15); savePrestige(); TOTAL_CHAMPS++; saveChamps(TOTAL_CHAMPS); LAST_CHAMP = SEASON.playerTeam; award('champion');
+                    if (HISTORY.length >= 1 && HISTORY[HISTORY.length - 1] === 'w') award('backtback');
+
+                    const s = assessTeamStrength(G.you); // FLAG
+                    if (s.grade == 'C' || s.grade == 'D') award('underdog');
+
+                    HISTORY.push('w'); if (HISTORY.length >= 5 && HISTORY.slice(-5).filter(x => x === 'w').length >= 3) award('dynasty');
+                    saveHistory(HISTORY); document.getElementById('series-final-line').textContent = '🏆 World Series Champions!';
+                    document.getElementById('series-result-line').textContent = `${SEASON.playerTeam} wins the World Series!`; renderChampCounter('champ-counter-so'); renderBadges('seriesover-badges'); addB('View Championship', 'btn-gold', () => showScreen('seriesover'));
+                }
                 else { if (CURRENT_SERIES.round === 'lcs') { award('pennant'); MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 5); savePrestige(); } else { MANAGER_PRESTIGE = Math.min(10000, MANAGER_PRESTIGE + 5); savePrestige(); } addB('Play Next Series', 'btn-green', () => { recoverPitchersBetweenSeries(CURRENT_SERIES.series); advancePlayoffRound(); autoSimNonPlayerSeries(); const next = findNextPlayerSeries(); if (next) startPlayoffSeries(next); else goToPlayoffs(); }); }
             } else { HISTORY.push('l'); saveHistory(HISTORY); advancePlayoffRound(); addB('View Final Bracket', 'btn-primary', () => goToPlayoffs()); addB('New Franchise', 'btn-amber', () => startNewFranchise()); }
             document.getElementById('sop-champ').innerHTML = '';
@@ -4168,7 +4179,7 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
         }
 
         function setupMatchForSeries() {
-            G.inning = 1; G.half = 'top'; G.outs = 0; G.bases = [null, null, null]; G.log = []; G.over = false; G.pendingEnd = false; G.biYou = 0; G.biOpp = 0;
+            G.inning = 1; G.half = 'top'; G.outs = 0; G.bases = [null, null, null]; G.log = []; G.over = false; G.pendingEnd = false; G.biYou = 0; G.biOpp = 0; G.consecutiveBBs = 0;
             G.you.hitters.forEach(h => { h.stats = { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }; }); G.opp.hitters.forEach(h => { h.stats = { ab: 0, h: 0, bb: 0, k: 0, rbi: 0, r: 0, hr: 0, trp: 0 }; });
             if (!G.savedLineup) { G.yourLineup = [0, 1, 2, 3, 4, 5, 6, 7, 8]; } else { G.yourLineup = G.savedLineup.slice(); }
             G.benchIds = Array.from({ length: 13 }, (_, i) => i).filter(id => !G.yourLineup.includes(id));
@@ -4219,14 +4230,17 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
         function curBat(isYou) { const team = isYou ? G.you : G.opp, lu = isYou ? G.yourLineup : G.oppLineup; return team.hitters[lu[(isYou ? G.biYou : G.biOpp) % 9]]; }
         function handBonus(bat, pit) { if (bat.hand === 'S') return 0.020; if ((bat.hand === 'L' && pit.hand === 'R') || (bat.hand === 'R' && pit.hand === 'L')) return 0.030; return 0; }
         function hitType(bat) { const pw = clamp((bat.ops - 0.600) / 0.300, -1, 5), hr = 0.03 + pw * 0.08, d = 0.18 + pw * 0.05, t = 0.02 + pw * 0.02, r = Math.random(); if (r < hr) return 'HR'; if (r < hr + d) return '2B'; if (r < hr + d + t) return '3B'; return '1B'; }
-        function getRes(bat, pit) {
+        function getRes(bat, pit, bbs) {
             const pen = stamPen(pit), bon = handBonus(bat, pit);
             const k = clamp((bat.kRate * 0.6 + pit.kRate * 0.6) - pen * 0.15, 0.01, 0.99);
             const bb = clamp((bat.bbRate * 0.6 + pit.bbRate * 0.6) + pen * 0.12, 0.01, 0.99);
             const bip = 1 - k - bb, eAdj = (pit.era - 4.00) * 0.015;
             const babip = clamp(0.290 + bon + (bat.avg - 0.260) * 0.5 - (pit.whip - 1.3) * 0.08 + eAdj + pen * 0.1, 0.01, 0.999);
             const r = Math.random();
-            if (r < k) return 'K'; if (r < k + bb) return 'BB';
+            if (r < k) return 'K';
+            if (r < k + bb) {
+                return 'BB';
+            }
             if (r < k + bb + bip * babip) { if (Math.random() < 0.05) return 'E'; return hitType(bat); }
             if (Math.random() < 0.05) return 'E';
             return Math.random() < (0.55 - (bat.ops * 0.15)) ? 'GO' : 'FO';
@@ -4383,6 +4397,20 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
             if (!iy) oppAutoSub();
             const def = G.opp.runs - G.you.runs; if (def > G.gameMaxDef) G.gameMaxDef = def;
             const bat = curBat(iy), pit = curPit(ft), res = getRes(bat, pit);
+
+            // FLAG
+            // Track consecutive walks
+            if (res === 'BB') {
+                G.consecutiveBBs++;
+
+                if (G.consecutiveBBs >= 4) {
+                    award('justabitoutside');
+                    G.consecutiveBBs = 0; // reset after awarding
+                }
+            } else {
+                G.consecutiveBBs = 0;
+            }
+
             const isOfficialAB = (res !== 'BB' && res !== 'E');
             if (isOfficialAB) bat.stats.ab++;
             if (res === 'K') bat.stats.k++;
@@ -4491,6 +4519,9 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
         function endGame() {
             G.over = true; G.pendingEnd = false;
             const youWon = G.you.runs > G.opp.runs; checkGameBadges(youWon);
+
+            if ((G.you.runs == 6 && G.opp.runs == 7) || (G.you.runs == 7 && G.opp.runs == 6)) award('sixtyseven'); // FLAG
+
             if (CURRENT_GAME_SERIES) {
                 const s = CURRENT_GAME_SERIES.series; const winsNeeded = Math.ceil(s.format / 2);
                 if (s.home.name === SEASON.playerTeam) { if (youWon) s.wins.home++; else s.wins.away++; }
@@ -4614,6 +4645,9 @@ ${fp ? '<span class="chip chip-purple" style="font-size:9px">★FP</span>' : ''}
 
         function renderScoreboard() {
             const el = document.getElementById('score-strip-wrap'), maxI = Math.max(9, G.maxInning);
+
+            if ((G.you.runs == 0 && G.opp.runs == 0) || (G.you.runs == 0 && G.opp.runs == 0)) award('thriller'); // FLAG
+
             // Convention: away team always shown on top row, home team on bottom row
             const youAreHome = G.homeTeam === 'you';
             const topTeam = youAreHome ? G.opp : G.you;   // away team bats top
@@ -4718,6 +4752,7 @@ ${G.bases[2] ? `<text x="${cx - sz}" y="${cy + 5}" font-size="10" fill="#e6f1fb"
             for (let b = 0; b < 3; b++)if (G.bases[b] && G.bases[b].id === oi) G.bases[b] = inp;
             G.log.unshift({ msg: `Sub: ${inp.name} replaces ${out.name} (slot ${os + 1}).`, isSub: true });
             if (CURRENT_GAME_SERIES) award('moneyball');
+            if (inp.name == 'T. Sahur') award('triplet'); // Flag
             renderMgr(); renderGame();
         }
 
