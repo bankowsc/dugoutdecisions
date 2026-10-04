@@ -1,0 +1,657 @@
+<body>
+
+
+
+const HITTER_TEMPLATES = {
+            1: {
+                0: [
+                    { id:0, name:'D. Nakamura', hand:'R', num:15, pos:'OF', spd:78, avg:0.315, ops:0.84, bbRate:0.07, kRate:0.28 },
+                    { id:1, name:'E. Ortega', hand:'L', num:22, pos:'OF', spd:84, avg:0.315, ops:0.84, bbRate:0.07, kRate:0.28 },
+                    { id:2, name:'F. Pruitt', hand:'R', num:29, pos:'OF', spd:90, avg:0.315, ops:0.84, bbRate:0.07, kRate:0.28 },
+                    { id:3, name:'G. Quinlan', hand:'R', num:36, pos:'INF', spd:67, avg:0.315, ops:0.84, bbRate:0.07, kRate:0.28 },
+                    { id:4, name:'H. Reyes', hand:'S', num:43, pos:'INF', spd:72, avg:0.3, ops:0.78, bbRate:0.06, kRate:0.3 },
+                    { id:5, name:'I. Sato', hand:'L', num:50, pos:'INF', spd:52, avg:0.3, ops:0.78, bbRate:0.06, kRate:0.3 },
+                    { id:6, name:'J. Tremblay', hand:'R', num:57, pos:'INF', spd:57, avg:0.3, ops:0.78, bbRate:0.06, kRate:0.3 },
+                    { id:7, name:'K. Underhill', hand:'R', num:64, pos:'C', spd:36, avg:0.3, ops:0.78, bbRate:0.06, kRate:0.3 },
+                    { id:8, name:'L. Vance', hand:'L', num:71, pos:'UTIL', spd:58, avg:0.28, ops:0.7, bbRate:0.06, kRate:0.3 },
+                    { id:9, name:'M. Whitfield', hand:'R', num:78, pos:'OF', spd:84, avg:0.28, ops:0.7, bbRate:0.06, kRate:0.3 },
+                    { id:10, name:'N. Xiong', hand:'S', num:85, pos:'INF', spd:52, avg:0.28, ops:0.7, bbRate:0.06, kRate:0.3 },
+                    { id:11, name:'O. Yates', hand:'R', num:92, pos:'C', spd:40, avg:0.28, ops:0.7, bbRate:0.06, kRate:0.3 },
+                    { id:12, name:'P. Zabel', hand:'L', num:1, pos:'UTIL', spd:48, avg:0.28, ops:0.7, bbRate:0.06, kRate:0.3 }
+                ],
+                1: [
+                    { id:0, name:'I. Underhill', hand:'R', num:52, pos:'OF', spd:78, avg:0.245, ops:0.68, bbRate:0.07, kRate:0.28 },
+                    { id:1, name:'J. Vance', hand:'L', num:59, pos:'OF', spd:84, avg:0.245, ops:0.68, bbRate:0.07, kRate:0.28 },
+                    { id:2, name:'K. Whitfield', hand:'R', num:66, pos:'OF', spd:90, avg:0.245, ops:0.68, bbRate:0.07, kRate:0.28 },
+                    { id:3, name:'L. Xiong', hand:'R', num:73, pos:'INF', spd:67, avg:0.245, ops:0.68, bbRate:0.07, kRate:0.28 },
+                    { id:4, name:'M. Yates', hand:'S', num:80, pos:'INF', spd:72, avg:0.23, ops:0.62, bbRate:0.06, kRate:0.3 },
+                    { id:5, name:'N. Zabel', hand:'L', num:87, pos:'INF', spd:52, avg:0.23, ops:0.62, bbRate:0.06, kRate:0.3 },
+                    { id:6, name:'O. Alvarez', hand:'R', num:94, pos:'INF', spd:57, avg:0.23, ops:0.62, bbRate:0.06, kRate:0.3 },
+                    { id:7, name:'P. Boone', hand:'R', num:3, pos:'C', spd:36, avg:0.23, ops:0.62, bbRate:0.06, kRate:0.3 },
+                    { id:8, name:'Q. Castillo', hand:'L', num:10, pos:'UTIL', spd:58, avg:0.21, ops:0.54, bbRate:0.06, kRate:0.3 },
+                    { id:9, name:'R. Dunlap', hand:'R', num:17, pos:'OF', spd:84, avg:0.21, ops:0.54, bbRate:0.06, kRate:0.3 },
+                    { id:10, name:'S. Esposito', hand:'S', num:24, pos:'INF', spd:52, avg:0.21, ops:0.54, bbRate:0.06, kRate:0.3 },
+                    { id:11, name:'T. Farrow', hand:'R', num:31, pos:'C', spd:40, avg:0.21, ops:0.54, bbRate:0.06, kRate:0.3 },
+                    { id:12, name:'U. Guthrie', hand:'L', num:38, pos:'UTIL', spd:48, avg:0.21, ops:0.54, bbRate:0.06, kRate:0.3 }
+                ]
+            },
+            2: {
+                0: [
+                    { id:0, name:'G. Alvarez', hand:'R', num:26, pos:'OF', spd:78, avg:0.31, ops:0.831, bbRate:0.08, kRate:0.27 },
+                    { id:1, name:'H. Boone', hand:'L', num:33, pos:'OF', spd:84, avg:0.31, ops:0.831, bbRate:0.08, kRate:0.27 },
+                    { id:2, name:'I. Castillo', hand:'R', num:40, pos:'OF', spd:90, avg:0.31, ops:0.831, bbRate:0.08, kRate:0.27 },
+                    { id:3, name:'J. Dunlap', hand:'R', num:47, pos:'INF', spd:67, avg:0.31, ops:0.831, bbRate:0.08, kRate:0.27 },
+                    { id:4, name:'K. Esposito', hand:'S', num:54, pos:'INF', spd:72, avg:0.295, ops:0.771, bbRate:0.07, kRate:0.29 },
+                    { id:5, name:'L. Farrow', hand:'L', num:61, pos:'INF', spd:52, avg:0.295, ops:0.771, bbRate:0.07, kRate:0.29 },
+                    { id:6, name:'M. Guthrie', hand:'R', num:68, pos:'INF', spd:57, avg:0.295, ops:0.771, bbRate:0.07, kRate:0.29 },
+                    { id:7, name:'N. Holt', hand:'R', num:75, pos:'C', spd:36, avg:0.295, ops:0.771, bbRate:0.07, kRate:0.29 },
+                    { id:8, name:'O. Ibarra', hand:'L', num:82, pos:'UTIL', spd:58, avg:0.275, ops:0.691, bbRate:0.07, kRate:0.29 },
+                    { id:9, name:'P. Jansen', hand:'R', num:89, pos:'OF', spd:84, avg:0.275, ops:0.691, bbRate:0.07, kRate:0.29 },
+                    { id:10, name:'Q. Kowalski', hand:'S', num:96, pos:'INF', spd:52, avg:0.275, ops:0.691, bbRate:0.07, kRate:0.29 },
+                    { id:11, name:'R. Lund', hand:'R', num:5, pos:'C', spd:40, avg:0.275, ops:0.691, bbRate:0.07, kRate:0.29 },
+                    { id:12, name:'S. Marsh', hand:'L', num:12, pos:'UTIL', spd:48, avg:0.275, ops:0.691, bbRate:0.07, kRate:0.29 }
+                ],
+                1: [
+                    { id:0, name:'L. Holt', hand:'R', num:63, pos:'OF', spd:78, avg:0.255, ops:0.715, bbRate:0.08, kRate:0.27 },
+                    { id:1, name:'M. Ibarra', hand:'L', num:70, pos:'OF', spd:84, avg:0.255, ops:0.715, bbRate:0.08, kRate:0.27 },
+                    { id:2, name:'N. Jansen', hand:'R', num:77, pos:'OF', spd:90, avg:0.255, ops:0.715, bbRate:0.08, kRate:0.27 },
+                    { id:3, name:'O. Kowalski', hand:'R', num:84, pos:'INF', spd:67, avg:0.255, ops:0.715, bbRate:0.08, kRate:0.27 },
+                    { id:4, name:'P. Lund', hand:'S', num:91, pos:'INF', spd:72, avg:0.24, ops:0.655, bbRate:0.07, kRate:0.29 },
+                    { id:5, name:'Q. Marsh', hand:'L', num:98, pos:'INF', spd:52, avg:0.24, ops:0.655, bbRate:0.07, kRate:0.29 },
+                    { id:6, name:'R. Nakamura', hand:'R', num:7, pos:'INF', spd:57, avg:0.24, ops:0.655, bbRate:0.07, kRate:0.29 },
+                    { id:7, name:'S. Ortega', hand:'R', num:14, pos:'C', spd:36, avg:0.24, ops:0.655, bbRate:0.07, kRate:0.29 },
+                    { id:8, name:'T. Pruitt', hand:'L', num:21, pos:'UTIL', spd:58, avg:0.22, ops:0.575, bbRate:0.07, kRate:0.29 },
+                    { id:9, name:'U. Quinlan', hand:'R', num:28, pos:'OF', spd:84, avg:0.22, ops:0.575, bbRate:0.07, kRate:0.29 },
+                    { id:10, name:'V. Reyes', hand:'S', num:35, pos:'INF', spd:52, avg:0.22, ops:0.575, bbRate:0.07, kRate:0.29 },
+                    { id:11, name:'W. Sato', hand:'R', num:42, pos:'C', spd:40, avg:0.22, ops:0.575, bbRate:0.07, kRate:0.29 },
+                    { id:12, name:'X. Tremblay', hand:'L', num:49, pos:'UTIL', spd:48, avg:0.22, ops:0.575, bbRate:0.07, kRate:0.29 }
+                ]
+            },
+            3: {
+                0: [
+                    { id:0, name:'J. Nakamura', hand:'R', num:37, pos:'OF', spd:78, avg:0.306, ops:0.822, bbRate:0.08, kRate:0.26 },
+                    { id:1, name:'K. Ortega', hand:'L', num:44, pos:'OF', spd:84, avg:0.306, ops:0.822, bbRate:0.08, kRate:0.26 },
+                    { id:2, name:'L. Pruitt', hand:'R', num:51, pos:'OF', spd:90, avg:0.306, ops:0.822, bbRate:0.08, kRate:0.26 },
+                    { id:3, name:'M. Quinlan', hand:'R', num:58, pos:'INF', spd:67, avg:0.306, ops:0.822, bbRate:0.08, kRate:0.26 },
+                    { id:4, name:'N. Reyes', hand:'S', num:65, pos:'INF', spd:72, avg:0.291, ops:0.762, bbRate:0.07, kRate:0.28 },
+                    { id:5, name:'O. Sato', hand:'L', num:72, pos:'INF', spd:52, avg:0.291, ops:0.762, bbRate:0.07, kRate:0.28 },
+                    { id:6, name:'P. Tremblay', hand:'R', num:79, pos:'INF', spd:57, avg:0.291, ops:0.762, bbRate:0.07, kRate:0.28 },
+                    { id:7, name:'Q. Underhill', hand:'R', num:86, pos:'C', spd:36, avg:0.291, ops:0.762, bbRate:0.07, kRate:0.28 },
+                    { id:8, name:'R. Vance', hand:'L', num:93, pos:'UTIL', spd:58, avg:0.271, ops:0.682, bbRate:0.07, kRate:0.28 },
+                    { id:9, name:'S. Whitfield', hand:'R', num:2, pos:'OF', spd:84, avg:0.271, ops:0.682, bbRate:0.07, kRate:0.28 },
+                    { id:10, name:'T. Xiong', hand:'S', num:9, pos:'INF', spd:52, avg:0.271, ops:0.682, bbRate:0.07, kRate:0.28 },
+                    { id:11, name:'U. Yates', hand:'R', num:16, pos:'C', spd:40, avg:0.271, ops:0.682, bbRate:0.07, kRate:0.28 },
+                    { id:12, name:'V. Zabel', hand:'L', num:23, pos:'UTIL', spd:48, avg:0.271, ops:0.682, bbRate:0.07, kRate:0.28 }
+                ],
+                1: [
+                    { id:0, name:'O. Underhill', hand:'R', num:74, pos:'OF', spd:78, avg:0.264, ops:0.75, bbRate:0.08, kRate:0.26 },
+                    { id:1, name:'P. Vance', hand:'L', num:81, pos:'OF', spd:84, avg:0.264, ops:0.75, bbRate:0.08, kRate:0.26 },
+                    { id:2, name:'Q. Whitfield', hand:'R', num:88, pos:'OF', spd:90, avg:0.264, ops:0.75, bbRate:0.08, kRate:0.26 },
+                    { id:3, name:'R. Xiong', hand:'R', num:95, pos:'INF', spd:67, avg:0.264, ops:0.75, bbRate:0.08, kRate:0.26 },
+                    { id:4, name:'S. Yates', hand:'S', num:4, pos:'INF', spd:72, avg:0.249, ops:0.69, bbRate:0.07, kRate:0.28 },
+                    { id:5, name:'T. Zabel', hand:'L', num:11, pos:'INF', spd:52, avg:0.249, ops:0.69, bbRate:0.07, kRate:0.28 },
+                    { id:6, name:'U. Alvarez', hand:'R', num:18, pos:'INF', spd:57, avg:0.249, ops:0.69, bbRate:0.07, kRate:0.28 },
+                    { id:7, name:'V. Boone', hand:'R', num:25, pos:'C', spd:36, avg:0.249, ops:0.69, bbRate:0.07, kRate:0.28 },
+                    { id:8, name:'W. Castillo', hand:'L', num:32, pos:'UTIL', spd:58, avg:0.229, ops:0.61, bbRate:0.07, kRate:0.28 },
+                    { id:9, name:'X. Dunlap', hand:'R', num:39, pos:'OF', spd:84, avg:0.229, ops:0.61, bbRate:0.07, kRate:0.28 },
+                    { id:10, name:'Y. Esposito', hand:'S', num:46, pos:'INF', spd:52, avg:0.229, ops:0.61, bbRate:0.07, kRate:0.28 },
+                    { id:11, name:'Z. Farrow', hand:'R', num:53, pos:'C', spd:40, avg:0.229, ops:0.61, bbRate:0.07, kRate:0.28 },
+                    { id:12, name:'A. Guthrie', hand:'L', num:60, pos:'UTIL', spd:48, avg:0.229, ops:0.61, bbRate:0.07, kRate:0.28 }
+                ]
+            },
+            4: {
+                0: [
+                    { id:0, name:'M. Alvarez', hand:'R', num:48, pos:'OF', spd:78, avg:0.301, ops:0.813, bbRate:0.09, kRate:0.25 },
+                    { id:1, name:'N. Boone', hand:'L', num:55, pos:'OF', spd:84, avg:0.301, ops:0.813, bbRate:0.09, kRate:0.25 },
+                    { id:2, name:'O. Castillo', hand:'R', num:62, pos:'OF', spd:90, avg:0.301, ops:0.813, bbRate:0.09, kRate:0.25 },
+                    { id:3, name:'P. Dunlap', hand:'R', num:69, pos:'INF', spd:67, avg:0.301, ops:0.813, bbRate:0.09, kRate:0.25 },
+                    { id:4, name:'Q. Esposito', hand:'S', num:76, pos:'INF', spd:72, avg:0.286, ops:0.753, bbRate:0.08, kRate:0.27 },
+                    { id:5, name:'R. Farrow', hand:'L', num:83, pos:'INF', spd:52, avg:0.286, ops:0.753, bbRate:0.08, kRate:0.27 },
+                    { id:6, name:'S. Guthrie', hand:'R', num:90, pos:'INF', spd:57, avg:0.286, ops:0.753, bbRate:0.08, kRate:0.27 },
+                    { id:7, name:'T. Holt', hand:'R', num:97, pos:'C', spd:36, avg:0.286, ops:0.753, bbRate:0.08, kRate:0.27 },
+                    { id:8, name:'U. Ibarra', hand:'L', num:6, pos:'UTIL', spd:58, avg:0.266, ops:0.673, bbRate:0.08, kRate:0.27 },
+                    { id:9, name:'V. Jansen', hand:'R', num:13, pos:'OF', spd:84, avg:0.266, ops:0.673, bbRate:0.08, kRate:0.27 },
+                    { id:10, name:'W. Kowalski', hand:'S', num:20, pos:'INF', spd:52, avg:0.266, ops:0.673, bbRate:0.08, kRate:0.27 },
+                    { id:11, name:'X. Lund', hand:'R', num:27, pos:'C', spd:40, avg:0.266, ops:0.673, bbRate:0.08, kRate:0.27 },
+                    { id:12, name:'Y. Marsh', hand:'L', num:34, pos:'UTIL', spd:48, avg:0.266, ops:0.673, bbRate:0.08, kRate:0.27 }
+                ],
+                1: [
+                    { id:0, name:'R. Holt', hand:'R', num:85, pos:'OF', spd:78, avg:0.274, ops:0.785, bbRate:0.09, kRate:0.25 },
+                    { id:1, name:'S. Ibarra', hand:'L', num:92, pos:'OF', spd:84, avg:0.274, ops:0.785, bbRate:0.09, kRate:0.25 },
+                    { id:2, name:'T. Jansen', hand:'R', num:1, pos:'OF', spd:90, avg:0.274, ops:0.785, bbRate:0.09, kRate:0.25 },
+                    { id:3, name:'U. Kowalski', hand:'R', num:8, pos:'INF', spd:67, avg:0.274, ops:0.785, bbRate:0.09, kRate:0.25 },
+                    { id:4, name:'V. Lund', hand:'S', num:15, pos:'INF', spd:72, avg:0.259, ops:0.725, bbRate:0.08, kRate:0.27 },
+                    { id:5, name:'W. Marsh', hand:'L', num:22, pos:'INF', spd:52, avg:0.259, ops:0.725, bbRate:0.08, kRate:0.27 },
+                    { id:6, name:'X. Nakamura', hand:'R', num:29, pos:'INF', spd:57, avg:0.259, ops:0.725, bbRate:0.08, kRate:0.27 },
+                    { id:7, name:'Y. Ortega', hand:'R', num:36, pos:'C', spd:36, avg:0.259, ops:0.725, bbRate:0.08, kRate:0.27 },
+                    { id:8, name:'Z. Pruitt', hand:'L', num:43, pos:'UTIL', spd:58, avg:0.239, ops:0.645, bbRate:0.08, kRate:0.27 },
+                    { id:9, name:'A. Quinlan', hand:'R', num:50, pos:'OF', spd:84, avg:0.239, ops:0.645, bbRate:0.08, kRate:0.27 },
+                    { id:10, name:'B. Reyes', hand:'S', num:57, pos:'INF', spd:52, avg:0.239, ops:0.645, bbRate:0.08, kRate:0.27 },
+                    { id:11, name:'C. Sato', hand:'R', num:64, pos:'C', spd:40, avg:0.239, ops:0.645, bbRate:0.08, kRate:0.27 },
+                    { id:12, name:'D. Tremblay', hand:'L', num:71, pos:'UTIL', spd:48, avg:0.239, ops:0.645, bbRate:0.08, kRate:0.27 }
+                ]
+            },
+            5: {
+                0: [
+                    { id:0, name:'P. Nakamura', hand:'R', num:59, pos:'OF', spd:78, avg:0.297, ops:0.804, bbRate:0.09, kRate:0.24 },
+                    { id:1, name:'Q. Ortega', hand:'L', num:66, pos:'OF', spd:84, avg:0.297, ops:0.804, bbRate:0.09, kRate:0.24 },
+                    { id:2, name:'R. Pruitt', hand:'R', num:73, pos:'OF', spd:90, avg:0.297, ops:0.804, bbRate:0.09, kRate:0.24 },
+                    { id:3, name:'S. Quinlan', hand:'R', num:80, pos:'INF', spd:67, avg:0.297, ops:0.804, bbRate:0.09, kRate:0.24 },
+                    { id:4, name:'T. Reyes', hand:'S', num:87, pos:'INF', spd:72, avg:0.282, ops:0.744, bbRate:0.08, kRate:0.26 },
+                    { id:5, name:'U. Sato', hand:'L', num:94, pos:'INF', spd:52, avg:0.282, ops:0.744, bbRate:0.08, kRate:0.26 },
+                    { id:6, name:'V. Tremblay', hand:'R', num:3, pos:'INF', spd:57, avg:0.282, ops:0.744, bbRate:0.08, kRate:0.26 },
+                    { id:7, name:'W. Underhill', hand:'R', num:10, pos:'C', spd:36, avg:0.282, ops:0.744, bbRate:0.08, kRate:0.26 },
+                    { id:8, name:'X. Vance', hand:'L', num:17, pos:'UTIL', spd:58, avg:0.262, ops:0.664, bbRate:0.08, kRate:0.26 },
+                    { id:9, name:'Y. Whitfield', hand:'R', num:24, pos:'OF', spd:84, avg:0.262, ops:0.664, bbRate:0.08, kRate:0.26 },
+                    { id:10, name:'Z. Xiong', hand:'S', num:31, pos:'INF', spd:52, avg:0.262, ops:0.664, bbRate:0.08, kRate:0.26 },
+                    { id:11, name:'A. Yates', hand:'R', num:38, pos:'C', spd:40, avg:0.262, ops:0.664, bbRate:0.08, kRate:0.26 },
+                    { id:12, name:'B. Zabel', hand:'L', num:45, pos:'UTIL', spd:48, avg:0.262, ops:0.664, bbRate:0.08, kRate:0.26 }
+                ],
+                1: [
+                    { id:0, name:'U. Underhill', hand:'R', num:96, pos:'OF', spd:78, avg:0.283, ops:0.82, bbRate:0.09, kRate:0.24 },
+                    { id:1, name:'V. Vance', hand:'L', num:5, pos:'OF', spd:84, avg:0.283, ops:0.82, bbRate:0.09, kRate:0.24 },
+                    { id:2, name:'W. Whitfield', hand:'R', num:12, pos:'OF', spd:90, avg:0.283, ops:0.82, bbRate:0.09, kRate:0.24 },
+                    { id:3, name:'X. Xiong', hand:'R', num:19, pos:'INF', spd:67, avg:0.283, ops:0.82, bbRate:0.09, kRate:0.24 },
+                    { id:4, name:'Y. Yates', hand:'S', num:26, pos:'INF', spd:72, avg:0.268, ops:0.76, bbRate:0.08, kRate:0.26 },
+                    { id:5, name:'Z. Zabel', hand:'L', num:33, pos:'INF', spd:52, avg:0.268, ops:0.76, bbRate:0.08, kRate:0.26 },
+                    { id:6, name:'A. Alvarez', hand:'R', num:40, pos:'INF', spd:57, avg:0.268, ops:0.76, bbRate:0.08, kRate:0.26 },
+                    { id:7, name:'B. Boone', hand:'R', num:47, pos:'C', spd:36, avg:0.268, ops:0.76, bbRate:0.08, kRate:0.26 },
+                    { id:8, name:'C. Castillo', hand:'L', num:54, pos:'UTIL', spd:58, avg:0.248, ops:0.68, bbRate:0.08, kRate:0.26 },
+                    { id:9, name:'D. Dunlap', hand:'R', num:61, pos:'OF', spd:84, avg:0.248, ops:0.68, bbRate:0.08, kRate:0.26 },
+                    { id:10, name:'E. Esposito', hand:'S', num:68, pos:'INF', spd:52, avg:0.248, ops:0.68, bbRate:0.08, kRate:0.26 },
+                    { id:11, name:'F. Farrow', hand:'R', num:75, pos:'C', spd:40, avg:0.248, ops:0.68, bbRate:0.08, kRate:0.26 },
+                    { id:12, name:'G. Guthrie', hand:'L', num:82, pos:'UTIL', spd:48, avg:0.248, ops:0.68, bbRate:0.08, kRate:0.26 }
+                ]
+            },
+            6: {
+                0: [
+                    { id:0, name:'S. Alvarez', hand:'R', num:70, pos:'OF', spd:78, avg:0.292, ops:0.795, bbRate:0.1, kRate:0.23 },
+                    { id:1, name:'T. Boone', hand:'L', num:77, pos:'OF', spd:84, avg:0.292, ops:0.795, bbRate:0.1, kRate:0.23 },
+                    { id:2, name:'U. Castillo', hand:'R', num:84, pos:'OF', spd:90, avg:0.292, ops:0.795, bbRate:0.1, kRate:0.23 },
+                    { id:3, name:'V. Dunlap', hand:'R', num:91, pos:'INF', spd:67, avg:0.292, ops:0.795, bbRate:0.1, kRate:0.23 },
+                    { id:4, name:'W. Esposito', hand:'S', num:98, pos:'INF', spd:72, avg:0.277, ops:0.735, bbRate:0.09, kRate:0.25 },
+                    { id:5, name:'X. Farrow', hand:'L', num:7, pos:'INF', spd:52, avg:0.277, ops:0.735, bbRate:0.09, kRate:0.25 },
+                    { id:6, name:'Y. Guthrie', hand:'R', num:14, pos:'INF', spd:57, avg:0.277, ops:0.735, bbRate:0.09, kRate:0.25 },
+                    { id:7, name:'Z. Holt', hand:'R', num:21, pos:'C', spd:36, avg:0.277, ops:0.735, bbRate:0.09, kRate:0.25 },
+                    { id:8, name:'A. Ibarra', hand:'L', num:28, pos:'UTIL', spd:58, avg:0.257, ops:0.655, bbRate:0.09, kRate:0.25 },
+                    { id:9, name:'B. Jansen', hand:'R', num:35, pos:'OF', spd:84, avg:0.257, ops:0.655, bbRate:0.09, kRate:0.25 },
+                    { id:10, name:'C. Kowalski', hand:'S', num:42, pos:'INF', spd:52, avg:0.257, ops:0.655, bbRate:0.09, kRate:0.25 },
+                    { id:11, name:'D. Lund', hand:'R', num:49, pos:'C', spd:40, avg:0.257, ops:0.655, bbRate:0.09, kRate:0.25 },
+                    { id:12, name:'E. Marsh', hand:'L', num:56, pos:'UTIL', spd:48, avg:0.257, ops:0.655, bbRate:0.09, kRate:0.25 }
+                ],
+                1: [
+                    { id:0, name:'X. Holt', hand:'R', num:9, pos:'OF', spd:78, avg:0.293, ops:0.855, bbRate:0.1, kRate:0.23 },
+                    { id:1, name:'Y. Ibarra', hand:'L', num:16, pos:'OF', spd:84, avg:0.293, ops:0.855, bbRate:0.1, kRate:0.23 },
+                    { id:2, name:'Z. Jansen', hand:'R', num:23, pos:'OF', spd:90, avg:0.293, ops:0.855, bbRate:0.1, kRate:0.23 },
+                    { id:3, name:'A. Kowalski', hand:'R', num:30, pos:'INF', spd:67, avg:0.293, ops:0.855, bbRate:0.1, kRate:0.23 },
+                    { id:4, name:'B. Lund', hand:'S', num:37, pos:'INF', spd:72, avg:0.278, ops:0.795, bbRate:0.09, kRate:0.25 },
+                    { id:5, name:'C. Marsh', hand:'L', num:44, pos:'INF', spd:52, avg:0.278, ops:0.795, bbRate:0.09, kRate:0.25 },
+                    { id:6, name:'D. Nakamura', hand:'R', num:51, pos:'INF', spd:57, avg:0.278, ops:0.795, bbRate:0.09, kRate:0.25 },
+                    { id:7, name:'E. Ortega', hand:'R', num:58, pos:'C', spd:36, avg:0.278, ops:0.795, bbRate:0.09, kRate:0.25 },
+                    { id:8, name:'F. Pruitt', hand:'L', num:65, pos:'UTIL', spd:58, avg:0.258, ops:0.715, bbRate:0.09, kRate:0.25 },
+                    { id:9, name:'G. Quinlan', hand:'R', num:72, pos:'OF', spd:84, avg:0.258, ops:0.715, bbRate:0.09, kRate:0.25 },
+                    { id:10, name:'H. Reyes', hand:'S', num:79, pos:'INF', spd:52, avg:0.258, ops:0.715, bbRate:0.09, kRate:0.25 },
+                    { id:11, name:'I. Sato', hand:'R', num:86, pos:'C', spd:40, avg:0.258, ops:0.715, bbRate:0.09, kRate:0.25 },
+                    { id:12, name:'J. Tremblay', hand:'L', num:93, pos:'UTIL', spd:48, avg:0.258, ops:0.715, bbRate:0.09, kRate:0.25 }
+                ]
+            },
+            7: {
+                0: [
+                    { id:0, name:'V. Nakamura', hand:'R', num:81, pos:'OF', spd:78, avg:0.288, ops:0.786, bbRate:0.11, kRate:0.22 },
+                    { id:1, name:'W. Ortega', hand:'L', num:88, pos:'OF', spd:84, avg:0.288, ops:0.786, bbRate:0.11, kRate:0.22 },
+                    { id:2, name:'X. Pruitt', hand:'R', num:95, pos:'OF', spd:90, avg:0.288, ops:0.786, bbRate:0.11, kRate:0.22 },
+                    { id:3, name:'Y. Quinlan', hand:'R', num:4, pos:'INF', spd:67, avg:0.288, ops:0.786, bbRate:0.11, kRate:0.22 },
+                    { id:4, name:'Z. Reyes', hand:'S', num:11, pos:'INF', spd:72, avg:0.273, ops:0.726, bbRate:0.1, kRate:0.24 },
+                    { id:5, name:'A. Sato', hand:'L', num:18, pos:'INF', spd:52, avg:0.273, ops:0.726, bbRate:0.1, kRate:0.24 },
+                    { id:6, name:'B. Tremblay', hand:'R', num:25, pos:'INF', spd:57, avg:0.273, ops:0.726, bbRate:0.1, kRate:0.24 },
+                    { id:7, name:'C. Underhill', hand:'R', num:32, pos:'C', spd:36, avg:0.273, ops:0.726, bbRate:0.1, kRate:0.24 },
+                    { id:8, name:'D. Vance', hand:'L', num:39, pos:'UTIL', spd:58, avg:0.253, ops:0.646, bbRate:0.1, kRate:0.24 },
+                    { id:9, name:'E. Whitfield', hand:'R', num:46, pos:'OF', spd:84, avg:0.253, ops:0.646, bbRate:0.1, kRate:0.24 },
+                    { id:10, name:'F. Xiong', hand:'S', num:53, pos:'INF', spd:52, avg:0.253, ops:0.646, bbRate:0.1, kRate:0.24 },
+                    { id:11, name:'G. Yates', hand:'R', num:60, pos:'C', spd:40, avg:0.253, ops:0.646, bbRate:0.1, kRate:0.24 },
+                    { id:12, name:'H. Zabel', hand:'L', num:67, pos:'UTIL', spd:48, avg:0.253, ops:0.646, bbRate:0.1, kRate:0.24 }
+                ],
+                1: [
+                    { id:0, name:'A. Underhill', hand:'R', num:20, pos:'OF', spd:78, avg:0.302, ops:0.89, bbRate:0.11, kRate:0.22 },
+                    { id:1, name:'B. Vance', hand:'L', num:27, pos:'OF', spd:84, avg:0.302, ops:0.89, bbRate:0.11, kRate:0.22 },
+                    { id:2, name:'C. Whitfield', hand:'R', num:34, pos:'OF', spd:90, avg:0.302, ops:0.89, bbRate:0.11, kRate:0.22 },
+                    { id:3, name:'D. Xiong', hand:'R', num:41, pos:'INF', spd:67, avg:0.302, ops:0.89, bbRate:0.11, kRate:0.22 },
+                    { id:4, name:'E. Yates', hand:'S', num:48, pos:'INF', spd:72, avg:0.287, ops:0.83, bbRate:0.1, kRate:0.24 },
+                    { id:5, name:'F. Zabel', hand:'L', num:55, pos:'INF', spd:52, avg:0.287, ops:0.83, bbRate:0.1, kRate:0.24 },
+                    { id:6, name:'G. Alvarez', hand:'R', num:62, pos:'INF', spd:57, avg:0.287, ops:0.83, bbRate:0.1, kRate:0.24 },
+                    { id:7, name:'H. Boone', hand:'R', num:69, pos:'C', spd:36, avg:0.287, ops:0.83, bbRate:0.1, kRate:0.24 },
+                    { id:8, name:'I. Castillo', hand:'L', num:76, pos:'UTIL', spd:58, avg:0.267, ops:0.75, bbRate:0.1, kRate:0.24 },
+                    { id:9, name:'J. Dunlap', hand:'R', num:83, pos:'OF', spd:84, avg:0.267, ops:0.75, bbRate:0.1, kRate:0.24 },
+                    { id:10, name:'K. Esposito', hand:'S', num:90, pos:'INF', spd:52, avg:0.267, ops:0.75, bbRate:0.1, kRate:0.24 },
+                    { id:11, name:'L. Farrow', hand:'R', num:97, pos:'C', spd:40, avg:0.267, ops:0.75, bbRate:0.1, kRate:0.24 },
+                    { id:12, name:'M. Guthrie', hand:'L', num:6, pos:'UTIL', spd:48, avg:0.267, ops:0.75, bbRate:0.1, kRate:0.24 }
+                ]
+            },
+            8: {
+                0: [
+                    { id:0, name:'Y. Alvarez', hand:'R', num:92, pos:'OF', spd:78, avg:0.283, ops:0.777, bbRate:0.11, kRate:0.21 },
+                    { id:1, name:'Z. Boone', hand:'L', num:1, pos:'OF', spd:84, avg:0.283, ops:0.777, bbRate:0.11, kRate:0.21 },
+                    { id:2, name:'A. Castillo', hand:'R', num:8, pos:'OF', spd:90, avg:0.283, ops:0.777, bbRate:0.11, kRate:0.21 },
+                    { id:3, name:'B. Dunlap', hand:'R', num:15, pos:'INF', spd:67, avg:0.283, ops:0.777, bbRate:0.11, kRate:0.21 },
+                    { id:4, name:'C. Esposito', hand:'S', num:22, pos:'INF', spd:72, avg:0.268, ops:0.717, bbRate:0.1, kRate:0.23 },
+                    { id:5, name:'D. Farrow', hand:'L', num:29, pos:'INF', spd:52, avg:0.268, ops:0.717, bbRate:0.1, kRate:0.23 },
+                    { id:6, name:'E. Guthrie', hand:'R', num:36, pos:'INF', spd:57, avg:0.268, ops:0.717, bbRate:0.1, kRate:0.23 },
+                    { id:7, name:'F. Holt', hand:'R', num:43, pos:'C', spd:36, avg:0.268, ops:0.717, bbRate:0.1, kRate:0.23 },
+                    { id:8, name:'G. Ibarra', hand:'L', num:50, pos:'UTIL', spd:58, avg:0.248, ops:0.637, bbRate:0.1, kRate:0.23 },
+                    { id:9, name:'H. Jansen', hand:'R', num:57, pos:'OF', spd:84, avg:0.248, ops:0.637, bbRate:0.1, kRate:0.23 },
+                    { id:10, name:'I. Kowalski', hand:'S', num:64, pos:'INF', spd:52, avg:0.248, ops:0.637, bbRate:0.1, kRate:0.23 },
+                    { id:11, name:'J. Lund', hand:'R', num:71, pos:'C', spd:40, avg:0.248, ops:0.637, bbRate:0.1, kRate:0.23 },
+                    { id:12, name:'K. Marsh', hand:'L', num:78, pos:'UTIL', spd:48, avg:0.248, ops:0.637, bbRate:0.1, kRate:0.23 }
+                ],
+                1: [
+                    { id:0, name:'D. Holt', hand:'R', num:31, pos:'OF', spd:78, avg:0.311, ops:0.925, bbRate:0.11, kRate:0.21 },
+                    { id:1, name:'E. Ibarra', hand:'L', num:38, pos:'OF', spd:84, avg:0.311, ops:0.925, bbRate:0.11, kRate:0.21 },
+                    { id:2, name:'F. Jansen', hand:'R', num:45, pos:'OF', spd:90, avg:0.311, ops:0.925, bbRate:0.11, kRate:0.21 },
+                    { id:3, name:'G. Kowalski', hand:'R', num:52, pos:'INF', spd:67, avg:0.311, ops:0.925, bbRate:0.11, kRate:0.21 },
+                    { id:4, name:'H. Lund', hand:'S', num:59, pos:'INF', spd:72, avg:0.296, ops:0.865, bbRate:0.1, kRate:0.23 },
+                    { id:5, name:'I. Marsh', hand:'L', num:66, pos:'INF', spd:52, avg:0.296, ops:0.865, bbRate:0.1, kRate:0.23 },
+                    { id:6, name:'J. Nakamura', hand:'R', num:73, pos:'INF', spd:57, avg:0.296, ops:0.865, bbRate:0.1, kRate:0.23 },
+                    { id:7, name:'K. Ortega', hand:'R', num:80, pos:'C', spd:36, avg:0.296, ops:0.865, bbRate:0.1, kRate:0.23 },
+                    { id:8, name:'L. Pruitt', hand:'L', num:87, pos:'UTIL', spd:58, avg:0.276, ops:0.785, bbRate:0.1, kRate:0.23 },
+                    { id:9, name:'M. Quinlan', hand:'R', num:94, pos:'OF', spd:84, avg:0.276, ops:0.785, bbRate:0.1, kRate:0.23 },
+                    { id:10, name:'N. Reyes', hand:'S', num:3, pos:'INF', spd:52, avg:0.276, ops:0.785, bbRate:0.1, kRate:0.23 },
+                    { id:11, name:'O. Sato', hand:'R', num:10, pos:'C', spd:40, avg:0.276, ops:0.785, bbRate:0.1, kRate:0.23 },
+                    { id:12, name:'P. Tremblay', hand:'L', num:17, pos:'UTIL', spd:48, avg:0.276, ops:0.785, bbRate:0.1, kRate:0.23 }
+                ]
+            },
+            9: {
+                0: [
+                    { id:0, name:'B. Nakamura', hand:'R', num:5, pos:'OF', spd:78, avg:0.279, ops:0.768, bbRate:0.12, kRate:0.2 },
+                    { id:1, name:'C. Ortega', hand:'L', num:12, pos:'OF', spd:84, avg:0.279, ops:0.768, bbRate:0.12, kRate:0.2 },
+                    { id:2, name:'D. Pruitt', hand:'R', num:19, pos:'OF', spd:90, avg:0.279, ops:0.768, bbRate:0.12, kRate:0.2 },
+                    { id:3, name:'E. Quinlan', hand:'R', num:26, pos:'INF', spd:67, avg:0.279, ops:0.768, bbRate:0.12, kRate:0.2 },
+                    { id:4, name:'F. Reyes', hand:'S', num:33, pos:'INF', spd:72, avg:0.264, ops:0.708, bbRate:0.11, kRate:0.22 },
+                    { id:5, name:'G. Sato', hand:'L', num:40, pos:'INF', spd:52, avg:0.264, ops:0.708, bbRate:0.11, kRate:0.22 },
+                    { id:6, name:'H. Tremblay', hand:'R', num:47, pos:'INF', spd:57, avg:0.264, ops:0.708, bbRate:0.11, kRate:0.22 },
+                    { id:7, name:'I. Underhill', hand:'R', num:54, pos:'C', spd:36, avg:0.264, ops:0.708, bbRate:0.11, kRate:0.22 },
+                    { id:8, name:'J. Vance', hand:'L', num:61, pos:'UTIL', spd:58, avg:0.244, ops:0.628, bbRate:0.11, kRate:0.22 },
+                    { id:9, name:'K. Whitfield', hand:'R', num:68, pos:'OF', spd:84, avg:0.244, ops:0.628, bbRate:0.11, kRate:0.22 },
+                    { id:10, name:'L. Xiong', hand:'S', num:75, pos:'INF', spd:52, avg:0.244, ops:0.628, bbRate:0.11, kRate:0.22 },
+                    { id:11, name:'M. Yates', hand:'R', num:82, pos:'C', spd:40, avg:0.244, ops:0.628, bbRate:0.11, kRate:0.22 },
+                    { id:12, name:'N. Zabel', hand:'L', num:89, pos:'UTIL', spd:48, avg:0.244, ops:0.628, bbRate:0.11, kRate:0.22 }
+                ],
+                1: [
+                    { id:0, name:'G. Underhill', hand:'R', num:42, pos:'OF', spd:78, avg:0.321, ops:0.96, bbRate:0.12, kRate:0.2 },
+                    { id:1, name:'H. Vance', hand:'L', num:49, pos:'OF', spd:84, avg:0.321, ops:0.96, bbRate:0.12, kRate:0.2 },
+                    { id:2, name:'I. Whitfield', hand:'R', num:56, pos:'OF', spd:90, avg:0.321, ops:0.96, bbRate:0.12, kRate:0.2 },
+                    { id:3, name:'J. Xiong', hand:'R', num:63, pos:'INF', spd:67, avg:0.321, ops:0.96, bbRate:0.12, kRate:0.2 },
+                    { id:4, name:'K. Yates', hand:'S', num:70, pos:'INF', spd:72, avg:0.306, ops:0.9, bbRate:0.11, kRate:0.22 },
+                    { id:5, name:'L. Zabel', hand:'L', num:77, pos:'INF', spd:52, avg:0.306, ops:0.9, bbRate:0.11, kRate:0.22 },
+                    { id:6, name:'M. Alvarez', hand:'R', num:84, pos:'INF', spd:57, avg:0.306, ops:0.9, bbRate:0.11, kRate:0.22 },
+                    { id:7, name:'N. Boone', hand:'R', num:91, pos:'C', spd:36, avg:0.306, ops:0.9, bbRate:0.11, kRate:0.22 },
+                    { id:8, name:'O. Castillo', hand:'L', num:98, pos:'UTIL', spd:58, avg:0.286, ops:0.82, bbRate:0.11, kRate:0.22 },
+                    { id:9, name:'P. Dunlap', hand:'R', num:7, pos:'OF', spd:84, avg:0.286, ops:0.82, bbRate:0.11, kRate:0.22 },
+                    { id:10, name:'Q. Esposito', hand:'S', num:14, pos:'INF', spd:52, avg:0.286, ops:0.82, bbRate:0.11, kRate:0.22 },
+                    { id:11, name:'R. Farrow', hand:'R', num:21, pos:'C', spd:40, avg:0.286, ops:0.82, bbRate:0.11, kRate:0.22 },
+                    { id:12, name:'S. Guthrie', hand:'L', num:28, pos:'UTIL', spd:48, avg:0.286, ops:0.82, bbRate:0.11, kRate:0.22 }
+                ]
+            },
+            10: {
+                0: [
+                    { id:0, name:'E. Alvarez', hand:'R', num:16, pos:'OF', spd:78, avg:0.275, ops:0.759, bbRate:0.12, kRate:0.19 },
+                    { id:1, name:'F. Boone', hand:'L', num:23, pos:'OF', spd:84, avg:0.275, ops:0.759, bbRate:0.12, kRate:0.19 },
+                    { id:2, name:'G. Castillo', hand:'R', num:30, pos:'OF', spd:90, avg:0.275, ops:0.759, bbRate:0.12, kRate:0.19 },
+                    { id:3, name:'H. Dunlap', hand:'R', num:37, pos:'INF', spd:67, avg:0.275, ops:0.759, bbRate:0.12, kRate:0.19 },
+                    { id:4, name:'I. Esposito', hand:'S', num:44, pos:'INF', spd:72, avg:0.26, ops:0.699, bbRate:0.11, kRate:0.21 },
+                    { id:5, name:'J. Farrow', hand:'L', num:51, pos:'INF', spd:52, avg:0.26, ops:0.699, bbRate:0.11, kRate:0.21 },
+                    { id:6, name:'K. Guthrie', hand:'R', num:58, pos:'INF', spd:57, avg:0.26, ops:0.699, bbRate:0.11, kRate:0.21 },
+                    { id:7, name:'L. Holt', hand:'R', num:65, pos:'C', spd:36, avg:0.26, ops:0.699, bbRate:0.11, kRate:0.21 },
+                    { id:8, name:'M. Ibarra', hand:'L', num:72, pos:'UTIL', spd:58, avg:0.24, ops:0.619, bbRate:0.11, kRate:0.21 },
+                    { id:9, name:'N. Jansen', hand:'R', num:79, pos:'OF', spd:84, avg:0.24, ops:0.619, bbRate:0.11, kRate:0.21 },
+                    { id:10, name:'O. Kowalski', hand:'S', num:86, pos:'INF', spd:52, avg:0.24, ops:0.619, bbRate:0.11, kRate:0.21 },
+                    { id:11, name:'P. Lund', hand:'R', num:93, pos:'C', spd:40, avg:0.24, ops:0.619, bbRate:0.11, kRate:0.21 },
+                    { id:12, name:'Q. Marsh', hand:'L', num:2, pos:'UTIL', spd:48, avg:0.24, ops:0.619, bbRate:0.11, kRate:0.21 }
+                ],
+                1: [
+                    { id:0, name:'J. Holt', hand:'R', num:53, pos:'OF', spd:78, avg:0.331, ops:0.995, bbRate:0.12, kRate:0.19 },
+                    { id:1, name:'K. Ibarra', hand:'L', num:60, pos:'OF', spd:84, avg:0.331, ops:0.995, bbRate:0.12, kRate:0.19 },
+                    { id:2, name:'L. Jansen', hand:'R', num:67, pos:'OF', spd:90, avg:0.331, ops:0.995, bbRate:0.12, kRate:0.19 },
+                    { id:3, name:'M. Kowalski', hand:'R', num:74, pos:'INF', spd:67, avg:0.331, ops:0.995, bbRate:0.12, kRate:0.19 },
+                    { id:4, name:'N. Lund', hand:'S', num:81, pos:'INF', spd:72, avg:0.316, ops:0.935, bbRate:0.11, kRate:0.21 },
+                    { id:5, name:'O. Marsh', hand:'L', num:88, pos:'INF', spd:52, avg:0.316, ops:0.935, bbRate:0.11, kRate:0.21 },
+                    { id:6, name:'P. Nakamura', hand:'R', num:95, pos:'INF', spd:57, avg:0.316, ops:0.935, bbRate:0.11, kRate:0.21 },
+                    { id:7, name:'Q. Ortega', hand:'R', num:4, pos:'C', spd:36, avg:0.316, ops:0.935, bbRate:0.11, kRate:0.21 },
+                    { id:8, name:'R. Pruitt', hand:'L', num:11, pos:'UTIL', spd:58, avg:0.295, ops:0.855, bbRate:0.11, kRate:0.21 },
+                    { id:9, name:'S. Quinlan', hand:'R', num:18, pos:'OF', spd:84, avg:0.295, ops:0.855, bbRate:0.11, kRate:0.21 },
+                    { id:10, name:'T. Reyes', hand:'S', num:25, pos:'INF', spd:52, avg:0.295, ops:0.855, bbRate:0.11, kRate:0.21 },
+                    { id:11, name:'U. Sato', hand:'R', num:32, pos:'C', spd:40, avg:0.295, ops:0.855, bbRate:0.11, kRate:0.21 },
+                    { id:12, name:'V. Tremblay', hand:'L', num:39, pos:'UTIL', spd:48, avg:0.295, ops:0.855, bbRate:0.11, kRate:0.21 }
+                ]
+            },
+        };
+ 
+        const PITCHER_TEMPLATES = {
+            1: {
+                0: [
+                    { id:0, name:'D. Ridgeway', hand:'R', num:73, isStarter:true, role:'SP', era:3.5, whip:1.12, kRate:0.2, bbRate:0.12, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'E. Sloane', hand:'R', num:80, isStarter:true, role:'SP', era:3.5, whip:1.12, kRate:0.2, bbRate:0.12, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'F. Tarver', hand:'L', num:87, isStarter:true, role:'SP', era:3.5, whip:1.12, kRate:0.2, bbRate:0.12, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'G. Upton', hand:'R', num:94, isStarter:true, role:'SP', era:3.5, whip:1.12, kRate:0.2, bbRate:0.12, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'H. Vasquez', hand:'S', num:3, isStarter:true, role:'SP', era:3.5, whip:1.12, kRate:0.2, bbRate:0.12, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'I. Wexford', hand:'R', num:10, isStarter:false, role:'RP', era:3.8, whip:1.15, kRate:0.23, bbRate:0.12, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'J. Yarrow', hand:'L', num:17, isStarter:false, role:'RP', era:3.8, whip:1.15, kRate:0.23, bbRate:0.12, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'K. Zellner', hand:'R', num:24, isStarter:false, role:'RP', era:3.8, whip:1.15, kRate:0.23, bbRate:0.12, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'L. Abernathy', hand:'R', num:31, isStarter:false, role:'RP', era:3.8, whip:1.15, kRate:0.23, bbRate:0.12, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'M. Ashby', hand:'L', num:38, isStarter:false, role:'RP', era:3.8, whip:1.15, kRate:0.23, bbRate:0.12, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'N. Brannigan', hand:'R', num:45, isStarter:false, role:'RP', era:3.8, whip:1.15, kRate:0.23, bbRate:0.12, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'O. Cortez', hand:'S', num:52, isStarter:false, role:'RP', era:3.8, whip:1.15, kRate:0.23, bbRate:0.12, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'P. Delgado', hand:'R', num:59, isStarter:false, role:'RP', era:3.8, whip:1.15, kRate:0.23, bbRate:0.12, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ],
+                1: [
+                    { id:0, name:'I. Zellner', hand:'R', num:12, isStarter:true, role:'SP', era:3.9, whip:1.32, kRate:0.16, bbRate:0.16, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'J. Abernathy', hand:'R', num:19, isStarter:true, role:'SP', era:3.9, whip:1.32, kRate:0.16, bbRate:0.16, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'K. Ashby', hand:'L', num:26, isStarter:true, role:'SP', era:3.9, whip:1.32, kRate:0.16, bbRate:0.16, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'L. Brannigan', hand:'R', num:33, isStarter:true, role:'SP', era:3.9, whip:1.32, kRate:0.16, bbRate:0.16, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'M. Cortez', hand:'S', num:40, isStarter:true, role:'SP', era:3.9, whip:1.32, kRate:0.16, bbRate:0.16, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'N. Delgado', hand:'R', num:47, isStarter:false, role:'RP', era:4.2, whip:1.35, kRate:0.19, bbRate:0.16, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'O. Ellison', hand:'L', num:54, isStarter:false, role:'RP', era:4.2, whip:1.35, kRate:0.19, bbRate:0.16, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'P. Fenwick', hand:'R', num:61, isStarter:false, role:'RP', era:4.2, whip:1.35, kRate:0.19, bbRate:0.16, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'Q. Gallagher', hand:'R', num:68, isStarter:false, role:'RP', era:4.2, whip:1.35, kRate:0.19, bbRate:0.16, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'R. Hargrove', hand:'L', num:75, isStarter:false, role:'RP', era:4.2, whip:1.35, kRate:0.19, bbRate:0.16, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'S. Ivers', hand:'R', num:82, isStarter:false, role:'RP', era:4.2, whip:1.35, kRate:0.19, bbRate:0.16, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'T. Jorden', hand:'S', num:89, isStarter:false, role:'RP', era:4.2, whip:1.35, kRate:0.19, bbRate:0.16, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'U. Kessler', hand:'R', num:96, isStarter:false, role:'RP', era:4.2, whip:1.35, kRate:0.19, bbRate:0.16, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ]
+            },
+            2: {
+                0: [
+                    { id:0, name:'G. Ellison', hand:'R', num:84, isStarter:true, role:'SP', era:3.45, whip:1.11, kRate:0.21, bbRate:0.12, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'H. Fenwick', hand:'R', num:91, isStarter:true, role:'SP', era:3.45, whip:1.11, kRate:0.21, bbRate:0.12, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'I. Gallagher', hand:'L', num:98, isStarter:true, role:'SP', era:3.45, whip:1.11, kRate:0.21, bbRate:0.12, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'J. Hargrove', hand:'R', num:7, isStarter:true, role:'SP', era:3.45, whip:1.11, kRate:0.21, bbRate:0.12, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'K. Ivers', hand:'S', num:14, isStarter:true, role:'SP', era:3.45, whip:1.11, kRate:0.21, bbRate:0.12, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'L. Jorden', hand:'R', num:21, isStarter:false, role:'RP', era:3.75, whip:1.14, kRate:0.24, bbRate:0.12, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'M. Kessler', hand:'L', num:28, isStarter:false, role:'RP', era:3.75, whip:1.14, kRate:0.24, bbRate:0.12, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'N. Larkspur', hand:'R', num:35, isStarter:false, role:'RP', era:3.75, whip:1.14, kRate:0.24, bbRate:0.12, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'O. Monroe', hand:'R', num:42, isStarter:false, role:'RP', era:3.75, whip:1.14, kRate:0.24, bbRate:0.12, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'P. Novak', hand:'L', num:49, isStarter:false, role:'RP', era:3.75, whip:1.14, kRate:0.24, bbRate:0.12, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'Q. Osgood', hand:'R', num:56, isStarter:false, role:'RP', era:3.75, whip:1.14, kRate:0.24, bbRate:0.12, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'R. Prescott', hand:'S', num:63, isStarter:false, role:'RP', era:3.75, whip:1.14, kRate:0.24, bbRate:0.12, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'S. Quirke', hand:'R', num:70, isStarter:false, role:'RP', era:3.75, whip:1.14, kRate:0.24, bbRate:0.12, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ],
+                1: [
+                    { id:0, name:'L. Larkspur', hand:'R', num:23, isStarter:true, role:'SP', era:3.7, whip:1.28, kRate:0.18, bbRate:0.15, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'M. Monroe', hand:'R', num:30, isStarter:true, role:'SP', era:3.7, whip:1.28, kRate:0.18, bbRate:0.15, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'N. Novak', hand:'L', num:37, isStarter:true, role:'SP', era:3.7, whip:1.28, kRate:0.18, bbRate:0.15, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'O. Osgood', hand:'R', num:44, isStarter:true, role:'SP', era:3.7, whip:1.28, kRate:0.18, bbRate:0.15, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'P. Prescott', hand:'S', num:51, isStarter:true, role:'SP', era:3.7, whip:1.28, kRate:0.18, bbRate:0.15, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'Q. Quirke', hand:'R', num:58, isStarter:false, role:'RP', era:4, whip:1.31, kRate:0.21, bbRate:0.15, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'R. Ridgeway', hand:'L', num:65, isStarter:false, role:'RP', era:4, whip:1.31, kRate:0.21, bbRate:0.15, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'S. Sloane', hand:'R', num:72, isStarter:false, role:'RP', era:4, whip:1.31, kRate:0.21, bbRate:0.15, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'T. Tarver', hand:'R', num:79, isStarter:false, role:'RP', era:4, whip:1.31, kRate:0.21, bbRate:0.15, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'U. Upton', hand:'L', num:86, isStarter:false, role:'RP', era:4, whip:1.31, kRate:0.21, bbRate:0.15, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'V. Vasquez', hand:'R', num:93, isStarter:false, role:'RP', era:4, whip:1.31, kRate:0.21, bbRate:0.15, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'W. Wexford', hand:'S', num:2, isStarter:false, role:'RP', era:4, whip:1.31, kRate:0.21, bbRate:0.15, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'X. Yarrow', hand:'R', num:9, isStarter:false, role:'RP', era:4, whip:1.31, kRate:0.21, bbRate:0.15, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ]
+            },
+            3: {
+                0: [
+                    { id:0, name:'J. Ridgeway', hand:'R', num:95, isStarter:true, role:'SP', era:3.4, whip:1.1, kRate:0.21, bbRate:0.11, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'K. Sloane', hand:'R', num:4, isStarter:true, role:'SP', era:3.4, whip:1.1, kRate:0.21, bbRate:0.11, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'L. Tarver', hand:'L', num:11, isStarter:true, role:'SP', era:3.4, whip:1.1, kRate:0.21, bbRate:0.11, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'M. Upton', hand:'R', num:18, isStarter:true, role:'SP', era:3.4, whip:1.1, kRate:0.21, bbRate:0.11, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'N. Vasquez', hand:'S', num:25, isStarter:true, role:'SP', era:3.4, whip:1.1, kRate:0.21, bbRate:0.11, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'O. Wexford', hand:'R', num:32, isStarter:false, role:'RP', era:3.7, whip:1.13, kRate:0.24, bbRate:0.11, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'P. Yarrow', hand:'L', num:39, isStarter:false, role:'RP', era:3.7, whip:1.13, kRate:0.24, bbRate:0.11, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'Q. Zellner', hand:'R', num:46, isStarter:false, role:'RP', era:3.7, whip:1.13, kRate:0.24, bbRate:0.11, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'R. Abernathy', hand:'R', num:53, isStarter:false, role:'RP', era:3.7, whip:1.13, kRate:0.24, bbRate:0.11, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'S. Ashby', hand:'L', num:60, isStarter:false, role:'RP', era:3.7, whip:1.13, kRate:0.24, bbRate:0.11, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'T. Brannigan', hand:'R', num:67, isStarter:false, role:'RP', era:3.7, whip:1.13, kRate:0.24, bbRate:0.11, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'U. Cortez', hand:'S', num:74, isStarter:false, role:'RP', era:3.7, whip:1.13, kRate:0.24, bbRate:0.11, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'V. Delgado', hand:'R', num:81, isStarter:false, role:'RP', era:3.7, whip:1.13, kRate:0.24, bbRate:0.11, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ],
+                1: [
+                    { id:0, name:'O. Zellner', hand:'R', num:34, isStarter:true, role:'SP', era:3.5, whip:1.23, kRate:0.2, bbRate:0.14, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'P. Abernathy', hand:'R', num:41, isStarter:true, role:'SP', era:3.5, whip:1.23, kRate:0.2, bbRate:0.14, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'Q. Ashby', hand:'L', num:48, isStarter:true, role:'SP', era:3.5, whip:1.23, kRate:0.2, bbRate:0.14, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'R. Brannigan', hand:'R', num:55, isStarter:true, role:'SP', era:3.5, whip:1.23, kRate:0.2, bbRate:0.14, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'S. Cortez', hand:'S', num:62, isStarter:true, role:'SP', era:3.5, whip:1.23, kRate:0.2, bbRate:0.14, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'T. Delgado', hand:'R', num:69, isStarter:false, role:'RP', era:3.8, whip:1.26, kRate:0.23, bbRate:0.14, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'U. Ellison', hand:'L', num:76, isStarter:false, role:'RP', era:3.8, whip:1.26, kRate:0.23, bbRate:0.14, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'V. Fenwick', hand:'R', num:83, isStarter:false, role:'RP', era:3.8, whip:1.26, kRate:0.23, bbRate:0.14, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'W. Gallagher', hand:'R', num:90, isStarter:false, role:'RP', era:3.8, whip:1.26, kRate:0.23, bbRate:0.14, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'X. Hargrove', hand:'L', num:97, isStarter:false, role:'RP', era:3.8, whip:1.26, kRate:0.23, bbRate:0.14, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'Y. Ivers', hand:'R', num:6, isStarter:false, role:'RP', era:3.8, whip:1.26, kRate:0.23, bbRate:0.14, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'Z. Jorden', hand:'S', num:13, isStarter:false, role:'RP', era:3.8, whip:1.26, kRate:0.23, bbRate:0.14, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'A. Kessler', hand:'R', num:20, isStarter:false, role:'RP', era:3.8, whip:1.26, kRate:0.23, bbRate:0.14, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ]
+            },
+            4: {
+                0: [
+                    { id:0, name:'M. Ellison', hand:'R', num:8, isStarter:true, role:'SP', era:3.35, whip:1.08, kRate:0.22, bbRate:0.11, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'N. Fenwick', hand:'R', num:15, isStarter:true, role:'SP', era:3.35, whip:1.08, kRate:0.22, bbRate:0.11, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'O. Gallagher', hand:'L', num:22, isStarter:true, role:'SP', era:3.35, whip:1.08, kRate:0.22, bbRate:0.11, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'P. Hargrove', hand:'R', num:29, isStarter:true, role:'SP', era:3.35, whip:1.08, kRate:0.22, bbRate:0.11, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'Q. Ivers', hand:'S', num:36, isStarter:true, role:'SP', era:3.35, whip:1.08, kRate:0.22, bbRate:0.11, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'R. Jorden', hand:'R', num:43, isStarter:false, role:'RP', era:3.65, whip:1.11, kRate:0.25, bbRate:0.11, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'S. Kessler', hand:'L', num:50, isStarter:false, role:'RP', era:3.65, whip:1.11, kRate:0.25, bbRate:0.11, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'T. Larkspur', hand:'R', num:57, isStarter:false, role:'RP', era:3.65, whip:1.11, kRate:0.25, bbRate:0.11, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'U. Monroe', hand:'R', num:64, isStarter:false, role:'RP', era:3.65, whip:1.11, kRate:0.25, bbRate:0.11, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'V. Novak', hand:'L', num:71, isStarter:false, role:'RP', era:3.65, whip:1.11, kRate:0.25, bbRate:0.11, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'W. Osgood', hand:'R', num:78, isStarter:false, role:'RP', era:3.65, whip:1.11, kRate:0.25, bbRate:0.11, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'X. Prescott', hand:'S', num:85, isStarter:false, role:'RP', era:3.65, whip:1.11, kRate:0.25, bbRate:0.11, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'Y. Quirke', hand:'R', num:92, isStarter:false, role:'RP', era:3.65, whip:1.11, kRate:0.25, bbRate:0.11, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ],
+                1: [
+                    { id:0, name:'R. Larkspur', hand:'R', num:45, isStarter:true, role:'SP', era:3.3, whip:1.19, kRate:0.21, bbRate:0.14, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'S. Monroe', hand:'R', num:52, isStarter:true, role:'SP', era:3.3, whip:1.19, kRate:0.21, bbRate:0.14, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'T. Novak', hand:'L', num:59, isStarter:true, role:'SP', era:3.3, whip:1.19, kRate:0.21, bbRate:0.14, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'U. Osgood', hand:'R', num:66, isStarter:true, role:'SP', era:3.3, whip:1.19, kRate:0.21, bbRate:0.14, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'V. Prescott', hand:'S', num:73, isStarter:true, role:'SP', era:3.3, whip:1.19, kRate:0.21, bbRate:0.14, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'W. Quirke', hand:'R', num:80, isStarter:false, role:'RP', era:3.6, whip:1.22, kRate:0.24, bbRate:0.14, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'X. Ridgeway', hand:'L', num:87, isStarter:false, role:'RP', era:3.6, whip:1.22, kRate:0.24, bbRate:0.14, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'Y. Sloane', hand:'R', num:94, isStarter:false, role:'RP', era:3.6, whip:1.22, kRate:0.24, bbRate:0.14, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'Z. Tarver', hand:'R', num:3, isStarter:false, role:'RP', era:3.6, whip:1.22, kRate:0.24, bbRate:0.14, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'A. Upton', hand:'L', num:10, isStarter:false, role:'RP', era:3.6, whip:1.22, kRate:0.24, bbRate:0.14, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'B. Vasquez', hand:'R', num:17, isStarter:false, role:'RP', era:3.6, whip:1.22, kRate:0.24, bbRate:0.14, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'C. Wexford', hand:'S', num:24, isStarter:false, role:'RP', era:3.6, whip:1.22, kRate:0.24, bbRate:0.14, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'D. Yarrow', hand:'R', num:31, isStarter:false, role:'RP', era:3.6, whip:1.22, kRate:0.24, bbRate:0.14, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ]
+            },
+            5: {
+                0: [
+                    { id:0, name:'P. Ridgeway', hand:'R', num:19, isStarter:true, role:'SP', era:3.3, whip:1.07, kRate:0.22, bbRate:0.11, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'Q. Sloane', hand:'R', num:26, isStarter:true, role:'SP', era:3.3, whip:1.07, kRate:0.22, bbRate:0.11, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'R. Tarver', hand:'L', num:33, isStarter:true, role:'SP', era:3.3, whip:1.07, kRate:0.22, bbRate:0.11, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'S. Upton', hand:'R', num:40, isStarter:true, role:'SP', era:3.3, whip:1.07, kRate:0.22, bbRate:0.11, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'T. Vasquez', hand:'S', num:47, isStarter:true, role:'SP', era:3.3, whip:1.07, kRate:0.22, bbRate:0.11, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'U. Wexford', hand:'R', num:54, isStarter:false, role:'RP', era:3.6, whip:1.1, kRate:0.25, bbRate:0.11, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'V. Yarrow', hand:'L', num:61, isStarter:false, role:'RP', era:3.6, whip:1.1, kRate:0.25, bbRate:0.11, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'W. Zellner', hand:'R', num:68, isStarter:false, role:'RP', era:3.6, whip:1.1, kRate:0.25, bbRate:0.11, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'X. Abernathy', hand:'R', num:75, isStarter:false, role:'RP', era:3.6, whip:1.1, kRate:0.25, bbRate:0.11, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'Y. Ashby', hand:'L', num:82, isStarter:false, role:'RP', era:3.6, whip:1.1, kRate:0.25, bbRate:0.11, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'Z. Brannigan', hand:'R', num:89, isStarter:false, role:'RP', era:3.6, whip:1.1, kRate:0.25, bbRate:0.11, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'A. Cortez', hand:'S', num:96, isStarter:false, role:'RP', era:3.6, whip:1.1, kRate:0.25, bbRate:0.11, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'B. Delgado', hand:'R', num:5, isStarter:false, role:'RP', era:3.6, whip:1.1, kRate:0.25, bbRate:0.11, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ],
+                1: [
+                    { id:0, name:'U. Zellner', hand:'R', num:56, isStarter:true, role:'SP', era:3.1, whip:1.14, kRate:0.23, bbRate:0.13, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'V. Abernathy', hand:'R', num:63, isStarter:true, role:'SP', era:3.1, whip:1.14, kRate:0.23, bbRate:0.13, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'W. Ashby', hand:'L', num:70, isStarter:true, role:'SP', era:3.1, whip:1.14, kRate:0.23, bbRate:0.13, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'X. Brannigan', hand:'R', num:77, isStarter:true, role:'SP', era:3.1, whip:1.14, kRate:0.23, bbRate:0.13, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'Y. Cortez', hand:'S', num:84, isStarter:true, role:'SP', era:3.1, whip:1.14, kRate:0.23, bbRate:0.13, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'Z. Delgado', hand:'R', num:91, isStarter:false, role:'RP', era:3.4, whip:1.17, kRate:0.26, bbRate:0.13, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'A. Ellison', hand:'L', num:98, isStarter:false, role:'RP', era:3.4, whip:1.17, kRate:0.26, bbRate:0.13, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'B. Fenwick', hand:'R', num:7, isStarter:false, role:'RP', era:3.4, whip:1.17, kRate:0.26, bbRate:0.13, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'C. Gallagher', hand:'R', num:14, isStarter:false, role:'RP', era:3.4, whip:1.17, kRate:0.26, bbRate:0.13, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'D. Hargrove', hand:'L', num:21, isStarter:false, role:'RP', era:3.4, whip:1.17, kRate:0.26, bbRate:0.13, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'E. Ivers', hand:'R', num:28, isStarter:false, role:'RP', era:3.4, whip:1.17, kRate:0.26, bbRate:0.13, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'F. Jorden', hand:'S', num:35, isStarter:false, role:'RP', era:3.4, whip:1.17, kRate:0.26, bbRate:0.13, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'G. Kessler', hand:'R', num:42, isStarter:false, role:'RP', era:3.4, whip:1.17, kRate:0.26, bbRate:0.13, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ]
+            },
+            6: {
+                0: [
+                    { id:0, name:'S. Ellison', hand:'R', num:30, isStarter:true, role:'SP', era:3.25, whip:1.06, kRate:0.23, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'T. Fenwick', hand:'R', num:37, isStarter:true, role:'SP', era:3.25, whip:1.06, kRate:0.23, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'U. Gallagher', hand:'L', num:44, isStarter:true, role:'SP', era:3.25, whip:1.06, kRate:0.23, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'V. Hargrove', hand:'R', num:51, isStarter:true, role:'SP', era:3.25, whip:1.06, kRate:0.23, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'W. Ivers', hand:'S', num:58, isStarter:true, role:'SP', era:3.25, whip:1.06, kRate:0.23, bbRate:0.1, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'X. Jorden', hand:'R', num:65, isStarter:false, role:'RP', era:3.55, whip:1.09, kRate:0.26, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'Y. Kessler', hand:'L', num:72, isStarter:false, role:'RP', era:3.55, whip:1.09, kRate:0.26, bbRate:0.1, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'Z. Larkspur', hand:'R', num:79, isStarter:false, role:'RP', era:3.55, whip:1.09, kRate:0.26, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'A. Monroe', hand:'R', num:86, isStarter:false, role:'RP', era:3.55, whip:1.09, kRate:0.26, bbRate:0.1, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'B. Novak', hand:'L', num:93, isStarter:false, role:'RP', era:3.55, whip:1.09, kRate:0.26, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'C. Osgood', hand:'R', num:2, isStarter:false, role:'RP', era:3.55, whip:1.09, kRate:0.26, bbRate:0.1, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'D. Prescott', hand:'S', num:9, isStarter:false, role:'RP', era:3.55, whip:1.09, kRate:0.26, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'E. Quirke', hand:'R', num:16, isStarter:false, role:'RP', era:3.55, whip:1.09, kRate:0.26, bbRate:0.1, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ],
+                1: [
+                    { id:0, name:'X. Larkspur', hand:'R', num:67, isStarter:true, role:'SP', era:2.9, whip:1.09, kRate:0.25, bbRate:0.12, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'Y. Monroe', hand:'R', num:74, isStarter:true, role:'SP', era:2.9, whip:1.09, kRate:0.25, bbRate:0.12, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'Z. Novak', hand:'L', num:81, isStarter:true, role:'SP', era:2.9, whip:1.09, kRate:0.25, bbRate:0.12, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'A. Osgood', hand:'R', num:88, isStarter:true, role:'SP', era:2.9, whip:1.09, kRate:0.25, bbRate:0.12, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'B. Prescott', hand:'S', num:95, isStarter:true, role:'SP', era:2.9, whip:1.09, kRate:0.25, bbRate:0.12, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'C. Quirke', hand:'R', num:4, isStarter:false, role:'RP', era:3.2, whip:1.12, kRate:0.28, bbRate:0.12, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'D. Ridgeway', hand:'L', num:11, isStarter:false, role:'RP', era:3.2, whip:1.12, kRate:0.28, bbRate:0.12, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'E. Sloane', hand:'R', num:18, isStarter:false, role:'RP', era:3.2, whip:1.12, kRate:0.28, bbRate:0.12, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'F. Tarver', hand:'R', num:25, isStarter:false, role:'RP', era:3.2, whip:1.12, kRate:0.28, bbRate:0.12, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'G. Upton', hand:'L', num:32, isStarter:false, role:'RP', era:3.2, whip:1.12, kRate:0.28, bbRate:0.12, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'H. Vasquez', hand:'R', num:39, isStarter:false, role:'RP', era:3.2, whip:1.12, kRate:0.28, bbRate:0.12, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'I. Wexford', hand:'S', num:46, isStarter:false, role:'RP', era:3.2, whip:1.12, kRate:0.28, bbRate:0.12, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'J. Yarrow', hand:'R', num:53, isStarter:false, role:'RP', era:3.2, whip:1.12, kRate:0.28, bbRate:0.12, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ]
+            },
+            7: {
+                0: [
+                    { id:0, name:'V. Ridgeway', hand:'R', num:41, isStarter:true, role:'SP', era:3.2, whip:1.05, kRate:0.24, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'W. Sloane', hand:'R', num:48, isStarter:true, role:'SP', era:3.2, whip:1.05, kRate:0.24, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'X. Tarver', hand:'L', num:55, isStarter:true, role:'SP', era:3.2, whip:1.05, kRate:0.24, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'Y. Upton', hand:'R', num:62, isStarter:true, role:'SP', era:3.2, whip:1.05, kRate:0.24, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'Z. Vasquez', hand:'S', num:69, isStarter:true, role:'SP', era:3.2, whip:1.05, kRate:0.24, bbRate:0.1, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'A. Wexford', hand:'R', num:76, isStarter:false, role:'RP', era:3.5, whip:1.08, kRate:0.27, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'B. Yarrow', hand:'L', num:83, isStarter:false, role:'RP', era:3.5, whip:1.08, kRate:0.27, bbRate:0.1, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'C. Zellner', hand:'R', num:90, isStarter:false, role:'RP', era:3.5, whip:1.08, kRate:0.27, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'D. Abernathy', hand:'R', num:97, isStarter:false, role:'RP', era:3.5, whip:1.08, kRate:0.27, bbRate:0.1, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'E. Ashby', hand:'L', num:6, isStarter:false, role:'RP', era:3.5, whip:1.08, kRate:0.27, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'F. Brannigan', hand:'R', num:13, isStarter:false, role:'RP', era:3.5, whip:1.08, kRate:0.27, bbRate:0.1, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'G. Cortez', hand:'S', num:20, isStarter:false, role:'RP', era:3.5, whip:1.08, kRate:0.27, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'H. Delgado', hand:'R', num:27, isStarter:false, role:'RP', era:3.5, whip:1.08, kRate:0.27, bbRate:0.1, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ],
+                1: [
+                    { id:0, name:'A. Zellner', hand:'R', num:78, isStarter:true, role:'SP', era:2.7, whip:1.05, kRate:0.27, bbRate:0.11, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'B. Abernathy', hand:'R', num:85, isStarter:true, role:'SP', era:2.7, whip:1.05, kRate:0.27, bbRate:0.11, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'C. Ashby', hand:'L', num:92, isStarter:true, role:'SP', era:2.7, whip:1.05, kRate:0.27, bbRate:0.11, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'D. Brannigan', hand:'R', num:1, isStarter:true, role:'SP', era:2.7, whip:1.05, kRate:0.27, bbRate:0.11, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'E. Cortez', hand:'S', num:8, isStarter:true, role:'SP', era:2.7, whip:1.05, kRate:0.27, bbRate:0.11, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'F. Delgado', hand:'R', num:15, isStarter:false, role:'RP', era:3, whip:1.08, kRate:0.3, bbRate:0.11, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'G. Ellison', hand:'L', num:22, isStarter:false, role:'RP', era:3, whip:1.08, kRate:0.3, bbRate:0.11, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'H. Fenwick', hand:'R', num:29, isStarter:false, role:'RP', era:3, whip:1.08, kRate:0.3, bbRate:0.11, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'I. Gallagher', hand:'R', num:36, isStarter:false, role:'RP', era:3, whip:1.08, kRate:0.3, bbRate:0.11, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'J. Hargrove', hand:'L', num:43, isStarter:false, role:'RP', era:3, whip:1.08, kRate:0.3, bbRate:0.11, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'K. Ivers', hand:'R', num:50, isStarter:false, role:'RP', era:3, whip:1.08, kRate:0.3, bbRate:0.11, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'L. Jorden', hand:'S', num:57, isStarter:false, role:'RP', era:3, whip:1.08, kRate:0.3, bbRate:0.11, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'M. Kessler', hand:'R', num:64, isStarter:false, role:'RP', era:3, whip:1.08, kRate:0.3, bbRate:0.11, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ]
+            },
+            8: {
+                0: [
+                    { id:0, name:'Y. Ellison', hand:'R', num:52, isStarter:true, role:'SP', era:3.15, whip:1.04, kRate:0.24, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'Z. Fenwick', hand:'R', num:59, isStarter:true, role:'SP', era:3.15, whip:1.04, kRate:0.24, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'A. Gallagher', hand:'L', num:66, isStarter:true, role:'SP', era:3.15, whip:1.04, kRate:0.24, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'B. Hargrove', hand:'R', num:73, isStarter:true, role:'SP', era:3.15, whip:1.04, kRate:0.24, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'C. Ivers', hand:'S', num:80, isStarter:true, role:'SP', era:3.15, whip:1.04, kRate:0.24, bbRate:0.1, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'D. Jorden', hand:'R', num:87, isStarter:false, role:'RP', era:3.45, whip:1.07, kRate:0.27, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'E. Kessler', hand:'L', num:94, isStarter:false, role:'RP', era:3.45, whip:1.07, kRate:0.27, bbRate:0.1, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'F. Larkspur', hand:'R', num:3, isStarter:false, role:'RP', era:3.45, whip:1.07, kRate:0.27, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'G. Monroe', hand:'R', num:10, isStarter:false, role:'RP', era:3.45, whip:1.07, kRate:0.27, bbRate:0.1, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'H. Novak', hand:'L', num:17, isStarter:false, role:'RP', era:3.45, whip:1.07, kRate:0.27, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'I. Osgood', hand:'R', num:24, isStarter:false, role:'RP', era:3.45, whip:1.07, kRate:0.27, bbRate:0.1, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'J. Prescott', hand:'S', num:31, isStarter:false, role:'RP', era:3.45, whip:1.07, kRate:0.27, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'K. Quirke', hand:'R', num:38, isStarter:false, role:'RP', era:3.45, whip:1.07, kRate:0.27, bbRate:0.1, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ],
+                1: [
+                    { id:0, name:'D. Larkspur', hand:'R', num:89, isStarter:true, role:'SP', era:2.5, whip:1.01, kRate:0.29, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'E. Monroe', hand:'R', num:96, isStarter:true, role:'SP', era:2.5, whip:1.01, kRate:0.29, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'F. Novak', hand:'L', num:5, isStarter:true, role:'SP', era:2.5, whip:1.01, kRate:0.29, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'G. Osgood', hand:'R', num:12, isStarter:true, role:'SP', era:2.5, whip:1.01, kRate:0.29, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'H. Prescott', hand:'S', num:19, isStarter:true, role:'SP', era:2.5, whip:1.01, kRate:0.29, bbRate:0.1, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'I. Quirke', hand:'R', num:26, isStarter:false, role:'RP', era:2.8, whip:1.04, kRate:0.32, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'J. Ridgeway', hand:'L', num:33, isStarter:false, role:'RP', era:2.8, whip:1.04, kRate:0.32, bbRate:0.1, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'K. Sloane', hand:'R', num:40, isStarter:false, role:'RP', era:2.8, whip:1.04, kRate:0.32, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'L. Tarver', hand:'R', num:47, isStarter:false, role:'RP', era:2.8, whip:1.04, kRate:0.32, bbRate:0.1, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'M. Upton', hand:'L', num:54, isStarter:false, role:'RP', era:2.8, whip:1.04, kRate:0.32, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'N. Vasquez', hand:'R', num:61, isStarter:false, role:'RP', era:2.8, whip:1.04, kRate:0.32, bbRate:0.1, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'O. Wexford', hand:'S', num:68, isStarter:false, role:'RP', era:2.8, whip:1.04, kRate:0.32, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'P. Yarrow', hand:'R', num:75, isStarter:false, role:'RP', era:2.8, whip:1.04, kRate:0.32, bbRate:0.1, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ]
+            },
+            9: {
+                0: [
+                    { id:0, name:'B. Ridgeway', hand:'R', num:63, isStarter:true, role:'SP', era:3.1, whip:1.02, kRate:0.25, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'C. Sloane', hand:'R', num:70, isStarter:true, role:'SP', era:3.1, whip:1.02, kRate:0.25, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'D. Tarver', hand:'L', num:77, isStarter:true, role:'SP', era:3.1, whip:1.02, kRate:0.25, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'E. Upton', hand:'R', num:84, isStarter:true, role:'SP', era:3.1, whip:1.02, kRate:0.25, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'F. Vasquez', hand:'S', num:91, isStarter:true, role:'SP', era:3.1, whip:1.02, kRate:0.25, bbRate:0.1, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'G. Wexford', hand:'R', num:98, isStarter:false, role:'RP', era:3.4, whip:1.05, kRate:0.28, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'H. Yarrow', hand:'L', num:7, isStarter:false, role:'RP', era:3.4, whip:1.05, kRate:0.28, bbRate:0.1, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'I. Zellner', hand:'R', num:14, isStarter:false, role:'RP', era:3.4, whip:1.05, kRate:0.28, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'J. Abernathy', hand:'R', num:21, isStarter:false, role:'RP', era:3.4, whip:1.05, kRate:0.28, bbRate:0.1, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'K. Ashby', hand:'L', num:28, isStarter:false, role:'RP', era:3.4, whip:1.05, kRate:0.28, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'L. Brannigan', hand:'R', num:35, isStarter:false, role:'RP', era:3.4, whip:1.05, kRate:0.28, bbRate:0.1, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'M. Cortez', hand:'S', num:42, isStarter:false, role:'RP', era:3.4, whip:1.05, kRate:0.28, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'N. Delgado', hand:'R', num:49, isStarter:false, role:'RP', era:3.4, whip:1.05, kRate:0.28, bbRate:0.1, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ],
+                1: [
+                    { id:0, name:'G. Zellner', hand:'R', num:2, isStarter:true, role:'SP', era:2.3, whip:0.96, kRate:0.3, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'H. Abernathy', hand:'R', num:9, isStarter:true, role:'SP', era:2.3, whip:0.96, kRate:0.3, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'I. Ashby', hand:'L', num:16, isStarter:true, role:'SP', era:2.3, whip:0.96, kRate:0.3, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'J. Brannigan', hand:'R', num:23, isStarter:true, role:'SP', era:2.3, whip:0.96, kRate:0.3, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'K. Cortez', hand:'S', num:30, isStarter:true, role:'SP', era:2.3, whip:0.96, kRate:0.3, bbRate:0.1, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'L. Delgado', hand:'R', num:37, isStarter:false, role:'RP', era:2.6, whip:0.99, kRate:0.33, bbRate:0.1, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'M. Ellison', hand:'L', num:44, isStarter:false, role:'RP', era:2.6, whip:0.99, kRate:0.33, bbRate:0.1, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'N. Fenwick', hand:'R', num:51, isStarter:false, role:'RP', era:2.6, whip:0.99, kRate:0.33, bbRate:0.1, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'O. Gallagher', hand:'R', num:58, isStarter:false, role:'RP', era:2.6, whip:0.99, kRate:0.33, bbRate:0.1, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'P. Hargrove', hand:'L', num:65, isStarter:false, role:'RP', era:2.6, whip:0.99, kRate:0.33, bbRate:0.1, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'Q. Ivers', hand:'R', num:72, isStarter:false, role:'RP', era:2.6, whip:0.99, kRate:0.33, bbRate:0.1, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'R. Jorden', hand:'S', num:79, isStarter:false, role:'RP', era:2.6, whip:0.99, kRate:0.33, bbRate:0.1, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'S. Kessler', hand:'R', num:86, isStarter:false, role:'RP', era:2.6, whip:0.99, kRate:0.33, bbRate:0.1, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ]
+            },
+            10: {
+                0: [
+                    { id:0, name:'E. Ellison', hand:'R', num:74, isStarter:true, role:'SP', era:3.05, whip:1.01, kRate:0.25, bbRate:0.09, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'F. Fenwick', hand:'R', num:81, isStarter:true, role:'SP', era:3.05, whip:1.01, kRate:0.25, bbRate:0.09, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'G. Gallagher', hand:'L', num:88, isStarter:true, role:'SP', era:3.05, whip:1.01, kRate:0.25, bbRate:0.09, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'H. Hargrove', hand:'R', num:95, isStarter:true, role:'SP', era:3.05, whip:1.01, kRate:0.25, bbRate:0.09, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'I. Ivers', hand:'S', num:4, isStarter:true, role:'SP', era:3.05, whip:1.01, kRate:0.25, bbRate:0.09, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'J. Jorden', hand:'R', num:11, isStarter:false, role:'RP', era:3.35, whip:1.04, kRate:0.28, bbRate:0.09, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'K. Kessler', hand:'L', num:18, isStarter:false, role:'RP', era:3.35, whip:1.04, kRate:0.28, bbRate:0.09, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'L. Larkspur', hand:'R', num:25, isStarter:false, role:'RP', era:3.35, whip:1.04, kRate:0.28, bbRate:0.09, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'M. Monroe', hand:'R', num:32, isStarter:false, role:'RP', era:3.35, whip:1.04, kRate:0.28, bbRate:0.09, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'N. Novak', hand:'L', num:39, isStarter:false, role:'RP', era:3.35, whip:1.04, kRate:0.28, bbRate:0.09, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'O. Osgood', hand:'R', num:46, isStarter:false, role:'RP', era:3.35, whip:1.04, kRate:0.28, bbRate:0.09, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'P. Prescott', hand:'S', num:53, isStarter:false, role:'RP', era:3.35, whip:1.04, kRate:0.28, bbRate:0.09, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'Q. Quirke', hand:'R', num:60, isStarter:false, role:'RP', era:3.35, whip:1.04, kRate:0.28, bbRate:0.09, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ],
+                1: [
+                    { id:0, name:'J. Larkspur', hand:'R', num:13, isStarter:true, role:'SP', era:2.1, whip:0.92, kRate:0.32, bbRate:0.09, stamina:100, maxStamina:100, recoverRate:8, drainPerPitch:1.4 },
+                    { id:1, name:'K. Monroe', hand:'R', num:20, isStarter:true, role:'SP', era:2.1, whip:0.92, kRate:0.32, bbRate:0.09, stamina:102, maxStamina:102, recoverRate:8, drainPerPitch:1.7 },
+                    { id:2, name:'L. Novak', hand:'L', num:27, isStarter:true, role:'SP', era:2.1, whip:0.92, kRate:0.32, bbRate:0.09, stamina:104, maxStamina:104, recoverRate:8, drainPerPitch:2 },
+                    { id:3, name:'M. Osgood', hand:'R', num:34, isStarter:true, role:'SP', era:2.1, whip:0.92, kRate:0.32, bbRate:0.09, stamina:106, maxStamina:106, recoverRate:8, drainPerPitch:2.3 },
+                    { id:4, name:'N. Prescott', hand:'S', num:41, isStarter:true, role:'SP', era:2.1, whip:0.92, kRate:0.32, bbRate:0.09, stamina:108, maxStamina:108, recoverRate:8, drainPerPitch:2.6 },
+                    { id:5, name:'O. Quirke', hand:'R', num:48, isStarter:false, role:'RP', era:2.4, whip:0.95, kRate:0.35, bbRate:0.09, stamina:100, maxStamina:100, recoverRate:18, drainPerPitch:4.5 },
+                    { id:6, name:'P. Ridgeway', hand:'L', num:55, isStarter:false, role:'RP', era:2.4, whip:0.95, kRate:0.35, bbRate:0.09, stamina:101, maxStamina:101, recoverRate:18, drainPerPitch:4.9 },
+                    { id:7, name:'Q. Sloane', hand:'R', num:62, isStarter:false, role:'RP', era:2.4, whip:0.95, kRate:0.35, bbRate:0.09, stamina:102, maxStamina:102, recoverRate:18, drainPerPitch:5.3 },
+                    { id:8, name:'R. Tarver', hand:'R', num:69, isStarter:false, role:'RP', era:2.4, whip:0.95, kRate:0.35, bbRate:0.09, stamina:103, maxStamina:103, recoverRate:18, drainPerPitch:5.7 },
+                    { id:9, name:'S. Upton', hand:'L', num:76, isStarter:false, role:'RP', era:2.4, whip:0.95, kRate:0.35, bbRate:0.09, stamina:104, maxStamina:104, recoverRate:18, drainPerPitch:6.1 },
+                    { id:10, name:'T. Vasquez', hand:'R', num:83, isStarter:false, role:'RP', era:2.4, whip:0.95, kRate:0.35, bbRate:0.09, stamina:105, maxStamina:105, recoverRate:18, drainPerPitch:6.5 },
+                    { id:11, name:'U. Wexford', hand:'S', num:90, isStarter:false, role:'RP', era:2.4, whip:0.95, kRate:0.35, bbRate:0.09, stamina:106, maxStamina:106, recoverRate:18, drainPerPitch:6.9 },
+                    { id:12, name:'V. Yarrow', hand:'R', num:97, isStarter:false, role:'RP', era:2.4, whip:0.95, kRate:0.35, bbRate:0.09, stamina:107, maxStamina:107, recoverRate:18, drainPerPitch:7.3 }
+                ]
+            },
+        };
+        // ============================================================
+        // ROSTER LOOKUP (replaces the old random genH / genP)
+        // Same call signatures as before, so genTeam and everything
+        // else that calls genH(i, ai) / genP(i, ai) keeps working —
+        // they now return a deep copy of the fixed template for the
+        // current SEASON.difficulty tier instead of rolling random stats.
+
+</body>
