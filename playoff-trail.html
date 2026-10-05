@@ -22,8 +22,28 @@
       --r3: #f0b92e;
       --good: #2f9e5a;
       --bad: #3a2a2a;
+      --msg: #ffb4a8;
+      --chipbad: #e6c7c7;
       --head: 'Big Shoulders Display', 'Arial Narrow', Impact, sans-serif;
       --body: 'Figtree', system-ui, sans-serif;
+      color-scheme: dark;
+    }
+
+    :root[data-theme="light"] {
+      --bg: #f3f1ea;
+      --panel: #ffffff;
+      --line: #cdd5cf;
+      --chalk: #14231f;
+      --dim: #5d736b;
+      --miss: #9aa9a3;
+      --r1: #2a6fd6;
+      --r2: #22a45a;
+      --r3: #e0a410;
+      --good: #2f9e5a;
+      --bad: #ece1e1;
+      --msg: #b3261e;
+      --chipbad: #6b4a4a;
+      color-scheme: light;
     }
 
     * {
@@ -120,6 +140,11 @@
 
     .season .dot.t5 {
       font-size: 1.6rem
+    }
+
+    .dot.t6 {
+      background: #000;
+      box-shadow: 0 0 0 1px var(--line);
     }
 
     .trail {
@@ -275,7 +300,7 @@
     .msg {
       min-height: 1.4em;
       margin: 8px 2px;
-      color: #ffb4a8;
+      color: var(--msg);
       font-size: .9rem
     }
 
@@ -301,7 +326,7 @@
       font-size: .82rem;
       font-weight: 600;
       background: var(--bad);
-      color: #e6c7c7;
+      color: var(--chipbad);
       min-width: 58px;
       text-align: center
     }
@@ -330,6 +355,10 @@
       color: var(--dim)
     }
 
+    .hint.on strong {
+      color: #fff
+    }
+
     @media (max-width:420px) {
       .guess {
         grid-template-columns: 1fr 1fr 1fr
@@ -353,11 +382,81 @@
       gap: 12px
     }
 
-    .modes {
+    /* .modes {
       display: flex;
       gap: 8px;
       align-items: center;
       padding-top: 6px
+    } */
+    .modes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px 12px;
+      align-items: center;
+      padding-top: 6px
+    }
+
+    .switch {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .8rem;
+      color: var(--dim);
+      cursor: pointer;
+      position: relative;
+      user-select: none
+    }
+
+    .switch input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      flex: none;
+      padding: 0
+    }
+
+    .track {
+      width: 34px;
+      height: 20px;
+      border-radius: 20px;
+      background: var(--line);
+      position: relative;
+      transition: background .2s
+    }
+
+    .track::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--chalk);
+      transition: transform .2s
+    }
+
+    .switch input:checked+.track {
+      background: var(--r3)
+    }
+
+    .switch input:checked+.track::after {
+      transform: translateX(14px)
+    }
+
+    .switch input:focus-visible+.track {
+      outline: 2px solid var(--r3);
+      outline-offset: 2px
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+
+      .track,
+      .track::after {
+        transition: none
+      }
     }
 
     .modes button {
@@ -382,6 +481,104 @@
     .end button {
       margin-top: 10px
     }
+
+    .switch.locked {
+      opacity: .45;
+      cursor: not-allowed
+    }
+
+    .start {
+      margin: 4px 0 18px;
+      padding: 18px;
+      border-radius: 10px;
+      background: var(--panel);
+      border: 1px solid var(--r3);
+      text-align: center
+    }
+
+    .start h2 {
+      font: 900 1.9rem var(--head);
+      margin: 0 0 4px
+    }
+
+    .start p {
+      margin: 4px 0 14px;
+      color: var(--dim)
+    }
+
+    .start .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .start .choices button {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 14px 10px;
+      background: var(--bg);
+      color: var(--chalk);
+      border: 1px solid var(--line)
+    }
+
+    .start .choices button:hover {
+      border-color: var(--r3)
+    }
+
+    .start .choices small {
+      font: 400 .75rem var(--body);
+      color: var(--dim)
+    }
+
+    @media (max-width:420px) {
+      .start .choices {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .filtPanel {
+      margin: -10px 0 16px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel)
+    }
+
+    .filtPanel p {
+      margin: 0 0 8px;
+      color: var(--dim);
+      font-size: .82rem
+    }
+
+    .filtPanel .opts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px
+    }
+
+    .filtPanel label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600
+    }
+
+    .filtPanel label:has(input:checked) {
+      background: var(--r3);
+      color: #1c1503;
+      border-color: var(--r3)
+    }
+
+    .filtPanel input {
+      flex: none;
+      width: auto;
+      padding: 0
+    }
   </style>
 </head>
 
@@ -389,10 +586,22 @@
   <main>
     <div class="top">
       <h1>Playoff Trail</h1>
-      <div class="modes"><button id="daily" type="button" hidden>Daily</button>
+      <div class="modes">
+        <label class="switch" title="Hard mode: 3 random seasons first, random reveal order">
+          <input type="checkbox" id="hard"><span class="track"></span><span>Hard</span>
+        </label>
+        <label class="switch" title="Dark / light mode">
+          <input type="checkbox" id="theme"><span class="track"></span><span>Dark</span>
+        </label>
+        <button id="daily" type="button" hidden>Daily</button>
         <button id="inf" type="button" aria-label="New random game" title="New random game">∞</button>
+
+        <button id="filt" type="button" title="Choose leagues for practice games" hidden>Leagues</button>
+
       </div>
+
     </div>
+    <section class="filtPanel" id="filtPanel" hidden></section>
 
     <p class="sub">Name the franchise from its postseason history. New team every day.</p>
 
@@ -403,23 +612,28 @@
       <span><i class="dot t3"></i>Conference championship Game</span>
       <span><i class="dot t4"></i>League champion (lost final)</span>
       <span><i class="dot t5">🏆</i>Won the title</span>
-      <span>Notes: Playoffs for Years season started in: NBA/NHL Playoffs in Summer '26 are for '25 season.</span>
-      <span>Additional: NBA Play-In not counted as playoff appearance until won / reached field of 16.</span>
+      <span><i class="dot t6"></i>Franchise didn't exist yet</span>
+      <span>Notes: Relocated or renamed franchises keep their history under current name.</span>
+      <span>Notes: NBA Play-In not counted as playoff appearance unless won / reached field of 16.</span>
     </div>
 
-    <section class="trail" id="trail" aria-label="Playoff history"></section>
 
-    <div class="status"><span id="count"></span><em id="shown"></em></div>
-    <section class="hints" id="hints"></section>
+    <section class="start" id="start" hidden></section>
+    <div id="play">
+      <section class="trail" id="trail" aria-label="Playoff history"></section>
 
-    <form id="form" autocomplete="off">
-      <input id="input" list="teams" placeholder="Pick a team" aria-label="Team guess">
-      <datalist id="teams"></datalist>
-      <button id="btn" type="submit">Guess</button>
-    </form>
-    <div class="msg" id="msg" role="status"></div>
-    <section id="guesses"></section>
-    <section id="end"></section>
+      <div class="status"><span id="count"></span><em id="shown"></em></div>
+      <section class="hints" id="hints"></section>
+
+      <form id="form" autocomplete="off">
+        <input id="input" list="teams" placeholder="Pick a team" aria-label="Team guess">
+        <datalist id="teams"></datalist>
+        <button id="btn" type="submit">Guess</button>
+      </form>
+      <div class="msg" id="msg" role="status"></div>
+      <section id="guesses"></section>
+      <section id="end"></section>
+    </div>
   </main>
 
   <script>
@@ -432,13 +646,15 @@
          3 = Conference championship game
          4 = League champion (lost the final)
          5 = Won the Title
+
+         6 = Franchise not Exist yet
        conference: the "league" level inside the sport (AFC, NFC, AL, NL, East, West, etc.)
        division:   division name, or "" if the sport/team has none
        The four teams below are SAMPLE PLACEHOLDERS with made-up histories. Replace them.
        ============================================================ */
     const TEAMS = [
       // ==================== NFL ====================
-      { name: "Arizona Cardinals", sport: "NFL", conference: "NFC", division: "West", history: "00001000003100002500" },
+      { name: "Arizona Cardinals", sport: "NFL", conference: "NFC", division: "West", history: "00001000003100002500" }, //?
       { name: "Atlanta Falcons", sport: "NFL", conference: "NFC", division: "South", history: "00000000240003120100" },
       { name: "Baltimore Ravens", sport: "NFL", conference: "AFC", division: "North", history: "02310220000205322302" },
       { name: "Buffalo Bills", sport: "NFL", conference: "AFC", division: "East", history: "23222310100000000000" },
@@ -559,13 +775,13 @@
       { name: "Philadelphia Flyers", sport: "NHL", conference: "East", division: "Metropolitan", history: "33021000141000013221" },//?
       { name: "Pittsburgh Penguins", sport: "NHL", conference: "East", division: "Metropolitan", history: "10250554215550215521" },
       { name: "San Jose Sharks", sport: "NHL", conference: "West", division: "Pacific", history: "00000000002002103211" },
-      { name: "Seattle Kraken", sport: "NHL", conference: "West", division: "Pacific", history: "00030000000000000000" },
+      { name: "Seattle Kraken", sport: "NHL", conference: "West", division: "Pacific", history: "00020666666666666666" },
       { name: "St. Louis Blues", sport: "NHL", conference: "West", division: "Central", history: "01002115023111200000" },
       { name: "Tampa Bay Lightning", sport: "NHL", conference: "East", division: "Atlantic", history: "11114551304100300111" },
       { name: "Toronto Maple Leafs", sport: "NHL", conference: "East", division: "Atlantic", history: "02121111110001000000" },
       { name: "Utah Mammoth", sport: "NHL", conference: "West", division: "Central", history: "10000010000000312000" },
       { name: "Vancouver Canucks", sport: "NHL", conference: "West", division: "Pacific", history: "00200030000101142202" },
-      { name: "Vegas Golden Knights", sport: "NHL", conference: "West", division: "Pacific", history: "42150331400000000000" },
+      { name: "Vegas Golden Knights", sport: "NHL", conference: "West", division: "Pacific", history: "42150331466666666666" },
       { name: "Washington Capitals", sport: "NHL", conference: "East", division: "Metropolitan", history: "02101111522211111210" },
       { name: "Winnipeg Jets", sport: "NHL", conference: "West", division: "Central", history: "02110211300100000001" }
     ];
@@ -573,7 +789,7 @@
 
     /* ============================================================ */
     const START_YEAR = 2025, YEARS = 21, MAX_GUESSES = 7, STEP = 3;
-    const ICON = ["✕", "", "", "", "", "🏆"]; const $ = id => document.getElementById(id);
+    const ICON = ["✕", "", "", "", "", "🏆", ""]; const $ = id => document.getElementById(id);
     const today = new Date();
     const dayKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
     // const STORE = "playoffTrail:" + dayKey;
@@ -585,13 +801,57 @@
     // try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) state = s; } catch (e) { }
     // const save = () => { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) { } };
     function hash(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
-    let game = 0, target, state, STORE;
+    let dailyMode = null;
+    try { const v = localStorage.getItem("playoffTrail:dm:" + dayKey); if (v !== null) dailyMode = v === "1"; } catch (e) { }
+    function setDailyMode(h) { dailyMode = h; try { localStorage.setItem("playoffTrail:dm:" + dayKey, h ? "1" : "0"); } catch (e) { } }
+    const needsChoice = () => game === 0 && dailyMode === null;
+    const ALL_SPORTS = ["NFL", "MLB", "NBA", "NHL"];
+    let sports = new Set(ALL_SPORTS);
+    try {
+      const s = JSON.parse(localStorage.getItem("playoffTrail:sports"));
+      if (Array.isArray(s)) { const ok = s.filter(x => ALL_SPORTS.includes(x)); if (ok.length) sports = new Set(ok); }
+    } catch (e) { }
+    let game = 0, target, state, STORE, order, rank;
+    let hard = false;
+    try { hard = localStorage.getItem("playoffTrail:hard") === "1"; } catch (e) { }
+
+    function rng(seed) {
+      let a = seed >>> 0;
+      return () => {
+        a = a + 0x6D2B79F5 | 0;
+        let t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+    // Reveal order of the 21 seasons, fixed by the seed. Normal mode = newest first.
+    function makeOrder(seed) {
+      const o = Array.from({ length: YEARS }, (_, i) => i);
+      if (!hard) return o;
+      const r = rng(hash(seed + ":order"));
+      for (let i = YEARS - 1; i > 0; i--) {
+        const j = Math.floor(r() * (i + 1));
+        [o[i], o[j]] = [o[j], o[i]];
+      }
+      return o;
+    }
+
     function loadGame(n) {
       game = n;
-      STORE = "playoffTrail:" + dayKey + (n ? "#" + n : "");
-      target = TEAMS[hash(n ? dayKey + "#" + n : dayKey) % TEAMS.length];
+      if (n === 0 && dailyMode !== null) hard = dailyMode;   // Daily always uses its chosen mode
+      $("hard").checked = hard;
+      const base = dayKey + (n ? "#" + n + "~" + [...sports].sort().join("") : "");
+      const seed = base + (hard ? "!hard" : "");
+      STORE = "playoffTrail:" + seed;
+      const pool = n ? TEAMS.filter(t => sports.has(t.sport)) : TEAMS;
+      const P = pool.length ? pool : TEAMS;       // safety net if a league has no teams yet
+      target = P[hash(n ? seed : base) % P.length];
+      order = makeOrder(seed);
+      rank = [];
+      order.forEach((yr, pos) => rank[yr] = pos);
       state = { guesses: [], over: false, won: false };
       try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) state = s; } catch (e) { }
+      if (n === 0 && dailyMode === null && state.guesses.length) setDailyMode(hard); // run already in progress
     }
     const save = () => { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) { } };
     loadGame(0);
@@ -613,9 +873,14 @@
     function renderTrail(prev) {
       const n = visibleYears(), el = $("trail"); el.innerHTML = "";
       for (let i = 0; i < YEARS; i++) {
-        const hidden = i >= n, v = +target.history[i] || 0;
+        //const hidden = i >= n, v = +target.history[i] || 0;
+        const hidden = rank[i] >= n, v = +target.history[i] || 0;
+
         const d = document.createElement("div");
-        d.className = "season" + (hidden ? " hidden" : "") + (!hidden && i >= prev ? " new" : "");
+
+        //d.className = "season" + (hidden ? " hidden" : "") + (!hidden && i >= prev ? " new" : "");
+        d.className = "season" + (hidden ? " hidden" : "") + (!hidden && rank[i] >= prev ? " new" : "");
+
         d.innerHTML = `<i class="dot ${hidden ? "" : (v === 0 ? "x" : "t" + v)}">${hidden ? "?" : ICON[v]}</i><b>${START_YEAR - i}</b>`;
         el.appendChild(d);
       }
@@ -639,7 +904,8 @@
         return `<div class="guess"><span class="n">${g.name}</span>${chip(c.sport, g.sport)}${chip(c.conf, g.conference)}${chip(c.div, g.division)}</div>`;
       }).join("");
       //$("count").textContent = `Guess ${Math.min(state.guesses.length + 1, MAX_GUESSES)} of ${MAX_GUESSES}`;
-      $("count").textContent = (game ? `Practice ${game}: ` : "") + `Guess ${Math.min(state.guesses.length + 1, MAX_GUESSES)} of ${MAX_GUESSES}`;
+      $("count").textContent = (hard ? "Hard · " : "") + (game ? `Practice ${game}: ` : "") + `Guess ${Math.min(state.guesses.length + 1, MAX_GUESSES)} of ${MAX_GUESSES}`;
+
     }
 
     function renderEnd() {
@@ -654,8 +920,41 @@
       $("teams").innerHTML = TEAMS.filter(t => !used.has(t.name)).map(t => `<option value="${t.name}">${t.sport} · ${t.conference}</option>`).join("");
     }
 
-    function renderAll(prev = 0) { $("daily").hidden = !game; renderTrail(prev); renderHints(); renderGuesses(); renderEnd(); renderList(); }
+    function renderStart() {
+      $("start").innerHTML = `<h2>Today's Daily</h2><p>Pick your difficulty before the first clues appear. It locks once you start.</p>
+    <div class="choices">
+      <button type="button" data-h="0">Normal<small>Newest seasons first</small></button>
+      <button type="button" data-h="1">Hard<small>Random seasons, random order</small></button>
+    </div>`;
+      $("start").querySelectorAll("button").forEach(b => b.onclick = () => chooseDaily(b.dataset.h === "1"));
+    }
+    function chooseDaily(h) {
+      hard = h; setDailyMode(h);
+      try { localStorage.setItem("playoffTrail:hard", h ? "1" : "0"); } catch (e) { }
+      loadGame(0); reset();
+    }
+    function renderAll(prev = 0) {
+      const pending = needsChoice();
+      $("daily").hidden = !game;
 
+      //new
+      $("filt").hidden = !game;
+      if (!game) $("filtPanel").hidden = true;
+      const fl = !!game && !state.over && state.guesses.length > 0;
+      $("filt").disabled = fl;
+      $("filtPanel").querySelectorAll("input").forEach(i => i.disabled = fl);
+
+      $("start").hidden = !pending;
+      $("play").hidden = pending;
+      //const locked = !state.over && (game === 0 || state.guesses.length > 0);
+      const locked = game === 0 || (!state.over && state.guesses.length > 0);
+      $("hard").disabled = locked;
+      const sw = $("hard").closest(".switch");
+      sw.classList.toggle("locked", locked);
+      sw.title = locked ? (game === 0 ? "Today's Daily difficulty is locked" : "Difficulty is locked until this game ends") : "Hard mode: 3 random seasons first, random reveal order";
+      if (pending) { renderStart(); return; }
+      renderTrail(prev); renderHints(); renderGuesses(); renderEnd(); renderList();
+    }
     $("form").addEventListener("submit", e => {
       e.preventDefault();
       if (state.over) return;
@@ -680,16 +979,57 @@
     };
     $("daily").onclick = () => { loadGame(0); reset(); };
 
+    // Hard mode
+    $("hard").checked = hard;
+    $("hard").onchange = () => {
+      hard = $("hard").checked;
+      try { localStorage.setItem("playoffTrail:hard", hard ? "1" : "0"); } catch (e) { }
+      if (game === 0) setDailyMode(hard);
+      loadGame(game); reset();
+    };
+
+    // Theme
+    function applyTheme(t) {
+      document.documentElement.dataset.theme = t;
+      $("theme").checked = t === "dark";
+      try { localStorage.setItem("playoffTrail:theme", t); } catch (e) { }
+    }
+    let savedTheme = null;
+    try { savedTheme = localStorage.getItem("playoffTrail:theme"); } catch (e) { }
+    applyTheme(savedTheme || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"));
+    $("theme").onchange = () => applyTheme($("theme").checked ? "dark" : "light");
+
 
     const SHARE_URL = ""; // set to your game's public URL; blank uses the current page address
+    // function shareText() {
+    //   const rows = state.guesses.map(n => {
+    //     const c = compare(byName(n));
+    //     return [c.sport, c.conf, c.div].map(ok => ok ? "🟩" : "🟥").join("");
+    //   });
+    //   if (state.won) rows[rows.length - 1] += " 🏆";
+    //   const score = state.won ? state.guesses.length : "X";
+    //   return `Playoff Trail ${game ? "Practice #" + game : dayKey} ${score}/${MAX_GUESSES}\n${rows.join("\n")}\n${SHARE_URL || location.href.split("#")[0]}`;
+    // }
+    const RANKS = ["Hall of Famer", "MVP", "All-Star", "Starter", "Role Player", "Bench Warmer", "Buzzer Beater"];
     function shareText() {
-      const rows = state.guesses.map(n => {
-        const c = compare(byName(n));
-        return [c.sport, c.conf, c.div].map(ok => ok ? "🟩" : "🟥").join("");
+      const n = state.guesses.length;
+      const rows = state.guesses.map((g, i) => {
+        const c = compare(byName(g));
+        const r = [c.sport, c.conf, c.div].map(ok => ok ? "🟩" : "🟥").join("");
+        //return state.won && i === n - 1 ? r + " 🏆" : r;
+        return i === n - 1 ? (state.won ? r + " 🏆" : state.over ? r + " ❌" : r) : r;
       });
-      if (state.won) rows[rows.length - 1] += " 🏆";
-      const score = state.won ? state.guesses.length : "X";
-      return `Playoff Trail ${game ? "Practice #" + game : dayKey} ${score}/${MAX_GUESSES}\n${rows.join("\n")}\n${SHARE_URL || location.href.split("#")[0]}`;
+      const seen = state.won ? Math.min(YEARS, STEP + STEP * (n - 1)) : YEARS;
+      const groups = Math.ceil(YEARS / STEP), lit = Math.ceil(seen / STEP);
+      return [
+        `PLAYOFF TRAIL · ${game ? "Practice #" + game : dayKey}`,
+        ...(hard ? ["🔥 HARD MODE 🔥"] : []),
+        state.won ? `🏆 ${RANKS[Math.min(n, RANKS.length) - 1]} · ${n}/${MAX_GUESSES}` : `💀 · X/${MAX_GUESSES}`,
+        "",
+        ...rows,
+        "",
+        SHARE_URL || location.href.split("#")[0]
+      ].join("\n");
     }
     async function share(btn) {
       const t = shareText();
@@ -723,6 +1063,20 @@
         if (ps.some(p => p.y < c.height + 20)) requestAnimationFrame(frame); else c.remove();
       })();
     }
+
+    function renderFilter() {
+      $("filtPanel").innerHTML = `<p>Leagues included in practice games</p><div class="opts">` +
+        ALL_SPORTS.map(s => `<label><input type="checkbox" value="${s}" ${sports.has(s) ? "checked" : ""}>${s}</label>`).join("") + `</div>`;
+      $("filtPanel").querySelectorAll("input").forEach(i => i.onchange = () => {
+        if (i.checked) sports.add(i.value);
+        else if (sports.size > 1) sports.delete(i.value);
+        else { i.checked = true; return; }          // keep at least one league selected
+        try { localStorage.setItem("playoffTrail:sports", JSON.stringify([...sports])); } catch (e) { }
+        $("inf").onclick();                         // fresh practice game with the new pool
+      });
+    }
+    $("filt").onclick = () => { $("filtPanel").hidden = !$("filtPanel").hidden; };
+    renderFilter();
 
     renderAll(YEARS);
   </script>
