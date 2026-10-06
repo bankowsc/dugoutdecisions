@@ -606,13 +606,13 @@
     <p class="sub">Name the franchise from its postseason history. New team every day.</p>
 
     <div class="legend" aria-label="Legend">
-      <span><i class="dot x">✕</i>Missed</span>
-      <span><i class="dot t1"></i>First round / wild card</span>
-      <span><i class="dot t2"></i>Divisional / round 2</span>
-      <span><i class="dot t3"></i>Conference championship Game</span>
-      <span><i class="dot t4"></i>League champion (lost final)</span>
-      <span><i class="dot t5">🏆</i>Won the title</span>
-      <span><i class="dot t6"></i>Franchise didn't exist yet</span>
+      <span><i class="dot t1"></i>First Round / Wild Card</span>
+      <span><i class="dot t2"></i>Divisional / Confrence Semis</span>
+      <span><i class="dot t3"></i>Leauge/Conference Championship Game</span>
+      <span><i class="dot t4"></i>League/Conference Champion (Lost Final)</span>
+      <span><i class="dot t5">🏆</i>Won the Title</span>
+      <span><i class="dot x">✕</i>Missed Playoffs</span>
+      <span><i class="dot t6"></i>Franchise Didn't Exist</span>
       <span>Notes: Relocated or renamed franchises keep their history under current name.</span>
       <span>Notes: NBA Play-In not counted as playoff appearance unless won / reached field of 16.</span>
     </div>
@@ -654,70 +654,70 @@
        ============================================================ */
     const TEAMS = [
       // ==================== NFL ====================
-      { name: "Arizona Cardinals", sport: "NFL", conference: "NFC", division: "West", history: "00001000003100002500" }, //?
+      { name: "Arizona Cardinals", sport: "NFL", conference: "NFC", division: "West", history: "00001000003100002400" },
       { name: "Atlanta Falcons", sport: "NFL", conference: "NFC", division: "South", history: "00000000240003120100" },
-      { name: "Baltimore Ravens", sport: "NFL", conference: "AFC", division: "North", history: "02310220000205322302" },
+      { name: "Baltimore Ravens", sport: "NFL", conference: "AFC", division: "North", history: "02310221000205322302" }, //2018 1
       { name: "Buffalo Bills", sport: "NFL", conference: "AFC", division: "East", history: "23222310100000000000" },
       { name: "Carolina Panthers", sport: "NFL", conference: "NFC", division: "South", history: "10000000104220000200" },
       { name: "Chicago Bears", sport: "NFL", conference: "NFC", division: "North", history: "20000101000000030004" },
-      { name: "Cincinnati Bengals", sport: "NFL", conference: "AFC", division: "North", history: "00034000001111101001" },
+      { name: "Cincinnati Bengals", sport: "NFL", conference: "AFC", division: "North", history: "00034000001111101000" },
       { name: "Cleveland Browns", sport: "NFL", conference: "AFC", division: "North", history: "00100200000000000000" },
-      { name: "Dallas Cowboys", sport: "NFL", conference: "NFC", division: "East", history: "00101002020200002021" },
-      { name: "Denver Broncos", sport: "NFL", conference: "AFC", division: "West", history: "31000000005242202003" },
+      { name: "Dallas Cowboys", sport: "NFL", conference: "NFC", division: "East", history: "00121002020200002021" },
+      { name: "Denver Broncos", sport: "NFL", conference: "AFC", division: "West", history: "31000000005242200000" },
       { name: "Detroit Lions", sport: "NFL", conference: "NFC", division: "North", history: "02300000010100100000" },
-      { name: "Green Bay Packers", sport: "NFL", conference: "NFC", division: "North", history: "11202330332312251032" },
+      { name: "Green Bay Packers", sport: "NFL", conference: "NFC", division: "North", history: "11202330032312251030" },
       { name: "Houston Texans", sport: "NFL", conference: "AFC", division: "South", history: "22200021021002200000" },
-      { name: "Indianapolis Colts", sport: "NFL", conference: "AFC", division: "South", history: "00000102000321044025" },
-      { name: "Jacksonville Jaguars", sport: "NFL", conference: "AFC", division: "South", history: "10020000300000000021" },
-      { name: "Kansas City Chiefs", sport: "NFL", conference: "AFC", division: "West", history: "04553453122010010000" },
+      { name: "Indianapolis Colts", sport: "NFL", conference: "AFC", division: "South", history: "00000102000321014125" },
+      { name: "Jacksonville Jaguars", sport: "NFL", conference: "AFC", division: "South", history: "10020000300000000020" },
+      { name: "Kansas City Chiefs", sport: "NFL", conference: "AFC", division: "West", history: "04553453122010010001" },
       { name: "Las Vegas Raiders", sport: "NFL", conference: "AFC", division: "West", history: "00001000010000000000" },
-      { name: "Los Angeles Chargers", sport: "NFL", conference: "AFC", division: "West", history: "11010000200020002232" },
-      { name: "Los Angeles Rams", sport: "NFL", conference: "NFC", division: "West", history: "32105241000000000000" },
-      { name: "Miami Dolphins", sport: "NFL", conference: "AFC", division: "East", history: "00110000010000000010" },
-      { name: "Minnesota Vikings", sport: "NFL", conference: "NFC", division: "North", history: "01010020301001033000" },
-      { name: "New England Patriots", sport: "NFL", conference: "AFC", division: "East", history: "40011015452522411043" },
-      { name: "New Orleans Saints", sport: "NFL", conference: "NFC", division: "South", history: "00000231200010205003" },
-      { name: "New York Giants", sport: "NFL", conference: "NFC", division: "East", history: "00020000000000000051" },
+      { name: "Los Angeles Chargers", sport: "NFL", conference: "AFC", division: "West", history: "11010002000020002232" },
+      { name: "Los Angeles Rams", sport: "NFL", conference: "NFC", division: "West", history: "32105204100000000000" },
+      { name: "Miami Dolphins", sport: "NFL", conference: "AFC", division: "East", history: "00110000010000000100" },
+      { name: "Minnesota Vikings", sport: "NFL", conference: "NFC", division: "North", history: "01010020301001003100" },
+      { name: "New England Patriots", sport: "NFL", conference: "AFC", division: "East", history: "40001015452533421043" },
+      { name: "New Orleans Saints", sport: "NFL", conference: "NFC", division: "South", history: "00000213200020215003" },
+      { name: "New York Giants", sport: "NFL", conference: "NFC", division: "East", history: "00020000010000000051" },
       { name: "New York Jets", sport: "NFL", conference: "AFC", division: "East", history: "00000000000000033001" },
-      { name: "Philadelphia Eagles", sport: "NFL", conference: "NFC", division: "East", history: "15430102500010011302" },
-      { name: "Pittsburgh Steelers", sport: "NFL", conference: "AFC", division: "North", history: "11101200232000440502" },
-      { name: "San Francisco 49ers", sport: "NFL", conference: "NFC", division: "West", history: "20430040000003400000" },
-      { name: "Seattle Seahawks", sport: "NFL", conference: "NFC", division: "West", history: "50010121023452010022" },
-      { name: "Tampa Bay Buccaneers", sport: "NFL", conference: "NFC", division: "South", history: "01212500000000000101" },
+      { name: "Philadelphia Eagles", sport: "NFL", conference: "NFC", division: "East", history: "15141012500010011302" },
+      { name: "Pittsburgh Steelers", sport: "NFL", conference: "AFC", division: "North", history: "11101100232100140510" },
+      { name: "San Francisco 49ers", sport: "NFL", conference: "NFC", division: "West", history: "20433040000034300000" },
+      { name: "Seattle Seahawks", sport: "NFL", conference: "NFC", division: "West", history: "50010121022452020022" },
+      { name: "Tampa Bay Buccaneers", sport: "NFL", conference: "NFC", division: "South", history: "01212500000000000010" },
       { name: "Tennessee Titans", sport: "NFL", conference: "AFC", division: "South", history: "00002130200000000210" },
-      { name: "Washington Commanders", sport: "NFL", conference: "NFC", division: "East", history: "03000100011001000110" },
+      { name: "Washington Commanders", sport: "NFL", conference: "NFC", division: "East", history: "03000100001001000010" },
 
       // ==================== MLB ====================
-      { name: "Arizona Diamondbacks", sport: "MLB", conference: "NL", division: "West", history: "00400200200000002030" },
-      { name: "Atlanta Braves", sport: "MLB", conference: "NL", division: "East", history: "01225122000021020000" },
-      { name: "Baltimore Orioles", sport: "MLB", conference: "AL", division: "East", history: "01200000010301000000" },
-      { name: "Boston Red Sox", sport: "MLB", conference: "AL", division: "East", history: "10004055000050002352" },
-      { name: "Chicago Cubs", sport: "MLB", conference: "NL", division: "Central", history: "20000101353000002220" },
-      { name: "Chicago White Sox", sport: "MLB", conference: "AL", division: "Central", history: "00002100000000000004" },
-      { name: "Cincinnati Reds", sport: "MLB", conference: "NL", division: "Central", history: "10000100000012020000" },
-      { name: "Cleveland Guardians", sport: "MLB", conference: "AL", division: "Central", history: "03020202400000000000" },
-      { name: "Colorado Rockies", sport: "MLB", conference: "NL", division: "West", history: "00000002100000002040" },
-      { name: "Detroit Tigers", sport: "MLB", conference: "AL", division: "Central", history: "22000000002343000004" },
-      { name: "Houston Astros", sport: "MLB", conference: "AL", division: "West", history: "01354342502000000000" },
-      { name: "Kansas City Royals", sport: "MLB", conference: "AL", division: "Central", history: "02000000005400000000" },
-      { name: "Los Angeles Angels", sport: "MLB", conference: "AL", division: "West", history: "00000000000200003220" },
-      { name: "Los Angeles Dodgers", sport: "MLB", conference: "NL", division: "West", history: "55223524432230025042" },
-      { name: "Miami Marlins", sport: "MLB", conference: "NL", division: "East", history: "00100200000000000000" },
-      { name: "Milwaukee Brewers", sport: "MLB", conference: "NL", division: "Central", history: "31102113000000030000" },
-      { name: "Minnesota Twins", sport: "MLB", conference: "AL", division: "Central", history: "00201021000000022002" },
-      { name: "New York Mets", sport: "MLB", conference: "NL", division: "East", history: "03000000014000000003" },
-      { name: "New York Yankees", sport: "MLB", conference: "AL", division: "East", history: "24031232301000225522" },
-      { name: "Las Vegas Athletics", sport: "MLB", conference: "AL", division: "West", history: "00002011000122000003" },
-      { name: "Philadelphia Phillies", sport: "MLB", conference: "NL", division: "East", history: "22340000000000234520" },
-      { name: "Pittsburgh Pirates", sport: "MLB", conference: "NL", division: "Central", history: "00000000001120000000" },
-      { name: "San Diego Padres", sport: "MLB", conference: "NL", division: "West", history: "12000200000000000002" },
-      { name: "San Francisco Giants", sport: "MLB", conference: "NL", division: "West", history: "00002000020005005050" },
-      { name: "Seattle Mariners", sport: "MLB", conference: "AL", division: "West", history: "30001000000000000000" },
-      { name: "St. Louis Cardinals", sport: "MLB", conference: "NL", division: "Central", history: "00001030002045050205" },
-      { name: "Tampa Bay Rays", sport: "MLB", conference: "AL", division: "East", history: "00112420000002022040" },
-      { name: "Texas Rangers", sport: "MLB", conference: "AL", division: "West", history: "00500000022001044000" },
-      { name: "Toronto Blue Jays", sport: "MLB", conference: "AL", division: "East", history: "40101000033000000000" },
-      { name: "Washington Nationals", sport: "MLB", conference: "NL", division: "East", history: "00000050220202000000" },
+      { name: "Arizona Diamondbacks", sport: "MLB", conference: "NL", division: "West", history: "000400200200000002030" },
+      { name: "Atlanta Braves", sport: "MLB", conference: "NL", division: "East", history: "201225122000021020000" },
+      { name: "Baltimore Orioles", sport: "MLB", conference: "AL", division: "East", history: "001200000010301000000" },
+      { name: "Boston Red Sox", sport: "MLB", conference: "AL", division: "East", history: "110004055000050002352" },
+      { name: "Chicago Cubs", sport: "MLB", conference: "NL", division: "Central", history: "120000101353000002220" },
+      { name: "Chicago White Sox", sport: "MLB", conference: "AL", division: "Central", history: "200002100000000000004" },
+      { name: "Cincinnati Reds", sport: "MLB", conference: "NL", division: "Central", history: "010000100000012020000" },
+      { name: "Cleveland Guardians", sport: "MLB", conference: "AL", division: "Central", history: "203020202400000000000" },
+      { name: "Colorado Rockies", sport: "MLB", conference: "NL", division: "West", history: "000000002100000002040" },
+      { name: "Detroit Tigers", sport: "MLB", conference: "AL", division: "Central", history: "022000000002343000004" },
+      { name: "Houston Astros", sport: "MLB", conference: "AL", division: "West", history: "101354342502000000000" },
+      { name: "Kansas City Royals", sport: "MLB", conference: "AL", division: "Central", history: "002000000005400000000" },
+      { name: "Los Angeles Angels", sport: "MLB", conference: "AL", division: "West", history: "000000000000200003220" },
+      { name: "Los Angeles Dodgers", sport: "MLB", conference: "NL", division: "West", history: "255223524432230025042" },
+      { name: "Miami Marlins", sport: "MLB", conference: "NL", division: "East", history: "000100200000000000000" },
+      { name: "Milwaukee Brewers", sport: "MLB", conference: "NL", division: "Central", history: "231102113000000030000" },
+      { name: "Minnesota Twins", sport: "MLB", conference: "AL", division: "Central", history: "000201021000000022002" },
+      { name: "New York Mets", sport: "MLB", conference: "NL", division: "East", history: "003000000014000000003" },
+      { name: "New York Yankees", sport: "MLB", conference: "AL", division: "East", history: "224031232301000225522" },
+      { name: "Las Vegas Athletics", sport: "MLB", conference: "AL", division: "West", history: "000002011000122000003" },
+      { name: "Philadelphia Phillies", sport: "MLB", conference: "NL", division: "East", history: "122340000000000234520" },
+      { name: "Pittsburgh Pirates", sport: "MLB", conference: "NL", division: "Central", history: "000000000001120000000" },
+      { name: "San Diego Padres", sport: "MLB", conference: "NL", division: "West", history: "212000200000000000002" },
+      { name: "San Francisco Giants", sport: "MLB", conference: "NL", division: "West", history: "000002000020005005050" },
+      { name: "Seattle Mariners", sport: "MLB", conference: "AL", division: "West", history: "030001000000000000000" },
+      { name: "St. Louis Cardinals", sport: "MLB", conference: "NL", division: "Central", history: "000001030002045050205" },
+      { name: "Tampa Bay Rays", sport: "MLB", conference: "AL", division: "East", history: "200112420000002022040" },
+      { name: "Texas Rangers", sport: "MLB", conference: "AL", division: "West", history: "000500000022001044000" },
+      { name: "Toronto Blue Jays", sport: "MLB", conference: "AL", division: "East", history: "040101000033000000000" },
+      { name: "Washington Nationals", sport: "MLB", conference: "NL", division: "East", history: "000000050220202000000" },
 
       // ==================== NBA ====================
       { name: "Atlanta Hawks", sport: "NBA", conference: "East", division: "Southeast", history: "100113000023111222200" },
@@ -788,7 +788,7 @@
 
 
     /* ============================================================ */
-    const START_YEAR = 2025, YEARS = 21, MAX_GUESSES = 7, STEP = 3;
+    const START_YEAR = 2026, YEARS = 21, MAX_GUESSES = 7, STEP = 3;
     const ICON = ["✕", "", "", "", "", "🏆", ""]; const $ = id => document.getElementById(id);
     const today = new Date();
     const dayKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
