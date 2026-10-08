@@ -91,13 +91,20 @@
     }
 
     .legend {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: flex-start;
       display: flex;
-      flex-wrap: wrap;
       gap: 6px 16px;
       font-size: .82rem;
       color: var(--dim);
       margin-bottom: 14px
     }
+
+    /*.legend {
+      align-items: center
+    }*/
+
 
     .legend span {
       display: flex;
@@ -116,10 +123,11 @@
     }
 
     .dot.x {
+      font-style: normal;
       background: none;
       color: var(--miss);
       font-weight: 900;
-      font-size: .9rem
+      font-size: .8rem
     }
 
     .dot.t0 {
@@ -143,12 +151,15 @@
     }
 
     .dot.t5 {
+      font-style: normal;
       background: none;
-      font-size: 1rem
+      font-size: 0.8rem;
+
     }
 
     .season .dot.t5 {
-      font-size: 1.6rem
+      font-style: normal;
+      font-size: 1.6rem;
     }
 
     .dot.t6 {
@@ -547,7 +558,7 @@
     }
 
     .filtPanel {
-      margin: -10px 0 16px;
+      margin: 0 0 16px;
       padding: 12px;
       border: 1px solid var(--line);
       border-radius: 10px;
@@ -588,6 +599,94 @@
       width: auto;
       padding: 0
     }
+
+    .info {
+      align-self: flex-end;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border-radius: 50%;
+      background: var(--panel);
+      color: var(--chalk);
+      border: 1px solid var(--line);
+      font: italic 700 .85rem/1 Georgia, serif
+    }
+
+    .info:hover {
+      border-color: var(--r3)
+    }
+
+    .info[aria-expanded="true"] {
+      background: var(--r3);
+      color: #1c1503;
+      border-color: var(--r3)
+    }
+
+    .notes {
+      margin: -4px 0 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+      font-size: .82rem;
+      color: var(--dim)
+    }
+
+    .notes ol {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 6px
+    }
+
+    .top {
+      flex-wrap: wrap
+    }
+
+    h1 {
+      white-space: nowrap
+    }
+
+    .modes {
+      margin-left: auto
+    }
+
+    #filt {
+      padding: 10px 10px;
+      /*margin: 0 0 14px;*/
+      background: var(--panel);
+      color: var(--chalk);
+      border: 1px solid var(--line)
+    }
+
+    #filt[hidden] {
+      display: block;
+      /* keep it in the layout... */
+      visibility: hidden;
+      /* ...but invisible and unclickable */
+    }
+
+
+
+    .top {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .modes {
+      width: 100%;
+      justify-content: flex-start;
+      margin-left: 0;
+    }
+
+    #daily {
+      margin-left: auto;
+    }
+
+    #daily[hidden]+#inf {
+      margin-left: auto;
+    }
   </style>
 </head>
 
@@ -605,7 +704,7 @@
         <button id="daily" type="button" hidden>Daily</button>
         <button id="inf" type="button" aria-label="New random game" title="New random game">∞</button>
 
-        <button id="filt" type="button" title="Choose leagues for practice games" hidden>Leagues</button>
+        <button id="filt" type="button" title="Choose leagues for practice games" hidden>Leagues Filter</button>
 
       </div>
 
@@ -614,21 +713,32 @@
 
     <p class="sub">Name the franchise from its postseason history. New team every day.</p>
 
+    <div class="filtRow">
+      <button id="filt" type="button" title="Choose leagues for practice games" hidden>Leagues Filter</button>
+    </div>
+    <section class="filtPanel" id="filtPanel" hidden></section>
+
+
     <div class="legend" aria-label="Legend">
-      <span><i class="dot t1"></i>First Round / Wild Card</span>
-      <span><i class="dot t2"></i>Divisional / Confrence Semis</span>
-      <span><i class="dot t3"></i>Leauge/Conference Championship Game</span>
-      <span><i class="dot t4"></i>League/Conference Champion (Lost Final)</span>
-      <span><i class="dot t5">🏆</i>Won the Title</span>
+      <button class="info" id="infoBtn" type="button" aria-expanded="false" aria-controls="notes" aria-label="Notes"
+        title="Notes">+</button>
       <span><i class="dot x">✕</i>Missed Playoffs</span>
       <span><i class="dot t6"></i>Franchise Didn't Exist</span>
-      <span>1: Relocated or renamed franchises keep their history under current name.</span>
-      <span>2: NBA Play-In not counted as playoff appearance unless won / reached field of 16.</span>
-      <span>3: Years are when the playoffs happened. Superbowl for the 2025 season will be in 2026</span>
-      <span>Coyotes and Utah Mammoth separate franchise histories</span>
+      <span><i class="dot t1"></i>First Round / Wild Card</span>
+      <span><i class="dot t2"></i>Divisional / Conference Semis</span>
+      <span><i class="dot t3"></i>League/Conference Championship Game</span>
+      <span><i class="dot t4"></i>League/Conference Champion (Lost Final)</span>
+      <span><i class="dot t5">🏆</i>Won the Title</span>
 
     </div>
-
+    <div class="notes" id="notes" hidden>
+      <ol>
+        <li>Relocated or renamed franchises keep their history under current name.</li>
+        <li>NBA Play-In not counted as a playoff appearance unless won / reached field of 16.</li>
+        <li>Years are when the playoffs happened. The Super Bowl for the 2025 season is played in 2026.</li>
+        <li>Coyotes and Utah Mammoth have separate franchise histories.</li>
+      </ol>
+    </div>
 
     <section class="start" id="start" hidden></section>
     <div id="play">
@@ -1114,6 +1224,12 @@
     }
     $("filt").onclick = () => { $("filtPanel").hidden = !$("filtPanel").hidden; };
     renderFilter();
+
+    $("infoBtn").onclick = () => {
+      const opening = $("notes").hidden;
+      $("notes").hidden = !opening;
+      $("infoBtn").setAttribute("aria-expanded", opening);
+    };
 
     renderAll(YEARS);
   </script>
