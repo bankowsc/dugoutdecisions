@@ -69,7 +69,7 @@ const teams = [
 
 
 
-const teams2 = [
+const bigten = [
     { name: "Illinois", sport: "NCAAM", conference: "BigTen", division: "1", history: "524122000000020201012" },
     { name: "Indiana", sport: "NCAAM", conference: "BigTen", division: "1", history: "000210000032033000122" },
     { name: "Iowa", sport: "NCAAM", conference: "BigTen", division: "1", history: "400112020022100000001" },
@@ -85,33 +85,85 @@ const teams2 = [
     { name: "Purdue", sport: "NCAAM", conference: "BigTen", division: "1", history: "436131043311002233220" },
     { name: "Rutgers", sport: "NCAAM", conference: "BigTen", division: "1", history: "000012000000000000000" },
     { name: "UCLA", sport: "NCAAM", conference: "BigTen", division: "1", history: "220335001303310202552" },
-    { name: "USC", sport: "NCAAM", conference: "BigTen", division: "1", history: "000114000210000102130" },
+    { name: "Southern California", sport: "NCAAM", conference: "BigTen", division: "1", history: "000114000210000102130" },
     { name: "Washington", sport: "NCAAM", conference: "BigTen", division: "1", history: "000000020000000232003" },
     { name: "Wisconsin", sport: "NCAAM", conference: "BigTen", division: "1", history: "121022010336513322321" },
 ];
 
-const teams3 = [
-    { name: "Alabama",         sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Arkansas",        sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Auburn",          sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Florida",         sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Georgia",         sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Kentucky",        sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "LSU",             sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Mississippi State", sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Missouri",        sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Ole Miss",        sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Oklahoma",        sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "South Carolina",  sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Tennessee",       sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Texas",           sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Texas A&M",       sport: "NCAAM", conference: "SEC", division: "1", history: "" },
-    { name: "Vanderbilt",      sport: "NCAAM", conference: "SEC", division: "1", history: "" },
+
+const sec = [
+    { name: "Alabama",          sport: "NCAAM", conference: "SEC", division: "1", history: "345313002000001000002" },
+    { name: "Arkansas",         sport: "NCAAM", conference: "SEC", division: "1", history: "330344001202000000211" },
+    { name: "Auburn",           sport: "NCAAM", conference: "SEC", division: "1", history: "051220052000000000000" },
+    { name: "Florida",          sport: "NCAAM", conference: "SEC", division: "1", history: "271002022400544410077" },
+    { name: "Georgia",          sport: "NCAAM", conference: "SEC", division: "1", history: "110000000001000100100" },
+    { name: "Kentucky",         sport: "NCAAM", conference: "SEC", division: "1", history: "231210043425607540122" },
+    { name: "Lousiana State",   sport: "NCAAM", conference: "SEC", division: "1", history: "000012030001000002005" },
+    { name: "Mississippi State",sport: "NCAAM", conference: "SEC", division: "1", history: "011100010000000001200" },
+    { name: "Missouri",         sport: "NCAAM", conference: "SEC", division: "1", history: "110201001000011124000" },
+    { name: "Ole Miss",         sport: "NCAAM", conference: "SEC", division: "1", history: "030000010001020000000" },
+    { name: "Oklahoma",         sport: "NCAAM", conference: "SEC", division: "1", history: "010002021053110004201" },
+    { name: "South Carolina",   sport: "NCAAM", conference: "SEC", division: "1", history: "001000000500000000000" },
+    { name: "Tennessee",        sport: "NCAAM", conference: "SEC", division: "1", history: "444321032000300141332" },
+    { name: "Texas",            sport: "NCAAM", conference: "SEC", division: "1", history: "312421001011201212424" },
+    { name: "Texas A&M",        sport: "NCAAM", conference: "SEC", division: "1", history: "222100003030000122232" },
+    { name: "Vanderbilt",       sport: "NCAAM", conference: "SEC", division: "1", history: "210000000110002110130" },
 ];
 
 
+const acc = [
+    { name: "Boston College",  sport: "NCAAM", conference: "ACC", division: "1", history: "000000000000000001023" },
+    { name: "California",      sport: "NCAAM", conference: "ACC", division: "1", history: "000000000010021021001" },
+    { name: "Clemson",         sport: "NCAAM", conference: "ACC", division: "1", history: "114001003000000111100" },
+    { name: "Duke",            sport: "NCAAM", conference: "ACC", division: "1", history: "454250044237141374213" },
+    { name: "Florida State",   sport: "NCAAM", conference: "ACC", division: "1", history: "000003034200002311000" },
+    { name: "Georgia Tech",    sport: "NCAAM", conference: "ACC", division: "1", history: "000001000000000020010" },
+    { name: "Louisville",      sport: "NCAAM", conference: "ACC", division: "1", history: "210000010204375114420" },
+    { name: "Miami",           sport: "NCAAM", conference: "ACC", division: "1", history: "200540001130030000200" },
+    { name: "North Carolina State",        sport: "NCAAM", conference: "ACC", division: "1", history: "105100001003113000002" },
+    { name: "North Carolina",  sport: "NCAAM", conference: "ACC", division: "1", history: "113061032763224407542" },
+    { name: "Notre Dame",      sport: "NCAAM", conference: "ACC", division: "1", history: "000020000244011210210" },
+    { name: "Pittsburgh",      sport: "NCAAM", conference: "ACC", division: "1", history: "000200000010210224232" },
+    { name: "Southern Methodist",             sport: "NCAAM", conference: "ACC", division: "1", history: "100000000101000000000" },
+    { name: "Stanford",        sport: "NCAAM", conference: "ACC", division: "1", history: "000000000000300000310" },
+    { name: "Syracuse",        sport: "NCAAM", conference: "ACC", division: "1", history: "000003013050254233001" },
+    { name: "Virginia",        sport: "NCAAM", conference: "ACC", division: "1", history: "201101071242301000020" },
+    { name: "Virginia Tech",   sport: "NCAAM", conference: "ACC", division: "1", history: "000011031100000000020" },
+    { name: "Wake Forest",     sport: "NCAAM", conference: "ACC", division: "1", history: "000000000100000021000" },
+];
 
+const big12 = [
+    { name: "Arizona",          sport: "NCAAM", conference: "Big12", division: "1", history: "533130001314430403112" },
+    { name: "Arizona State",    sport: "NCAAM", conference: "Big12", division: "1", history: "000100011000100002000" },
+    { name: "Baylor",           sport: "NCAAM", conference: "Big12", division: "1", history: "022227020311304040100" },
+    { name: "Brigham Young",              sport: "NCAAM", conference: "Big12", division: "1", history: "131001000001101321110" },
+    { name: "Cincinnati",       sport: "NCAAM", conference: "Big12", division: "1", history: "000000012212113200000" },
+    { name: "Colorado",         sport: "NCAAM", conference: "Big12", division: "1", history: "002002000010112000000" },
+    { name: "Houston",          sport: "NCAAM", conference: "Big12", division: "1", history: "363345032000000010000" },
+    { name: "Iowa State",       sport: "NCAAM", conference: "Big12", division: "1", history: "323130010231322000000" },
+    { name: "Kansas",           sport: "NCAAM", conference: "Big12", division: "1", history: "212272025442236423741" },
+    { name: "Kansas State",     sport: "NCAAM", conference: "Big12", division: "1", history: "000400014100112240200" },
+    { name: "Oklahoma State",   sport: "NCAAM", conference: "Big12", division: "1", history: "000002000101110012000" },
+    { name: "Texas Christian",  sport: "NCAAM", conference: "Big12", division: "1", history: "201220001000000000000" },
+    { name: "Texas Tech",       sport: "NCAAM", conference: "Big12", division: "1", history: "241032064010000000010" },
+    { name: "Central Florida",  sport: "NCAAM", conference: "Big12", division: "1", history: "100000020000000000000" },
+    { name: "Utah",             sport: "NCAAM", conference: "Big12", division: "1", history: "000000000023000001000" },
+    { name: "West Virginia",    sport: "NCAAM", conference: "Big12", division: "1", history: "000102003313001251303" },
+];
 
+const bigeast = [
+    { name: "Butler",       sport: "NCAAM", conference: "BigEast", division: "1", history: "000000002322020661230" },
+    { name: "Creighton",    sport: "NCAAM", conference: "BigEast", division: "1", history: "023423001100222000010" },
+    { name: "DePaul",       sport: "NCAAM", conference: "BigEast", division: "1", history: "000000000000000000000" },
+    { name: "Georgetown",   sport: "NCAAM", conference: "BigEast", division: "1", history: "000001000002012110253" },
+    { name: "Marquette",    sport: "NCAAM", conference: "BigEast", division: "1", history: "013210010100043312211" },
+    { name: "Providence",   sport: "NCAAM", conference: "BigEast", division: "1", history: "000130001121100000000" },
+    { name: "Seton Hall",   sport: "NCAAM", conference: "BigEast", division: "1", history: "000010012110000000001" },
+    { name: "St. John's",   sport: "NCAAM", conference: "BigEast", division: "1", history: "320000010001000100000" },
+    { name: "Connecticut",        sport: "NCAAM", conference: "BigEast", division: "1", history: "627711000020701705105" },
+    { name: "Villanova",    sport: "NCAAM", conference: "BigEast", division: "1", history: "100053027272210125314" },
+    { name: "Xavier",       sport: "NCAAM", conference: "BigEast", division: "1", history: "010300002423103133421" },
+];
 
 
 

@@ -701,7 +701,7 @@
     .modes { padding-top: 0; margin: 0 0 10px }
 
     .actions { display: flex; gap: 8px; align-items: center }
-    .actions button { min-height: 36px; padding: 6px 14px; background: var(--panel); color: var(--chalk); border: 1px solid var(--line) }
+    .actions button { min-height: 36px; padding: 6px 14px; background: var(--panel); color: var(--chalk); border: 1px solid var(--line); margin: 0 0 36px}
     #inf { padding: 2px 14px }
 
     /* hidden buttons keep their space, so nothing shifts between Daily and Infinity */
@@ -714,17 +714,50 @@
     .notes { margin: 0 0 10px }
 
     .actions { margin: 0 0 -30px; position: relative; z-index: 2 }  
-    .filtPanel { margin: 42px 0 -25px }
+    .filtPanel { margin: 42px 0 25px }
 
-    html { scrollbar-gutter: stable; }
+
+
+    .dot.u1 { background: #7fb4ff }
+.dot.u2 { background: var(--r1) }
+.dot.u3 { background: #2cc4c4 }
+.dot.u4 { background: var(--r2) }
+.dot.u5 { background: #b07cff }
+.dot.u6 { background: var(--r3) }
+.dot.u7 { background: none; font-size: 1rem }
+.season .dot.u7 { font-size: 1.6rem }
+.dot.u8 { background: #000; box-shadow: 0 0 0 1px var(--line) }
+
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; align-self: flex-start }
+.seg button { padding: 6px 16px; min-height: 36px; border-radius: 0; border: 0; background: var(--panel); color: var(--chalk) }
+.seg button.on { background: var(--r3); color: #1c1503 }
+
+.titleRow { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px }
+.titleRow .siteTitle { margin: 0 }
+.seg { align-self: center; flex: none }
+
+@media (max-width: 380px) {
+  h1 { font-size: 2.2rem }
+  .seg button { padding: 6px 10px }
+}
+
+
+html { scrollbar-gutter: stable; }
 </style>
 </head>
 
 <body>
   <main>
     <div class="top">
-      <h1 class="siteTitle">Playoff Trail</h1>
+      <div class="titleRow">
+        <h1 class="siteTitle">Playoff Trail</h1>
+        <div class="seg" id="seg">
+          <button type="button" data-m="pro">Pro</button>
+          <button type="button" data-m="ncaa">NCAA</button>
+        </div>
+      </div>
       <p class="sub">Name the franchise from its postseason history. New team every day.</p>
+
       <div class="modes">
         <label class="switch" title="Hard mode: 3 random seasons first, random reveal order">
           <input type="checkbox" id="hard"><span class="track"></span><span>Hard</span>
@@ -739,15 +772,11 @@
         <button id="daily" type="button" hidden>Daily</button>
       </div>
     </div>
-    <section class="filtPanel" id="filtPanel" hidden></section>
 
-    <div class="filtRow">
-      <button id="filt" type="button" title="Choose leagues for practice games" hidden>Leagues Filter</button>
-    </div>
     <section class="filtPanel" id="filtPanel" hidden></section>
 
 
-    <div class="legend" aria-label="Legend">
+    <div class="legend" id="legend" aria-label="Legend">
       <button class="info" id="infoBtn" type="button" aria-expanded="false" aria-controls="notes" aria-label="Notes"
         title="Notes">+</button>
       <span><i class="dot x">✕</i>Missed Playoffs</span>
@@ -1031,6 +1060,33 @@
     const ICON = ["✕", "", "", "", "", "🏆", ""]; const $ = id => document.getElementById(id);
     const today = new Date();
     const dayKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    const MODES = {
+      pro: {
+        teams: TEAMS, prefix: "t", shareName: "PLAYOFF TRAIL",
+        icons: ["✕", "", "", "", "", "🏆", ""],
+        legend: [["t1", "", "First Round / Wild Card"], ["t2", "", "Divisional / Conference Semis"],
+          ["t3", "", "League/Conference Championship Game"], ["t4", "", "League/Conference Champion (Lost Final)"],
+          ["t5", "🏆", "Won the Title"], ["x", "✕", "Missed Playoffs"], ["t6", "", "Franchise Didn't Exist"]],
+        notes: ["Relocated or renamed franchises keep their history under current name.",
+          "NBA Play-In not counted as a playoff appearance unless won / reached field of 16.",
+          "Years are when the playoffs happened. The Super Bowl for the 2025 season is played in 2026.",
+          "Coyotes and Utah Mammoth have separate franchise histories."]
+      },
+      ncaa: {
+        teams: TEAMS2, prefix: "u", shareName: "PLAYOFF TRAIL · NCAA",
+        icons: ["✕", "", "", "", "", "", "", "🏆", ""],
+        legend: [["u1", "", "First Four / Round of 64"], ["u2", "", "Round of 32"], ["u3", "", "Sweet 16"],
+          ["u4", "", "Elite 8"], ["u5", "", "Final Four"], ["u6", "", "National Runner-up"],
+          ["u7", "🏆", "National Champion"], ["x", "✕", "Missed Tournament"], ["u8", "", "Not in Division I yet"]],
+        notes: ["The 2020 tournament was canceled and is listed as a miss for every team."]
+      }
+    };
+    let modeKey = "pro";
+    try { const m = localStorage.getItem("playoffTrail:mode"); if (MODES[m]) modeKey = m; } catch (e) { }
+    const cfg = () => MODES[modeKey];
+    const NS = () => modeKey === "pro" ? "playoffTrail:" : "playoffTrail:ncaa:";   // pro keeps its old keys
+
+
     // const STORE = "playoffTrail:" + dayKey;
 
     // function hash(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
@@ -1040,9 +1096,16 @@
     // try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) state = s; } catch (e) { }
     // const save = () => { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) { } };
     function hash(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
+
+    // let dailyMode = null;
+    // try { const v = localStorage.getItem("playoffTrail:dm:" + dayKey); if (v !== null) dailyMode = v === "1"; } catch (e) { }
+    // function setDailyMode(h) { dailyMode = h; try { localStorage.setItem("playoffTrail:dm:" + dayKey, h ? "1" : "0"); } catch (e) { } }
+
     let dailyMode = null;
-    try { const v = localStorage.getItem("playoffTrail:dm:" + dayKey); if (v !== null) dailyMode = v === "1"; } catch (e) { }
-    function setDailyMode(h) { dailyMode = h; try { localStorage.setItem("playoffTrail:dm:" + dayKey, h ? "1" : "0"); } catch (e) { } }
+    function readDailyMode() { dailyMode = null; try { const v = localStorage.getItem(NS() + "dm:" + dayKey); if (v !== null) dailyMode = v === "1"; } catch (e) { } }
+    function setDailyMode(h) { dailyMode = h; try { localStorage.setItem(NS() + "dm:" + dayKey, h ? "1" : "0"); } catch (e) { } }
+    readDailyMode();
+
     const needsChoice = () => game === 0 && dailyMode === null;
     const ALL_SPORTS = ["NFL", "MLB", "NBA", "NHL"];
     let sports = new Set(ALL_SPORTS);
@@ -1075,30 +1138,50 @@
       return o;
     }
 
+    // function loadGame(n) {
+    //   game = n;
+    //   if (n === 0 && dailyMode !== null) hard = dailyMode;   // Daily always uses its chosen mode
+    //   $("hard").checked = hard;
+    //   const base = dayKey + (n ? "#" + n + "~" + [...sports].sort().join("") : "");
+    //   const seed = base + (hard ? "!hard" : "");
+    //   STORE = "playoffTrail:" + seed;
+    //   const pool = n ? TEAMS.filter(t => sports.has(t.sport)) : TEAMS;
+    //   const P = pool.length ? pool : TEAMS;       // safety net if a league has no teams yet
+    //   target = P[hash(n ? seed : base) % P.length];
+    //   order = makeOrder(seed);
+    //   rank = [];
+    //   order.forEach((yr, pos) => rank[yr] = pos);
+    //   state = { guesses: [], over: false, won: false };
+    //   try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) state = s; } catch (e) { }
+    //   if (n === 0 && dailyMode === null && state.guesses.length) setDailyMode(hard); // run already in progress
+    // }
     function loadGame(n) {
-      game = n;
-      if (n === 0 && dailyMode !== null) hard = dailyMode;   // Daily always uses its chosen mode
-      $("hard").checked = hard;
-      const base = dayKey + (n ? "#" + n + "~" + [...sports].sort().join("") : "");
-      const seed = base + (hard ? "!hard" : "");
-      STORE = "playoffTrail:" + seed;
-      const pool = n ? TEAMS.filter(t => sports.has(t.sport)) : TEAMS;
-      const P = pool.length ? pool : TEAMS;       // safety net if a league has no teams yet
-      target = P[hash(n ? seed : base) % P.length];
-      order = makeOrder(seed);
-      rank = [];
-      order.forEach((yr, pos) => rank[yr] = pos);
-      state = { guesses: [], over: false, won: false };
-      try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) state = s; } catch (e) { }
-      if (n === 0 && dailyMode === null && state.guesses.length) setDailyMode(hard); // run already in progress
-    }
+  game = n;
+  if (n === 0 && dailyMode !== null) hard = dailyMode;
+  $("hard").checked = hard;
+  const pro = modeKey === "pro";
+  const base = dayKey + (n ? "#" + n + (pro ? "~" + [...sports].sort().join("") : "") : "");
+  const seed = base + (hard ? "!hard" : "");
+  STORE = NS() + seed;
+  const all = cfg().teams;
+  const pool = n && pro ? all.filter(t => sports.has(t.sport)) : all;   // league filter is pro-only
+  const P = pool.length ? pool : all;
+  target = P[hash(n ? seed : base) % P.length];
+  order = makeOrder(seed);
+  rank = [];
+  order.forEach((yr, pos) => rank[yr] = pos);
+  state = { guesses: [], over: false, won: false };
+  try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) state = s; } catch (e) { }
+  if (n === 0 && dailyMode === null && state.guesses.length) setDailyMode(hard);
+}
     const save = () => { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) { } };
     loadGame(0);
     let practiceN = 0;
-    try { practiceN = +localStorage.getItem("playoffTrail:n:" + dayKey) || 0; } catch (e) { }
+    function readPracticeN() { practiceN = 0; try { practiceN = +localStorage.getItem(NS() + "n:" + dayKey) || 0; } catch (e) { } }
+    readPracticeN();
 
 
-    const byName = n => TEAMS.find(t => t.name.toLowerCase() === n.trim().toLowerCase());
+    const byName = n => cfg().teams.find(t => t.name.toLowerCase() === n.trim().toLowerCase());
     function compare(g) {
       const sport = g.sport === target.sport;
       const conf = sport && g.conference === target.conference;
@@ -1120,7 +1203,7 @@
         //d.className = "season" + (hidden ? " hidden" : "") + (!hidden && i >= prev ? " new" : "");
         d.className = "season" + (hidden ? " hidden" : "") + (!hidden && rank[i] >= prev ? " new" : "");
 
-        d.innerHTML = `<i class="dot ${hidden ? "" : (v === 0 ? "x" : "t" + v)}">${hidden ? "?" : ICON[v]}</i><b>${START_YEAR - i}</b>`;
+        d.innerHTML = `<i class="dot ${hidden ? "" : (v === 0 ? "x" : cfg().prefix + v)}">${hidden ? "?" : cfg().icons[v]}</i><b>${START_YEAR - i}</b>`;
         el.appendChild(d);
       }
       $("shown").textContent = `Showing ${n} of ${YEARS} seasons`;
@@ -1156,7 +1239,7 @@
 
     function renderList() {
       const used = new Set(state.guesses);
-      $("teams").innerHTML = TEAMS.filter(t => !used.has(t.name)).map(t => `<option value="${t.name}">${t.sport} · ${t.conference}</option>`).join("");
+      $("teams").innerHTML = cfg().teams.filter(t => !used.has(t.name)).map(t => `<option value="${t.name}">${t.sport} · ${t.conference}</option>`).join("");
     }
 
     function renderStart() {
@@ -1177,11 +1260,15 @@
       $("daily").hidden = !game;
 
       //new
-      $("filt").hidden = !game;
+      //$("filt").hidden = !game;
       if (!game) $("filtPanel").hidden = true;
       const fl = !!game && !state.over && state.guesses.length > 0;
-      $("filt").disabled = fl;
-      $("filtPanel").querySelectorAll("input").forEach(i => i.disabled = fl);
+      //$("filt").disabled = fl;
+      //$("filtPanel").querySelectorAll("input").forEach(i => i.disabled = fl);
+
+      const noFilter = !game || modeKey !== "pro";
+      $("filt").hidden = noFilter;
+      if (noFilter) $("filtPanel").hidden = true;
 
       $("start").hidden = !pending;
       $("play").hidden = pending;
@@ -1213,7 +1300,8 @@
     function reset() { $("msg").textContent = ""; $("input").value = ""; renderAll(0); }
     $("inf").onclick = () => {
       practiceN++;
-      try { localStorage.setItem("playoffTrail:n:" + dayKey, practiceN); } catch (e) { }
+      try { localStorage.setItem(NS() + "n:" + dayKey, practiceN); } catch (e) { }
+      //try { localStorage.setItem("playoffTrail:n:" + dayKey, practiceN); } catch (e) { }
       loadGame(practiceN); reset();
     };
     $("daily").onclick = () => { loadGame(0); reset(); };
@@ -1261,7 +1349,7 @@
       const seen = state.won ? Math.min(YEARS, STEP + STEP * (n - 1)) : YEARS;
       const groups = Math.ceil(YEARS / STEP), lit = Math.ceil(seen / STEP);
       return [
-        `PLAYOFF TRAIL · ${game ? "Practice #" + game : dayKey}`,
+        //${cfg().shareName} · ${game ? "Practice #" + game : dayKey}
         ...(hard ? ["🔥 HARD MODE 🔥"] : []),
         state.won ? `🏆 ${RANKS[Math.min(n, RANKS.length) - 1]} · ${n}/${MAX_GUESSES}` : `💀 · X/${MAX_GUESSES}`,
         "",
@@ -1322,6 +1410,29 @@
       $("notes").hidden = !opening;
       $("infoBtn").setAttribute("aria-expanded", opening);
     };
+
+    function renderLegend() {
+      const L = $("legend");
+      L.querySelectorAll("span").forEach(s => s.remove());
+      cfg().legend.forEach(([cls, icon, text]) => {
+        const s = document.createElement("span");
+        s.innerHTML = `<i class="dot ${cls}">${icon}</i>${text}`;
+        L.appendChild(s);
+      });
+      $("notes").innerHTML = "<ol>" + cfg().notes.map(n => `<li>${n}</li>`).join("") + "</ol>";
+    }
+    function syncSeg() { $("seg").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.m === modeKey)); }
+    function setMode(m) {
+      if (m === modeKey) return;
+      modeKey = m;
+      try { localStorage.setItem("playoffTrail:mode", m); } catch (e) { }
+      readDailyMode(); readPracticeN();
+      syncSeg(); renderLegend();
+      $("notes").hidden = true; $("infoBtn").setAttribute("aria-expanded", "false");
+      loadGame(0); reset();
+    }
+    $("seg").querySelectorAll("button").forEach(b => b.onclick = () => setMode(b.dataset.m));
+    renderLegend(); syncSeg();
 
     renderAll(YEARS);
   </script>
