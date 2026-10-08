@@ -701,7 +701,7 @@
     .modes { padding-top: 0; margin: 0 0 10px }
 
     .actions { display: flex; gap: 8px; align-items: center }
-    .actions button { min-height: 36px; padding: 6px 14px; background: var(--panel); color: var(--chalk); border: 1px solid var(--line); margin: 0 0 36px}
+    .actions button { min-height: 36px; padding: 6px 14px; background: var(--panel); color: var(--chalk); border: 1px solid var(--line); margin: 0 0 40px}
     #inf { padding: 2px 14px }
 
     /* hidden buttons keep their space, so nothing shifts between Daily and Infinity */
@@ -714,7 +714,7 @@
     .notes { margin: 0 0 10px }
 
     .actions { margin: 0 0 -30px; position: relative; z-index: 2 }  
-    .filtPanel { margin: 42px 0 25px }
+    .filtPanel { margin: 4px 0 25px }
 
 
 
@@ -1066,7 +1066,7 @@ html { scrollbar-gutter: stable; }
     const dayKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
     const MODES = {
       pro: {
-        teams: TEAMS, prefix: "t", shareName: "PLAYOFF TRAIL",
+        teams: TEAMS, filterBy: "sport", prefix: "t", shareName: "PLAYOFF TRAIL",
         icons: ["✕", "", "", "", "", "🏆", ""],
         legend: [["t1", "", "First Round / Wild Card"], ["t2", "", "Divisional / Conference Semis"],
           ["t3", "", "League/Conference Championship Game"], ["t4", "", "League/Conference Champion (Lost Final)"],
@@ -1077,7 +1077,7 @@ html { scrollbar-gutter: stable; }
           "Coyotes and Utah Mammoth have separate franchise histories."]
       },
       ncaa: {
-        teams: TEAMS2, prefix: "u", shareName: "PLAYOFF TRAIL · NCAA",
+        teams: TEAMS2, filterBy: "conference", prefix: "u", shareName: "PLAYOFF TRAIL · NCAA",
         icons: ["✕", "", "", "", "", "", "", "🏆", ""],
         legend: [["u1", "", "First Four / Round of 64"], ["u2", "", "Round of 32"], ["u3", "", "Sweet 16"],
           ["u4", "", "Elite 8"], ["u5", "", "Final Four"], ["u6", "", "National Runner-up"],
@@ -1116,12 +1116,25 @@ html { scrollbar-gutter: stable; }
     readDailyMode();
 
     const needsChoice = () => game === 0 && dailyMode === null;
-    const ALL_SPORTS = ["NFL", "MLB", "NBA", "NHL"];
-    let sports = new Set(ALL_SPORTS);
-    try {
-      const s = JSON.parse(localStorage.getItem("playoffTrail:sports"));
-      if (Array.isArray(s)) { const ok = s.filter(x => ALL_SPORTS.includes(x)); if (ok.length) sports = new Set(ok); }
-    } catch (e) { }
+    // const ALL_SPORTS = ["NFL", "MLB", "NBA", "NHL"];
+    // let sports = new Set(ALL_SPORTS);
+    // try {
+    //   const s = JSON.parse(localStorage.getItem("playoffTrail:sports"));
+    //   if (Array.isArray(s)) { const ok = s.filter(x => ALL_SPORTS.includes(x)); if (ok.length) sports = new Set(ok); }
+    // } catch (e) { }
+    const filterOpts = () => [...new Set(cfg().teams.map(t => t[cfg().filterBy]).filter(Boolean))];
+    let sports = new Set();
+    function readSports() {
+      const all = filterOpts();
+      sports = new Set(all);
+      try {
+        const s = JSON.parse(localStorage.getItem(NS() + "sports"));
+        if (Array.isArray(s)) { const ok = s.filter(x => all.includes(x)); if (ok.length) sports = new Set(ok); }
+      } catch (e) { }
+    }
+    readSports();
+
+
     let game = 0, target, state, STORE, order, rank;
     let hard = false;
     try { hard = localStorage.getItem("playoffTrail:hard") === "1"; } catch (e) { }
@@ -1168,12 +1181,11 @@ html { scrollbar-gutter: stable; }
   game = n;
   if (n === 0 && dailyMode !== null) hard = dailyMode;
   $("hard").checked = hard;
-  const pro = modeKey === "pro";
-  const base = dayKey + (n ? "#" + n + (pro ? "~" + [...sports].sort().join("") : "") : "");
+  const base = dayKey + (n ? "#" + n + "~" + [...sports].sort().join("") : "");
   const seed = base + (hard ? "!hard" : "");
   STORE = NS() + seed;
-  const all = cfg().teams;
-  const pool = n && pro ? all.filter(t => sports.has(t.sport)) : all;   // league filter is pro-only
+  const all = cfg().teams, f = cfg().filterBy;
+  const pool = n ? all.filter(t => sports.has(t[f])) : all;
   const P = pool.length ? pool : all;
   target = P[hash(n ? seed : base) % P.length];
   order = makeOrder(seed);
@@ -1279,7 +1291,7 @@ html { scrollbar-gutter: stable; }
     function renderEnd() {
       $("end").innerHTML = !state.over ? "" : `<div class="end"><h2>${state.won ? "Got it" : "Out of guesses"}</h2>
     <p>${state.won ? `Solved in ${state.guesses.length} of ${MAX_GUESSES}.` : "Today's team was:"}</p>
-    <p style="color:var(--chalk);font-weight:600">${target.name}</p><p>${game ? "Press ∞ for another team." : "Come back tomorrow for a new franchise."}</p><button id="share" type="button" onclick="share(this)">Share result</button></div>`;
+    <p style="color:var(--chalk);font-weight:600">${target.name}</p><p>${game ? "Press ∞ for another team." : "Come back tomorrow for a new team."}</p><button id="share" type="button" onclick="share(this)">Share result</button></div>`;
       $("input").disabled = $("btn").disabled = state.over;
     }
 
@@ -1312,7 +1324,8 @@ html { scrollbar-gutter: stable; }
       //$("filt").disabled = fl;
       //$("filtPanel").querySelectorAll("input").forEach(i => i.disabled = fl);
 
-      const noFilter = !game || modeKey !== "pro";
+      //const noFilter = !game || modeKey !== "pro";
+      const noFilter = !game || filterOpts().length < 2;
       $("filt").hidden = noFilter;
       if (noFilter) $("filtPanel").hidden = true;
 
@@ -1440,15 +1453,26 @@ html { scrollbar-gutter: stable; }
       })();
     }
 
+    // function renderFilter() {
+    //   $("filtPanel").innerHTML = `<p>Leagues included in practice games</p><div class="opts">` +
+    //     ALL_SPORTS.map(s => `<label><input type="checkbox" value="${s}" ${sports.has(s) ? "checked" : ""}>${s}</label>`).join("") + `</div>`;
+    //   $("filtPanel").querySelectorAll("input").forEach(i => i.onchange = () => {
+    //     if (i.checked) sports.add(i.value);
+    //     else if (sports.size > 1) sports.delete(i.value);
+    //     else { i.checked = true; return; }          // keep at least one league selected
+    //     try { localStorage.setItem("playoffTrail:sports", JSON.stringify([...sports])); } catch (e) { }
+    //     $("inf").onclick();                         // fresh practice game with the new pool
+    //   });
+    // }
     function renderFilter() {
       $("filtPanel").innerHTML = `<p>Leagues included in practice games</p><div class="opts">` +
-        ALL_SPORTS.map(s => `<label><input type="checkbox" value="${s}" ${sports.has(s) ? "checked" : ""}>${s}</label>`).join("") + `</div>`;
+        filterOpts().map(s => `<label><input type="checkbox" value="${s}" ${sports.has(s) ? "checked" : ""}>${s}</label>`).join("") + `</div>`;
       $("filtPanel").querySelectorAll("input").forEach(i => i.onchange = () => {
         if (i.checked) sports.add(i.value);
         else if (sports.size > 1) sports.delete(i.value);
-        else { i.checked = true; return; }          // keep at least one league selected
-        try { localStorage.setItem("playoffTrail:sports", JSON.stringify([...sports])); } catch (e) { }
-        $("inf").onclick();                         // fresh practice game with the new pool
+        else { i.checked = true; return; }
+        try { localStorage.setItem(NS() + "sports", JSON.stringify([...sports])); } catch (e) { }
+        $("inf").onclick();
       });
     }
     $("filt").onclick = () => { $("filtPanel").hidden = !$("filtPanel").hidden; };
@@ -1475,7 +1499,7 @@ html { scrollbar-gutter: stable; }
       if (m === modeKey) return;
       modeKey = m;
       try { localStorage.setItem("playoffTrail:mode", m); } catch (e) { }
-      readDailyMode(); readPracticeN();
+      readDailyMode(); readPracticeN(); readSports(); renderFilter(); $("filtPanel").hidden = true;
       syncSeg(); renderLegend();
       $("notes").hidden = true; $("infoBtn").setAttribute("aria-expanded", "false");
       loadGame(0); reset();
