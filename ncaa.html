@@ -491,9 +491,19 @@
       padding: 2px 14px
     }
 
-    #confetti {
+    /* #confetti {
       position: fixed;
       inset: 0;
+      pointer-events: none;
+      z-index: 50
+    } */
+    #confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;        /* fallback for older browsers */
+      height: 100lvh;       /* full height even when the keyboard or address bar changes the viewport */
       pointer-events: none;
       z-index: 50
     }
@@ -719,34 +729,37 @@
 
 
     .dot.u1 { background: #7fb4ff }
-.dot.u2 { background: var(--r1) }
-.dot.u3 { background: #2cc4c4 }
-.dot.u4 { background: var(--r2) }
-.dot.u5 { background: #b07cff }
-.dot.u6 { background: var(--r3) }
-.dot.u7 { background: none; font-size: 1rem }
-.season .dot.u7 { font-size: 1.6rem }
-.dot.u8 { background: #000; box-shadow: 0 0 0 1px var(--line) }
+    .dot.u2 { background: var(--r1) }
+    .dot.u3 { background: #2cc4c4 }
+    .dot.u4 { background: var(--r2) }
+    .dot.u5 { background: #b07cff }
+    .dot.u6 { background: var(--r3) }
+    .dot.u7 { background: none; font-size: 1rem }
+    .season .dot.u7 { font-size: 1.6rem }
+    .dot.u8 { background: #000; box-shadow: 0 0 0 1px var(--line) }
 
-.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; align-self: flex-start }
-.seg button { padding: 6px 16px; min-height: 36px; border-radius: 0; border: 0; background: var(--panel); color: var(--chalk) }
-.seg button.on { background: var(--r3); color: #1c1503 }
+    .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; align-self: flex-start }
+    .seg button { padding: 6px 16px; min-height: 36px; border-radius: 0; border: 0; background: var(--panel); color: var(--chalk) }
+    .seg button.on { background: var(--r3); color: #1c1503 }
 
-.titleRow { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px }
-.titleRow .siteTitle { margin: 0 }
-.seg { align-self: center; flex: none }
-
-@media (max-width: 380px) {
-  h1 { font-size: 2.2rem }
-  .seg button { padding: 6px 10px }
-}
-.chip.part { background: var(--r3); color: #1c1503 }
-.hint.part { background: var(--r3); border-color: var(--r3) }
-.hint.part small { color: #3b2e08 }
-.hint.part strong { color: #1c1503 }
+    .titleRow { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px }
+    .titleRow .siteTitle { margin: 0 }
+    .seg { align-self: center; flex: none }
 
 
-html { scrollbar-gutter: stable; }
+    .chip.part { background: var(--r3); color: #1c1503 }
+    .hint.part { background: var(--r3); border-color: var(--r3) }
+    .hint.part small { color: #3b2e08 }
+    .hint.part strong { color: #1c1503 }
+
+    @media (max-width: 380px) {
+      h1 { font-size: 2.2rem }
+      .seg button { padding: 6px 10px }
+    }
+
+
+    html { scrollbar-gutter: stable; }
+
 </style>
 </head>
 
@@ -1203,20 +1216,25 @@ html { scrollbar-gutter: stable; }
 
 
     const byName = n => cfg().teams.find(t => t.name.toLowerCase() === n.trim().toLowerCase());
-    function colorScore(g) {
-      const seg = new Intl.Segmenter(undefined, { granularity: "grapheme" });
-      const teamColors = t => t.division || [...seg.segment(t.division || "")].map(s => s.segment);
-      const tc = [...new Set(teamColors(target))];
-      const gc = new Set(teamColors(g));
-      const hits = tc.filter(c => gc.has(c)).length;
-      return !hits ? 0 : hits === tc.length ? 2 : 1;
-    }
-    function compare(g) {
-      const sport = g.sport === target.sport;
-      const conf = sport && g.conference === target.conference;
-      const div = conf && g.division === target.division;
-      return { sport, conf, div, col: colorScore(g) };
-    }
+const key = c => c.replace(/\uFE0F/g, "").toLowerCase();
+//const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+function teamColors(t) {
+  if (!t) return [];
+  if (t.colors) return t.colors;
+  return [...graphemes.segment(t.division || "")].map(s => s.segment).filter(s => s.trim());
+}
+function colorScore(g) {
+  const tc = [...new Set(teamColors(target).map(key))];
+  const gc = new Set(teamColors(g).map(key));
+  const hits = tc.filter(c => gc.has(c)).length;
+  return !hits ? 0 : hits === tc.length ? 2 : 1;
+}
+function compare(g) {
+  const sport = g.sport === target.sport;
+  const conf = sport && g.conference === target.conference;
+  const div = conf && g.division === target.division;
+  return { sport, conf, div, col: colorScore(g) };
+}
     function visibleYears() {
       return state.over ? YEARS : Math.min(YEARS, STEP + STEP * state.guesses.length);
     }
@@ -1250,7 +1268,12 @@ html { scrollbar-gutter: stable; }
     function renderHints() {
       const matched = { sport: false, conf: false, div: false };
       state.guesses.forEach(n => { const c = compare(byName(n)); for (const k in matched) matched[k] ||= c[k]; });
-      const cell = (cls, label, val) => `<div class="hint ${cls}"><small>${label}</small><strong>${val}</strong></div>`;
+      //const cell = (cls, label, val) => `<div class="hint ${cls}"><small>${label}</small><strong>${val}</strong></div>`;
+      const fill = {
+  on: "background:var(--good);border-color:var(--good);color:#fff",
+  part: "background:var(--r3);border-color:var(--r3);color:#1c1503"
+};
+const cell = (cls, label, val) => `<div class="hint ${cls}" style="${fill[cls] || ""}"><small>${label}</small><strong>${val}</strong></div>`;
       const std = (k, label, val) => cell(matched[k] ? "on" : state.over ? "reveal" : "", label, matched[k] || state.over ? val : "?");
       let third;
       if (modeKey === "ncaa") {
@@ -1276,14 +1299,26 @@ html { scrollbar-gutter: stable; }
     //   $("count").textContent = (hard ? "Hard · " : "") + (game ? `Practice ${game}: ` : "") + `Guess ${Math.min(state.guesses.length + 1, MAX_GUESSES)} of ${MAX_GUESSES}`;
 
     // }
-    function renderGuesses() {
+  //   function renderGuesses() {
+  //   const ncaa = modeKey === "ncaa";
+  //   $("guesses").innerHTML = state.guesses.map(n => {
+  //     const g = byName(n), c = compare(g);
+  //     const chip = (cls, t) => `<span class="chip ${cls}">${t || "—"}</span>`;
+  //     const third = ncaa ? chip(["", "part", "ok"][c.col], (g.colors || []).join(" / "))
+  //                       : chip(c.div ? "ok" : "", g.division);
+  //     return `<div class="guess"><span class="n">${g.name}</span>${chip(c.sport ? "ok" : "", g.sport)}${chip(c.conf ? "ok" : "", g.conference)}${teamColors(g).join(" ")}</div>`;
+  //   }).join("");
+  //   $("count").textContent = (hard ? "Hard · " : "") + (game ? `Practice ${game}: ` : "") + `Guess ${Math.min(state.guesses.length + 1, MAX_GUESSES)} of ${MAX_GUESSES}`;
+  // }
+  const CHIP = { ok: "background:var(--good);color:#fff", part: "background:var(--r3);color:#1c1503" };
+  function renderGuesses() {
     const ncaa = modeKey === "ncaa";
     $("guesses").innerHTML = state.guesses.map(n => {
       const g = byName(n), c = compare(g);
-      const chip = (cls, t) => `<span class="chip ${cls}">${t || "—"}</span>`;
-      const third = ncaa ? chip(["", "part", "ok"][c.col], (g.colors || []).join(" / "))
+      const chip = (cls, t) => `<span class="chip ${cls}" style="${CHIP[cls] || ""}">${t || "—"}</span>`;
+      const third = ncaa ? chip(["", "part", "ok"][c.col || 0], teamColors(g).join(" "))
                         : chip(c.div ? "ok" : "", g.division);
-      return `<div class="guess"><span class="n">${g.name}</span>${chip(c.sport ? "ok" : "", g.sport)}${chip(c.conf ? "ok" : "", g.conference)}${teamColors(g).join(" ")}</div>`;
+      return `<div class="guess"><span class="n">${g.name}</span>${chip(c.sport ? "ok" : "", g.sport)}${chip(c.conf ? "ok" : "", g.conference)}${third}</div>`;
     }).join("");
     $("count").textContent = (hard ? "Hard · " : "") + (game ? `Practice ${game}: ` : "") + `Guess ${Math.min(state.guesses.length + 1, MAX_GUESSES)} of ${MAX_GUESSES}`;
   }
@@ -1353,6 +1388,7 @@ html { scrollbar-gutter: stable; }
       else if (state.guesses.length >= MAX_GUESSES) { state.over = true; }
       $("input").value = "";
       save(); renderAll(prev);
+      if (state.over) $("input").blur();
       if (state.won) confetti();
     });
 
@@ -1433,7 +1469,11 @@ html { scrollbar-gutter: stable; }
     function confetti() {
       if (matchMedia("(prefers-reduced-motion:reduce)").matches) return;
       const c = document.createElement("canvas"); c.id = "confetti"; document.body.appendChild(c);
-      const x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
+      //const x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
+      const x = c.getContext("2d");
+      const r = c.getBoundingClientRect();     // measure the CSS-sized canvas
+      c.width = r.width; c.height = r.height;
+
       const cols = ["#f0b92e", "#3b8dff", "#34c26b", "#b07cff", "#e8efe9"];
       const ps = Array.from({ length: 160 }, () => ({
         x: Math.random() * c.width, y: -Math.random() * c.height * .6,
