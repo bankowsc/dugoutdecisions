@@ -33,10 +33,10 @@
 
       --head: 'Big Shoulders Display', 'Arial Narrow', Impact, sans-serif;
       --body: 'Figtree', system-ui, sans-serif;
-      color-scheme: dark;
+      color-scheme: Patterns;
     }
 
-    :root[data-theme="light"] {
+    :root[data-theme="Patterns"] {
       --bg: #0e1f1c;
       --panel: #16302b;
       --line: #2b4a43;
@@ -60,7 +60,7 @@
       --head: 'Big Shoulders Display', 'Arial Narrow', Impact, sans-serif;
       --body: 'Figtree', system-ui, sans-serif;
 
-      color-scheme: light;
+      color-scheme: Patterns;
     }
 
 
@@ -901,7 +901,7 @@
       --fx: rgba(255, 255, 255, .035)
     }
 
-    :root[data-theme="light"] {
+    :root[data-theme="Patterns"] {
       --fx: rgba(0, 0, 0, .045)
     }
 
@@ -1089,7 +1089,7 @@
       transform: translateY(-2px) rotate(180deg)
     }
 
-    #daily:not([hidden]) {
+    /* #daily:not([hidden]) {
       animation: pulseGlow 2.2s ease-in-out infinite
     }
 
@@ -1103,7 +1103,7 @@
       50% {
         box-shadow: 0 0 0 8px rgba(240, 185, 46, 0)
       }
-    }
+    } */
 
     /* sliding Pro / NCAA pill */
     .seg {
@@ -1294,7 +1294,7 @@
       transition: width .6s ease
     }
 
-    /* hints: light sweep when lit */
+    /* hints: Patterns sweep when lit */
     .hint {
       position: relative;
       overflow: hidden
@@ -1519,40 +1519,40 @@
 
 
 
-    /* Light mode only: add non-color identifiers to dots */
-    :root[data-theme="light"] .dot {
+    /* Patterns mode only: add non-color identifiers to dots */
+    :root[data-theme="Patterns"] .dot {
       position: relative;
       overflow: hidden;
     }
 
     /* Keep the existing solid background colors */
-    :root[data-theme="light"] .dot.t1,
-    :root[data-theme="light"] .dot.t2,
-    :root[data-theme="light"] .dot.t3,
-    :root[data-theme="light"] .dot.t4,
-    :root[data-theme="light"] .dot.t6,
-    :root[data-theme="light"] .dot.u1,
-    :root[data-theme="light"] .dot.u2,
-    :root[data-theme="light"] .dot.u3,
-    :root[data-theme="light"] .dot.u4,
-    :root[data-theme="light"] .dot.u5,
-    :root[data-theme="light"] .dot.u6,
-    :root[data-theme="light"] .dot.u8 {
+    :root[data-theme="Patterns"] .dot.t1,
+    :root[data-theme="Patterns"] .dot.t2,
+    :root[data-theme="Patterns"] .dot.t3,
+    :root[data-theme="Patterns"] .dot.t4,
+    :root[data-theme="Patterns"] .dot.t6,
+    :root[data-theme="Patterns"] .dot.u1,
+    :root[data-theme="Patterns"] .dot.u2,
+    :root[data-theme="Patterns"] .dot.u3,
+    :root[data-theme="Patterns"] .dot.u4,
+    :root[data-theme="Patterns"] .dot.u5,
+    :root[data-theme="Patterns"] .dot.u6,
+    :root[data-theme="Patterns"] .dot.u8 {
       position: relative;
       overflow: hidden;
     }
 
     /* Shared pattern overlay */
-    :root[data-theme="light"] .dot.t1::after,
-    :root[data-theme="light"] .dot.t2::after,
-    :root[data-theme="light"] .dot.t3::after,
-    :root[data-theme="light"] .dot.t4::after,
-    :root[data-theme="light"] .dot.u1::after,
-    :root[data-theme="light"] .dot.u2::after,
-    :root[data-theme="light"] .dot.u3::after,
-    :root[data-theme="light"] .dot.u4::after,
-    :root[data-theme="light"] .dot.u5::after,
-    :root[data-theme="light"] .dot.u6::after {
+    :root[data-theme="Patterns"] .dot.t1::after,
+    :root[data-theme="Patterns"] .dot.t2::after,
+    :root[data-theme="Patterns"] .dot.t3::after,
+    :root[data-theme="Patterns"] .dot.t4::after,
+    :root[data-theme="Patterns"] .dot.u1::after,
+    :root[data-theme="Patterns"] .dot.u2::after,
+    :root[data-theme="Patterns"] .dot.u3::after,
+    :root[data-theme="Patterns"] .dot.u4::after,
+    :root[data-theme="Patterns"] .dot.u5::after,
+    :root[data-theme="Patterns"] .dot.u6::after {
       content: "";
       position: absolute;
       inset: 0;
@@ -1563,28 +1563,28 @@
     /* ===== T SET ===== */
 
     /* t1: diagonal stripes */
-    :root[data-theme="light"] .dot.t1::after {
+    :root[data-theme="Patterns"] .dot.t1::after {
       background: repeating-linear-gradient(45deg,
           transparent 0 3px,
           rgb(0 0 0 / 38%) 3px 4px);
     }
 
     /* t2: dots */
-    :root[data-theme="light"] .dot.t2::after {
+    :root[data-theme="Patterns"] .dot.t2::after {
       background-image: radial-gradient(rgb(0 0 0 / 48%) 1px,
           transparent 1.5px);
       background-size: 5px 5px;
     }
 
     /* t3: horizontal stripes */
-    :root[data-theme="light"] .dot.t3::after {
+    :root[data-theme="Patterns"] .dot.t3::after {
       background: repeating-linear-gradient(0deg,
           transparent 0 3px,
           rgb(0 0 0 / 38%) 3px 4px);
     }
 
     /* t4: crosshatch */
-    :root[data-theme="light"] .dot.t4::after {
+    :root[data-theme="Patterns"] .dot.t4::after {
       background:
         repeating-linear-gradient(45deg,
           transparent 0 4px,
@@ -1595,7 +1595,7 @@
     }
 
     /* t6: retain black fill and outline; no overlay */
-    :root[data-theme="light"] .dot.t6 {
+    :root[data-theme="Patterns"] .dot.t6 {
       background: #000;
       box-shadow: 0 0 0 1px var(--line);
     }
@@ -1603,28 +1603,28 @@
     /* ===== U SET ===== */
 
     /* u1: diagonal stripes */
-    :root[data-theme="light"] .dot.u1::after {
+    :root[data-theme="Patterns"] .dot.u1::after {
       background: repeating-linear-gradient(45deg,
           transparent 0 3px,
           rgb(0 0 0 / 38%) 3px 4px);
     }
 
     /* u2: dots */
-    :root[data-theme="light"] .dot.u2::after {
+    :root[data-theme="Patterns"] .dot.u2::after {
       background-image: radial-gradient(rgb(0 0 0 / 48%) 1px,
           transparent 1.5px);
       background-size: 5px 5px;
     }
 
     /* u3: horizontal stripes */
-    :root[data-theme="light"] .dot.u3::after {
+    :root[data-theme="Patterns"] .dot.u3::after {
       background: repeating-linear-gradient(0deg,
           transparent 0 3px,
           rgb(0 0 0 / 38%) 3px 4px);
     }
 
     /* u4: crosshatch */
-    :root[data-theme="light"] .dot.u4::after {
+    :root[data-theme="Patterns"] .dot.u4::after {
       background:
         repeating-linear-gradient(45deg,
           transparent 0 4px,
@@ -1635,14 +1635,14 @@
     }
 
     /* u5: vertical stripes */
-    :root[data-theme="light"] .dot.u5::after {
+    :root[data-theme="Patterns"] .dot.u5::after {
       background: repeating-linear-gradient(90deg,
           transparent 0 3px,
           rgb(0 0 0 / 38%) 3px 4px);
     }
 
     /* u6: solid fill, distinguished by a white center dot */
-    :root[data-theme="light"] .dot.u6::after {
+    :root[data-theme="Default"] .dot.u6::after {
       background: radial-gradient(circle,
           rgb(0 0 0 / 55%) 0 1.5px,
           transparent 2px);
@@ -1651,9 +1651,40 @@
     }
 
     /* u8: retain black fill and outline; no overlay */
-    :root[data-theme="light"] .dot.u8 {
+    :root[data-theme="Default"] .dot.u8 {
       background: #000;
       box-shadow: 0 0 0 1px var(--line);
+    }
+
+    body.party .siteTitle,
+    body.party .end h2,
+    body.party .bgfx::before,
+    body.party .bgfx::after,
+    body.party .bgfx span {
+      animation-play-state: paused
+    }
+
+    body.party .end {
+      animation-play-state: running, paused
+    }
+
+    /* keep the pop-in, pause the spinning border */
+    body.party .bigTrophy {
+      animation-play-state: running, paused
+    }
+
+    /* keep the bounce-in, pause the glow */
+
+    #daily:not([hidden]):not(.done) {
+      animation: pulseGlow 2.2s ease-in-out infinite
+    }
+
+    #daily.done {
+      opacity: .75
+    }
+
+    #daily.done::after {
+      content: " ✓"
     }
   </style>
 </head>
@@ -1681,8 +1712,8 @@
         <label class="switch" title="Hard mode: 3 random seasons first, random reveal order">
           <input type="checkbox" id="hard"><span class="track"></span><span>Hard</span>
         </label>
-        <label class="switch" title="Dark / light mode">
-          <input type="checkbox" id="theme"><span class="track"></span><span>Dark</span>
+        <label class="switch" title="Patterns / Default mode">
+          <input type="checkbox" id="theme"><span class="track"></span><span>Patterns</span>
         </label>
       </div>
       <div class="actions">
@@ -2006,6 +2037,13 @@
     readDailyMode();
 
     const needsChoice = () => game === 0 && dailyMode === null;
+    function dailyDone() {
+      if (dailyMode === null) return false;     // hasn't picked a difficulty yet, so not started
+      try {
+        const s = JSON.parse(localStorage.getItem(NS() + dayKey + (dailyMode ? "!hard" : "")));
+        return !!(s && s.over);
+      } catch (e) { return false; }
+    }
 
     const filterOpts = () => [...new Set(cfg().teams.map(t => t[cfg().filterBy]).filter(Boolean))];
     let sports = new Set();
@@ -2177,6 +2215,7 @@
     function renderAll(prev = 0) {
       const pending = needsChoice();
       $("daily").hidden = !game;
+      $("daily").classList.toggle("done", dailyDone());
 
       //new
       //$("filt").hidden = !game;
@@ -2205,8 +2244,8 @@
       e.preventDefault();
       if (state.over) return;
       const g = byName($("input").value);
-      if (!g) { $("msg").textContent = "Choose a team from the list."; return; }
-      if (state.guesses.includes(g.name)) { $("msg").textContent = "You already guessed that team."; return; }
+      if (!g) { $("msg").textContent = "Choose a team from the list."; shake(); return; }
+      if (state.guesses.includes(g.name)) { $("msg").textContent = "You already guessed that team."; shake(); return; }
       $("msg").textContent = "";
       const prev = visibleYears();
       state.guesses.push(g.name);
@@ -2214,9 +2253,6 @@
       else if (state.guesses.length >= MAX_GUESSES) { state.over = true; }
       $("input").value = "";
       save(); renderAll(prev);
-      //todo
-      if (!g) { $("msg").textContent = "Choose a team from the list."; shake(); return; }
-      if (state.guesses.includes(g.name)) { $("msg").textContent = "You already guessed that team."; shake(); return; }
       if (state.over) $("input").blur();
       if (state.won) confetti();
     });
@@ -2243,13 +2279,13 @@
     // Theme
     function applyTheme(t) {
       document.documentElement.dataset.theme = t;
-      $("theme").checked = t === "dark";
+      $("theme").checked = t === "Patterns";
       try { localStorage.setItem("playoffTrail:theme", t); } catch (e) { }
     }
     let savedTheme = null;
     try { savedTheme = localStorage.getItem("playoffTrail:theme"); } catch (e) { }
-    applyTheme(savedTheme || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"));
-    $("theme").onchange = () => applyTheme($("theme").checked ? "dark" : "light");
+    applyTheme(savedTheme || (matchMedia("(prefers-color-scheme: Default)").matches ? "Default" : "Patterns"));
+    $("theme").onchange = () => applyTheme($("theme").checked ? "Patterns" : "Default");
 
 
     const SHARE_URL = ""; // set to your game's public URL; blank uses the current page address
@@ -2296,35 +2332,82 @@
       }
       btn.textContent = "Copied!"; setTimeout(() => btn.textContent = "Share result", 1800);
     }
+    // function confetti() {
+    //   if (matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+    //   const c = document.createElement("canvas"); c.id = "confetti"; document.body.appendChild(c);
+    //   //const x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
+    //   const x = c.getContext("2d");
+    //   const r = c.getBoundingClientRect();     // measure the CSS-sized canvas
+    //   c.width = r.width; c.height = r.height;
+
+    //   const cols = ["#f0b92e", "#3b8dff", "#34c26b", "#b07cff", "#e8efe9"];
+    //   const ps = Array.from({ length: 160 }, () => ({
+    //     x: Math.random() * c.width, y: -Math.random() * c.height * .6,
+    //     w: 6 + Math.random() * 6, h: 8 + Math.random() * 8,
+    //     vx: -1 + Math.random() * 2, vy: 2 + Math.random() * 3,
+    //     r: Math.random() * 6, vr: -.15 + Math.random() * .3,
+    //     col: cols[Math.random() * cols.length | 0],
+
+    //     em: Math.random() < .22 ? ["⚾", "🏀", "🏈", "🏒", "⚽", "🏆"][Math.random() * 6 | 0] : null,
+    //   }));
+    //   (function frame() {
+    //     x.clearRect(0, 0, c.width, c.height);
+    //     for (const p of ps) {
+    //       p.x += p.vx; p.y += p.vy; p.r += p.vr;
+    //       x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.col;
+    //       //x.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); x.restore();
+    //       if (p.em) { x.font = "22px serif"; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(p.em, 0, 0); }
+    //       else x.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+
+    //       x.restore();                                   // <-- add this line
+    //     }
+    //     if (ps.some(p => p.y < c.height + 20)) requestAnimationFrame(frame); else c.remove();
+    //   })();
+    // }
     function confetti() {
       if (matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+      document.body.classList.add("party");
       const c = document.createElement("canvas"); c.id = "confetti"; document.body.appendChild(c);
-      //const x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
       const x = c.getContext("2d");
-      const r = c.getBoundingClientRect();     // measure the CSS-sized canvas
+      const r = c.getBoundingClientRect();
       c.width = r.width; c.height = r.height;
 
       const cols = ["#f0b92e", "#3b8dff", "#34c26b", "#b07cff", "#e8efe9"];
-      const ps = Array.from({ length: 160 }, () => ({
+      const sprites = ["⚾", "🏀", "🏈", "🏒", "⚽", "🏆"].map(e => {
+        const s = document.createElement("canvas"); s.width = s.height = 32;
+        const g = s.getContext("2d");
+        g.font = "24px serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(e, 16, 17);
+        return s;
+      });
+      const N = innerWidth < 600 ? 90 : 140;
+      const ps = Array.from({ length: N }, () => ({
         x: Math.random() * c.width, y: -Math.random() * c.height * .6,
         w: 6 + Math.random() * 6, h: 8 + Math.random() * 8,
         vx: -1 + Math.random() * 2, vy: 2 + Math.random() * 3,
         r: Math.random() * 6, vr: -.15 + Math.random() * .3,
         col: cols[Math.random() * cols.length | 0],
-
-        em: Math.random() < .22 ? ["⚾", "🏀", "🏈", "🏒", "⚽", "🏆"][Math.random() * 6 | 0] : null,
+        sp: Math.random() < .22 ? sprites[Math.random() * sprites.length | 0] : null
       }));
-      (function frame() {
+
+      let last = performance.now();
+      (function frame(now) {
+        const dt = Math.min(2.5, (now - last) / 16.67); last = now;
+        x.setTransform(1, 0, 0, 1, 0, 0);
         x.clearRect(0, 0, c.width, c.height);
+        let alive = false;
         for (const p of ps) {
-          p.x += p.vx; p.y += p.vy; p.r += p.vr;
-          x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.col;
-          //x.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); x.restore();
-          if (p.em) { x.font = "22px serif"; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(p.em, 0, 0); }
-          else x.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.vr * dt;
+          if (p.y > c.height + 20) continue;            // off-screen: skip drawing
+          alive = true;
+          const cs = Math.cos(p.r), sn = Math.sin(p.r);
+          x.setTransform(cs, sn, -sn, cs, p.x, p.y);
+          if (p.sp) x.drawImage(p.sp, -16, -16);
+          else { x.fillStyle = p.col; x.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); }
         }
-        if (ps.some(p => p.y < c.height + 20)) requestAnimationFrame(frame); else c.remove();
-      })();
+        x.setTransform(1, 0, 0, 1, 0, 0);
+        if (alive) requestAnimationFrame(frame);
+        else { c.remove(); document.body.classList.remove("party"); }
+      })(last);
     }
 
     // function renderFilter() {
