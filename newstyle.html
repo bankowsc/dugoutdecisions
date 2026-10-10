@@ -810,11 +810,13 @@
 
     .dot.u7 {
       background: none;
-      font-size: 1rem
+      font-size: 1rem;
+      font-style: normal
     }
 
     .season .dot.u7 {
-      font-size: 1.6rem
+      font-size: 1.6rem;
+      font-style: normal
     }
 
     .dot.u8 {
@@ -1686,6 +1688,40 @@
     #daily.done::after {
       content: " ✓"
     }
+
+    .endHead {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px
+    }
+
+    .endHead h2 {
+      margin: 0
+    }
+
+    .bigTrophy {
+      font-size: 2.4rem
+    }
+
+    .end.lost h2 {
+      background-image: linear-gradient(90deg, var(--chalk), #ff5a4d, var(--chalk))
+    }
+
+    .end.lost {
+      background: linear-gradient(var(--panel), var(--panel)) padding-box,
+        conic-gradient(from var(--ang), #ff5a4d, #8a1c1c, #ff9a8a, #ff5a4d) border-box;
+    }
+
+    .cdot {
+      display: inline-block;
+      font-style: normal;
+      font-size: 1rem;
+      line-height: 1;
+      margin: 0 2px;
+      filter:
+        drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+    }
   </style>
 </head>
 
@@ -2015,7 +2051,9 @@
         legend: [["u1", "", "First Four / Round of 64"], ["u2", "", "Round of 32"], ["u3", "", "Sweet 16"],
         ["u4", "", "Elite 8"], ["u5", "", "Final Four"], ["u6", "", "National Runner-up"],
         ["u7", "🏆", "National Champion"], ["x", "✕", "Missed Tournament"]],
-        notes: ["The 2020 tournament was canceled and is listed as a miss for every team."]
+        notes: ["The 2020 tournament was canceled and is listed as a miss for every team.",
+          "Team color bank: ⚫🔵🟢🟠🟣🔴⚪🟡 *Yellow included for Gold & Brown"
+        ]
       }
     };
     let modeKey = "pro";
@@ -2165,7 +2203,8 @@
         const tc = teamColors(target);
         const found = new Set();
         state.guesses.forEach(n => teamColors(byName(n)).forEach(c => { if (tc.includes(c)) found.add(c); }));
-        const shown = tc.map(c => found.has(c) || state.over ? c : "?").join(" ");
+        //const shown = tc.map(c => found.has(c) || state.over ? c : "?").join(" ");
+        const shown = tc.map(c => found.has(c) || state.over ? `<span class="cdot">${c}</span>` : "?").join(" ");
         const all = tc.length && tc.every(c => found.has(c));
         third = cell(all ? "on" : found.size ? "part" : state.over ? "reveal" : "", "Colors", shown || "?");
       } else {
@@ -2180,7 +2219,10 @@
       $("guesses").innerHTML = state.guesses.map(n => {
         const g = byName(n), c = compare(g);
         const chip = (cls, t) => `<span class="chip ${cls}" style="${CHIP[cls] || ""}">${t || "—"}</span>`;
-        const third = ncaa ? chip(["", "part", "ok"][c.col || 0], teamColors(g).join(" "))
+        // const third = ncaa ? chip(["", "part", "ok"][c.col || 0], teamColors(g).join(" "))
+        //   : chip(c.div ? "ok" : "", g.division);
+        const third = ncaa
+          ? chip(["", "part", "ok"][c.col || 0], teamColors(g).map(k => `<span class="cdot">${k}</span>`).join(""))
           : chip(c.div ? "ok" : "", g.division);
         return `<div class="guess"><span class="n">${g.name}</span>${chip(c.sport ? "ok" : "", g.sport)}${chip(c.conf ? "ok" : "", g.conference)}${third}</div>`;
       }).join("");
@@ -2188,8 +2230,8 @@
     }
 
     function renderEnd() {
-      $("end").innerHTML = !state.over ? "" : `<div class="end"><h2>${state.won ? '<div class="bigTrophy">🏆</div>' : ""}${state.won ? "Got it" : "Out of guesses"}</h2>
-    <p>${state.won ? `Solved in ${state.guesses.length} of ${MAX_GUESSES}.` : "Today's team was:"}</p>
+      $("end").innerHTML = !state.over ? "" : `<div class="end${state.won ? "" : " lost"}"><div class="endHead">${state.won ? '<span class="bigTrophy">🏆</span>' : ""}<h2>${state.won ? "Got it" : "Out of guesses"}</h2></div>
+    <p>${state.won ? `Solved in ${state.guesses.length} of ${MAX_GUESSES}.` : "The team was:"}</p>
     <p style="color:var(--chalk);font-weight:600">${target.name}</p><p>${game ? "Press ∞ for another team." : "Come back tomorrow for a new team."}</p><button id="share" type="button" onclick="share(this)">Share result</button></div>`;
       $("input").disabled = $("btn").disabled = state.over;
     }
