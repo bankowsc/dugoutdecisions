@@ -1776,6 +1776,26 @@
     .legend {
       padding-right: 0
     }
+
+    .seg {
+      grid-template-columns: repeat(3, 1fr)
+    }
+
+    .seg::before {
+      width: calc(100% / 3)
+    }
+
+    .seg:has(button[data-m="ncaa"].on)::before {
+      transform: translateX(100%)
+    }
+
+    .seg:has(button[data-m="ucl"].on)::before {
+      transform: translateX(200%)
+    }
+
+    .titleRow {
+      flex-wrap: wrap
+    }
   </style>
 </head>
 
@@ -1794,6 +1814,7 @@
         <div class="seg" id="seg">
           <button type="button" data-m="pro">Pro</button>
           <button type="button" data-m="ncaa">NCAA</button>
+          <button type="button" data-m="ucl">UCL</button>
         </div>
       </div>
       <p class="sub">Name the franchise from its postseason history. New team every day.</p>
@@ -2080,7 +2101,75 @@
       { name: "Connecticut", sport: "NCAAM", conference: "BigEast", division: "🔵⚪", history: "627711000020701705105" },
       { name: "Villanova", sport: "NCAAM", conference: "BigEast", division: "🔵⚪", history: "100053027272210125314" },
       { name: "Xavier", sport: "NCAAM", conference: "BigEast", division: "🔵⚪", history: "010300002423103133421" },
-    ]
+    ];
+
+    const TEAMS3 = [
+      // ---------- ENGLAND ----------
+      { name: "Arsenal", sport: "UCL", conference: "England", division: "Premier League", history: "432000000111111123214" },
+      { name: "Aston Villa", sport: "UCL", conference: "England", division: "Premier League", history: "020000000000000000000" },
+      { name: "Chelsea", sport: "UCL", conference: "England", division: "Premier League", history: "100225101011305213431" },
+      { name: "Leicester City", sport: "UCL", conference: "England", division: "League One", history: "000000000200000000000" },
+      { name: "Liverpool", sport: "UCL", conference: "England", division: "Premier League", history: "210142154000000002341" },
+      { name: "Manchester City", sport: "UCL", conference: "England", division: "Premier League", history: "102534222131100000000" },
+      { name: "Manchester United", sport: "UCL", conference: "England", division: "Premier League", history: "000010021000210424530" },
+      { name: "Newcastle United", sport: "UCL", conference: "England", division: "Premier League", history: "100000000000000000000" },
+      { name: "Tottenham Hotspur", sport: "UCL", conference: "England", division: "Premier League", history: "100100141100000200000" },
+
+      // ---------- SPAIN ----------
+      { name: "Atlético Madrid", sport: "UCL", conference: "Spain", division: "La Liga", history: "312021210342400001000" },
+      { name: "Barcelona", sport: "UCL", conference: "Spain", division: "La Liga", history: "232001232225233535315" },
+      { name: "Málaga", sport: "UCL", conference: "Spain", division: "La Liga", history: "000000000000020000000" },
+      { name: "Real Madrid", sport: "UCL", conference: "Spain", division: "La Liga", history: "225353115553533311111" },
+      { name: "Real Sociedad", sport: "UCL", conference: "Spain", division: "La Liga", history: "001000000000000000000" },
+      { name: "Sevilla", sport: "UCL", conference: "Spain", division: "La Liga", history: "000001002100000010100" },
+      { name: "Valencia", sport: "UCL", conference: "Spain", division: "La Liga", history: "000000100000010100020" },
+      { name: "Villarreal", sport: "UCL", conference: "Spain", division: "La Liga", history: "000030000000000002003" },
+
+      // ---------- GERMANY ---------- // ALL TODO
+      { name: "Bayer Leverkusen", sport: "UCL", conference: "Germany", division: "Bundesliga", history: "1" },
+      { name: "Bayern Munich", sport: "UCL", conference: "Germany", division: "Bundesliga", history: "323222513233354142021" },
+      { name: "Borussia Dortmund", sport: "UCL", conference: "Germany", division: "Bundesliga", history: "124112111201241000000" },
+      { name: "Eintracht Frankfurt", sport: "UCL", confrence: "Germany", division: "Bundesliga", history: "0" },
+      { name: "RB Leipzig", sport: "UCL", conference: "Germany", division: "Bundesliga", history: "011111301000000000000" },
+      { name: "Schalke 04", sport: "UCL", conference: "Germany", division: "Bundesliga", history: "000000010001110300201" },
+      { name: "VfL Wolfsburg", sport: "UCL", conference: "Germany", division: "2. Bundesliga", history: "000010000020000010000" },
+
+      // ---------- ITALY ----------
+      { name: "Atalanta", sport: "UCL", conference: "Italy", division: "Serie A", history: "100001200000000000000" },
+      { name: "Inter Milan", sport: "UCL", conference: "Italy", division: "Serie A", history: "041410000000001251112" },
+      { name: "Juventus", sport: "UCL", conference: "Italy", division: "Serie A", history: "000011122414020001002" },
+      { name: "Lazio", sport: "UCL", conference: "Italy", division: "Serie A", history: "001001000000000000000" },
+      { name: "AC Milan", sport: "UCL", conference: "Italy", division: "Serie A", history: "000300000000112110153" },
+      { name: "Napoli", sport: "UCL", conference: "Italy", division: "Serie A", history: "001200100100001000000" },
+      { name: "Roma", sport: "UCL", conference: "Italy", division: "Serie A", history: "000000013010000101220" },
+
+      // ---------- FRANCE ----------
+      { name: "Bordeaux", sport: "UCL", conference: "France", division: "Régionale 1", history: "000000000000000020000" },
+      { name: "Lyon", sport: "UCL", conference: "France", division: "Ligue 1", history: "000000310000001131112" },
+      { name: "Marseille", sport: "UCL", conference: "France", division: "Ligue 1", history: "100101000000102111100" }, //TODO
+      { name: "Monaco", sport: "UCL", conference: "France", division: "Ligue 1", history: "000000000302000000000" },
+      { name: "Paris Saint-Germain", sport: "UCL", conference: "France", division: "Ligue 1", history: "553113411122220000000" },
+
+      // ---------- PORTUGAL ----------
+      { name: "Benfica", sport: "UCL", conference: "Portugal", division: "Primeira Liga", history: "010220000120002000002" },
+      { name: "Porto", sport: "UCL", conference: "Portugal", division: "Primeira Liga", history: "001102021102010012110" },
+      { name: "Sporting CP", sport: "UCL", conference: "Portugal", division: "Primeira Liga", history: "200010000000000001000" },
+
+      // ---------- NETHERLANDS ----------
+      { name: "Ajax", sport: "UCL", conference: "Netherlands", division: "Eredivisie", history: "000010030000000000001" },
+      { name: "PSV Eindhoven", sport: "UCL", conference: "Netherlands", division: "Eredivisie", history: "011000000010000000021" },
+
+      // ---------- TURKEY ----------
+      { name: "Fenerbahçe", sport: "UCL", conference: "Turkey", division: "Süper Lig", history: "000000000000000000200" },
+      { name: "Galatasaray", sport: "UCL", conference: "Turkey", division: "Süper Lig", history: "100000000000120000000" },
+
+      // ---------- RUSSIA ----------
+      { name: "CSKA Moscow", sport: "UCL", conference: "Russia", division: "Russian Premier League", history: "000000000000001020000" },
+      { name: "Zenit Saint Petersburg", sport: "UCL", conference: "Russia", division: "Russian Premier League", history: "000000000010101000000" },
+
+    ];
+
+
 
 
     /* ============================================================ */
@@ -2090,7 +2179,8 @@
     const dayKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
     const MODES = {
       pro: {
-        teams: TEAMS, filterBy: "sport", prefix: "t", shareName: "PLAYOFF TRAIL",
+        teams: TEAMS, filterBy: "sport", prefix: "t", shareName: "PLAYOFF TRAIL · Pro",
+        labels: ["Sport", "Conference", "Division"],
         icons: ["✕", "", "", "", "", "🏆", ""],
         legend: [["t1", "", "First Round / Wild Card"], ["t2", "", "Divisional / Conference Semis"],
         ["t3", "", "League/Conference Championship Game"], ["t4", "", "League/Conference Champion (Lost Final)"],
@@ -2102,6 +2192,7 @@
       },
       ncaa: {
         teams: TEAMS2, filterBy: "conference", prefix: "u", shareName: "PLAYOFF TRAIL · NCAA",
+        labels: ["Sport", "Conference", "Colors"],
         icons: ["✕", "", "", "", "", "", "", "🏆", ""],
         legend: [["u1", "", "First Four / Round of 64"], ["u2", "", "Round of 32"], ["u3", "", "Sweet 16"],
         ["u4", "", "Elite 8"], ["u5", "", "Final Four"], ["u6", "", "National Runner-up"],
@@ -2109,12 +2200,23 @@
         notes: ["The 2020 tournament was canceled and is listed as a miss for every team.",
           "Team color bank: ⚫🔵🟢🟠🟣🔴⚪🟡 *Yellow included for Gold & Brown"
         ]
+      },
+      ucl: {
+        teams: TEAMS3, filterBy: "division", prefix: "t", shareName: "PLAYOFF TRAIL · UCL",
+        labels: ["Sport", "Conference", "League"],
+        icons: ["✕", "", "", "", "", "🏆", ""],
+        legend: [["t1", "", "Group / League Phase or Round of 16"], ["t2", "", "Quarterfinal"],
+        ["t3", "", "Semifinal"], ["t4", "", "Runner-up (Lost Final)"],
+        ["t5", "🏆", "Champions League Winner"], ["x", "✕", "Missed UCL"]],
+        notes: ["Year is the season's end year: 2025-26 is listed under 2026.",
+          "Teams who lose in groups or first phase KO round count as misses. Reaching round of 16 is the first level."]
       }
     };
     let modeKey = "pro";
     try { const m = localStorage.getItem("playoffTrail:mode"); if (MODES[m]) modeKey = m; } catch (e) { }
     const cfg = () => MODES[modeKey];
-    const NS = () => modeKey === "pro" ? "playoffTrail:" : "playoffTrail:ncaa:";   // pro keeps its old keys
+    // const NS = () => modeKey === "pro" ? "playoffTrail:" : "playoffTrail:ncaa:";   // pro keeps its old keys
+    const NS = () => modeKey === "pro" ? "playoffTrail:" : "playoffTrail:" + modeKey + ":";
     const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" });
     function teamColors(t) {
       if (t.divison) return t.divison;
@@ -2243,29 +2345,55 @@
       $("shown").parentElement.style.setProperty("--p", n / YEARS);
     }
 
+    // function renderHints() {
+    //   const matched = { sport: false, conf: false, div: false };
+    //   state.guesses.forEach(n => { const c = compare(byName(n)); for (const k in matched) matched[k] ||= c[k]; });
+    //   //const cell = (cls, label, val) => `<div class="hint ${cls}"><small>${label}</small><strong>${val}</strong></div>`;
+    //   const fill = {
+    //     on: "background:var(--good);border-color:var(--good);color:#fff",
+    //     part: "background:var(--r3);border-color:var(--r3);color:#1c1503"
+    //   };
+    //   const cell = (cls, label, val) => `<div class="hint ${cls}" style="${fill[cls] || ""}"><small>${label}</small><strong>${val}</strong></div>`;
+    //   const std = (k, label, val) => cell(matched[k] ? "on" : state.over ? "reveal" : "", label, matched[k] || state.over ? val : "?");
+    //   let third;
+    //   if (modeKey === "ncaa") {
+    //     const tc = teamColors(target);
+    //     const found = new Set();
+    //     state.guesses.forEach(n => teamColors(byName(n)).forEach(c => { if (tc.includes(c)) found.add(c); }));
+    //     //const shown = tc.map(c => found.has(c) || state.over ? c : "?").join(" ");
+    //     const shown = tc.map(c => found.has(c) || state.over ? `<span class="cdot">${c}</span>` : "?").join(" ");
+    //     const all = tc.length && tc.every(c => found.has(c));
+    //     third = cell(all ? "on" : found.size ? "part" : state.over ? "reveal" : "", "Colors", shown || "?");
+    //   } else {
+    //     third = std("div", "Division", target.division || "None");
+    //   }
+    //   $("hints").innerHTML = std("sport", "Sport", target.sport) + std("conf", "Conference", target.conference) + third;
+    // }
     function renderHints() {
+      const L = cfg().labels;                       // e.g. ["Sport", "Country", "League"]
       const matched = { sport: false, conf: false, div: false };
       state.guesses.forEach(n => { const c = compare(byName(n)); for (const k in matched) matched[k] ||= c[k]; });
-      //const cell = (cls, label, val) => `<div class="hint ${cls}"><small>${label}</small><strong>${val}</strong></div>`;
+
       const fill = {
         on: "background:var(--good);border-color:var(--good);color:#fff",
         part: "background:var(--r3);border-color:var(--r3);color:#1c1503"
       };
       const cell = (cls, label, val) => `<div class="hint ${cls}" style="${fill[cls] || ""}"><small>${label}</small><strong>${val}</strong></div>`;
       const std = (k, label, val) => cell(matched[k] ? "on" : state.over ? "reveal" : "", label, matched[k] || state.over ? val : "?");
+
       let third;
       if (modeKey === "ncaa") {
-        const tc = teamColors(target);
+        const tc = teamColors(target), tk = tc.map(key);
         const found = new Set();
-        state.guesses.forEach(n => teamColors(byName(n)).forEach(c => { if (tc.includes(c)) found.add(c); }));
-        //const shown = tc.map(c => found.has(c) || state.over ? c : "?").join(" ");
-        const shown = tc.map(c => found.has(c) || state.over ? `<span class="cdot">${c}</span>` : "?").join(" ");
-        const all = tc.length && tc.every(c => found.has(c));
-        third = cell(all ? "on" : found.size ? "part" : state.over ? "reveal" : "", "Colors", shown || "?");
+        state.guesses.forEach(n => teamColors(byName(n)).map(key).forEach(k => { if (tk.includes(k)) found.add(k); }));
+        const shown = tc.map((c, i) => found.has(tk[i]) || state.over ? `<span class="cdot">${c}</span>` : "?").join(" ");
+        const all = tk.length && tk.every(k => found.has(k));
+        third = cell(all ? "on" : found.size ? "part" : state.over ? "reveal" : "", L[2], shown || "?");
       } else {
-        third = std("div", "Division", target.division || "None");
+        third = std("div", L[2], target.division || "None");
       }
-      $("hints").innerHTML = std("sport", "Sport", target.sport) + std("conf", "Conference", target.conference) + third;
+
+      $("hints").innerHTML = std("sport", L[0], target.sport) + std("conf", L[1], target.conference) + third;
     }
 
     const CHIP = { ok: "background:var(--good);color:#fff", part: "background:var(--r3);color:#1c1503" };
