@@ -1016,7 +1016,7 @@
       background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
-      animation: shimmer 7s linear infinite
+      animation: shimmer 7s linear infinite;
     }
 
     @keyframes shimmer {
@@ -1722,6 +1722,60 @@
       filter:
         drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
     }
+
+    .endBtns {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px
+    }
+
+    .endBtns button {
+      margin-top: 0
+    }
+
+    .endBtns .alt {
+      background: var(--panel);
+      color: var(--chalk);
+      border: 1px solid var(--line);
+      box-shadow: none
+    }
+
+    .endBtns .alt:hover {
+      border-color: var(--r3);
+      box-shadow: 0 0 0 3px rgba(240, 185, 46, .2)
+    }
+
+
+    .titleRow .siteTitle {
+      padding-bottom: .14em;
+      margin-bottom: -.14em;
+      margin: 0 0 2px
+    }
+
+    .actions .info {
+      position: static;
+      align-self: center;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border-radius: 50%;
+      margin: 0 0 40px auto;
+      /* auto left margin pins it to the right end of the row */
+      font-style: normal;
+      font-size: 1.2rem;
+    }
+
+    .actions .info[aria-expanded="true"],
+    .actions .info[aria-expanded="true"]:hover {
+      transform: rotate(45deg)
+    }
+
+    /* keeps the + turning into an x */
+    .legend {
+      padding-right: 0
+    }
   </style>
 </head>
 
@@ -1754,8 +1808,11 @@
       </div>
       <div class="actions">
         <button id="inf" type="button" aria-label="New random game" title="New random game">∞</button>
+        <button class="info" id="infoBtn" type="button" aria-expanded="false" aria-controls="notes" aria-label="Notes"
+          title="Notes">+</button>
         <button id="filt" type="button" title="Choose leagues for practice games" hidden>Leagues</button>
         <button id="daily" type="button" hidden>Daily</button>
+
       </div>
     </div>
 
@@ -1763,8 +1820,6 @@
 
 
     <div class="legend" id="legend" aria-label="Legend">
-      <button class="info" id="infoBtn" type="button" aria-expanded="false" aria-controls="notes" aria-label="Notes"
-        title="Notes">+</button>
       <span><i class="dot x">✕</i>Missed Playoffs</span>
       <span><i class="dot t6"></i>Franchise Didn't Exist</span>
       <span><i class="dot t1"></i>First Round / Wild Card</span>
@@ -1846,15 +1901,15 @@
       { name: "Chicago Cubs", sport: "MLB", conference: "NL", division: "Central", history: "120000101353000000220" },
       { name: "Chicago White Sox", sport: "MLB", conference: "AL", division: "Central", history: "200002100000000000200" },
       { name: "Cincinnati Reds", sport: "MLB", conference: "NL", division: "Central", history: "010000100000012020000" },
-      { name: "Cleveland Guardians", sport: "MLB", conference: "AL", division: "Central", history: "213020102240010000030" },
+      { name: "Cleveland Guardians", sport: "MLB", conference: "AL", division: "Central", history: "313020102240010000030" },
       { name: "Colorado Rockies", sport: "MLB", conference: "NL", division: "West", history: "000000002100000002040" },
       { name: "Detroit Tigers", sport: "MLB", conference: "AL", division: "Central", history: "022000000000234300004" },
       { name: "Houston Astros", sport: "MLB", conference: "AL", division: "West", history: "101354343502000000000" },
       { name: "Kansas City Royals", sport: "MLB", conference: "AL", division: "Central", history: "002000000005400000000" },
       { name: "Los Angeles Angels", sport: "MLB", conference: "AL", division: "West", history: "000000000000200003220" },
-      { name: "Los Angeles Dodgers", sport: "MLB", conference: "NL", division: "West", history: "255223524432230003302" },
+      { name: "Los Angeles Dodgers", sport: "MLB", conference: "NL", division: "West", history: "355223524432230003302" },
       { name: "Miami Marlins", sport: "MLB", conference: "NL", division: "East", history: "000100200000000000000" },
-      { name: "Milwaukee Brewers", sport: "MLB", conference: "NL", division: "Central", history: "231102113000000300200" },
+      { name: "Milwaukee Brewers", sport: "MLB", conference: "NL", division: "Central", history: "331102113000000300200" },
       { name: "Minnesota Twins", sport: "MLB", conference: "AL", division: "Central", history: "000200120100000022002" },
       { name: "New York Mets", sport: "MLB", conference: "NL", division: "East", history: "003010000014000000003" },
       { name: "New York Yankees", sport: "MLB", conference: "AL", division: "East", history: "224031232301003235022" },
@@ -1865,7 +1920,7 @@
       { name: "San Francisco Giants", sport: "MLB", conference: "NL", division: "West", history: "000002000020505050000" },
       { name: "Seattle Mariners", sport: "MLB", conference: "AL", division: "West", history: "030020000000000000000" },
       { name: "St. Louis Cardinals", sport: "MLB", conference: "NL", division: "Central", history: "000011130002343502005" },
-      { name: "Tampa Bay Rays", sport: "MLB", conference: "AL", division: "East", history: "200112420000020220400" },
+      { name: "Tampa Bay Rays", sport: "MLB", conference: "AL", division: "East", history: "300112420000020220400" },
       { name: "Texas Rangers", sport: "MLB", conference: "AL", division: "West", history: "000500000022001440000" },
       { name: "Toronto Blue Jays", sport: "MLB", conference: "AL", division: "East", history: "040110100033000000000" },
       { name: "Washington Nationals", sport: "MLB", conference: "NL", division: "East", history: "000000050220202000000" },
@@ -2229,10 +2284,21 @@
       $("count").textContent = (hard ? "Hard · " : "") + (game ? `Practice ${game}: ` : "") + `Guess ${Math.min(state.guesses.length + 1, MAX_GUESSES)} of ${MAX_GUESSES}`;
     }
 
+    // function renderEnd() {
+    //   $("end").innerHTML = !state.over ? "" : `<div class="end${state.won ? "" : " lost"}"><div class="endHead">${state.won ? '<span class="bigTrophy">🏆</span>' : ""}<h2>${state.won ? "Got it" : "Out of guesses"}</h2></div>
+    // <p>${state.won ? `Solved in ${state.guesses.length} of ${MAX_GUESSES}.` : "The team was:"}</p>
+    // <p style="color:var(--chalk);font-weight:600">${target.name}</p><p>${game ? "Press ∞ for another team." : "Come back tomorrow for a new team."}</p><button id="share" type="button" onclick="share(this)">Share result</button></div>`;
+    //   $("input").disabled = $("btn").disabled = state.over;
+    // }
     function renderEnd() {
       $("end").innerHTML = !state.over ? "" : `<div class="end${state.won ? "" : " lost"}"><div class="endHead">${state.won ? '<span class="bigTrophy">🏆</span>' : ""}<h2>${state.won ? "Got it" : "Out of guesses"}</h2></div>
     <p>${state.won ? `Solved in ${state.guesses.length} of ${MAX_GUESSES}.` : "The team was:"}</p>
-    <p style="color:var(--chalk);font-weight:600">${target.name}</p><p>${game ? "Press ∞ for another team." : "Come back tomorrow for a new team."}</p><button id="share" type="button" onclick="share(this)">Share result</button></div>`;
+    <p style="color:var(--chalk);font-weight:600">${target.name}</p>
+    <p>${game ? "Ready for another one?" : "Come back tomorrow, or keep playing in infinity mode."}</p>
+    <div class="endBtns">
+      <button id="share" type="button" onclick="share(this)">Share result</button>
+      <button class="alt" type="button" onclick="document.getElementById('inf').click()">∞ New Game</button>
+    </div></div>`;
       $("input").disabled = $("btn").disabled = state.over;
     }
 
@@ -2515,7 +2581,7 @@
 
 
     (function balls() {
-      const L = $("bgfx"), E = ["⚾", "🏀", "🏈", "🏒", "⚽", "🥎", "🏐", "🎾"];
+      const L = $("bgfx"), E = ["⚾", "🏀", "🏈", "🏒", "⚽"];
       for (let i = 0; i < 14; i++) {
         const b = document.createElement("span");
         b.textContent = E[i % E.length];
