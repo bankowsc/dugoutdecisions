@@ -3001,6 +3001,7 @@
         }
         function renderAll(prev = 0) {
             const pending = needsChoice();
+            PIXBG.journey(pending ? 0 : state.over ? 6 : Math.min(6, state.guesses.length));
             // $("daily").hidden = !game;
             $("daily").hidden = !(game || dayKey !== TODAY);
             $("daily").classList.toggle("done", dailyDone());
@@ -3511,6 +3512,9 @@
                 O: "111101101101111", P: "110101110100100", R: "110101110101101", S: "011100010001110", T: "111010010010010",
                 U: "101101101101111", "!": "010010010000010"
             };
+
+            Object.assign(FONT, { D: "110101101101110", M: "101111111101101", Y: "101101010010010" });
+
             const text = (s, x, y, sc, c) => {
                 g.fillStyle = c;
                 [...s].forEach((ch, n) => {
@@ -3523,6 +3527,16 @@
             let PX = 4, W = 0, H = 0, HZ = 0, T = 0, last = 0;
             let stars = [], clouds = [], crowd = [], balls = [], parts = [], rings = [], pops = [], rockets = [];
             let flash = 0, flashC = "#fff", dim = 0, amp = .6, wipe = -1;
+            let stage = 0, pos = 0, trav = 0, warp = 0, boost = 0, fade = 0, first = true;
+            const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+            const hh = n => { n = Math.sin(n * 127.1 + 311.7) * 43758.5453; return n - Math.floor(n); };   // stable pseudo-random
+            const mixa = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+            const rgb = a => "rgb(" + a.map(Math.round).join() + ")";
+            const SKY = [["#3a4a8a", "#f6a36b"], ["#4f9be0", "#bfe3f5"], ["#3d8ee8", "#9fd5ff"],
+            ["#4d86d8", "#f3d9a4"], ["#5a3d8a", "#ff8a5c"], ["#1a1f55", "#7a4a8a"]].map(p => p.map(hex));
+            const NAMES = ["HOME", "FARM", "ROAD", "CITY", "TAILGATE", "GATES", "STADIUM"];
+            // repeats fn along a scrolling layer: par = parallax speed, period = spacing
+            const lay = (par, period, fn) => { const o = trav * par, i0 = Math.floor(o / period); for (let i = i0; ; i++) { const x = i * period - o; if (x > W + period) break; fn(x, i); } };
             const FW = ["#f0b92e", "#3b8dff", "#34c26b", "#ff5a4d", "#ffffff", "#d946ef"];
 
             function build() {
@@ -3557,65 +3571,266 @@
             };
             const rocket = () => rockets.push({ x: rnd(W * .15, W * .85), y: H, vy: -rnd(3, 4.2), top: rnd(H * .12, H * .42), c: FW[(Math.random() * FW.length) | 0] });
 
+            // function react(kind, el) {
+            //     if (reduce) return;
+            //     const r = el ? el.getBoundingClientRect() : { left: innerWidth / 2, top: innerHeight / 2, width: 0 };
+            //     const [x, y] = toLow(r.left + r.width / 2, r.top);
+            //     if (kind === "hot") { pop("HIT!", x, y - 6, "#7dffa8"); ring(x, y, "#7dffa8", 26); burst(x, y, 28, ["#7dffa8", "#2f9e5a", "#fff"]); flash = .55; flashC = "#9dffb8"; amp += 3; launch(x, y, 2); }
+            //     if (kind === "warm") { pop("SAFE", x, y - 6, "#ffe27d"); ring(x, y, "#ffe27d", 20); burst(x, y, 16, ["#ffe27d", "#f0b92e", "#fff"]); flash = .3; flashC = "#ffe9a0"; amp += 1.5; launch(x, y); }
+            //     if (kind === "cold") { pop("BALL", x, y - 6, "#9fb4cc"); burst(x, y, 8, ["#9fb4cc", "#6b7f99"], 1.1); amp += .5; }
+            //     if (kind === "win") {
+            //         pop("GOAL!", W / 2, H * .28, "#f0b92e", 3); for (let i = 0; i < 8; i++) setTimeout(rocket, i * 240);
+            //         flash = 1; flashC = "#fff"; amp = 8; launch(x, y, 6); burst(x, y, 40, FW, 2.4);
+            //     }
+            //     if (kind === "lose") {
+            //         pop("OUT", W / 2, H * .28, "#ff6a5d", 3); dim = 1; amp = 0;
+            //         for (let i = 0; i < 46; i++) parts.push({ x: rnd(0, W), y: rnd(-20, 0), vx: -.3, vy: rnd(1.5, 3), l: 80, c: "#8fa6c4", s: 1, gv: .02 });
+            //     }
+            // }
             function react(kind, el) {
                 if (reduce) return;
                 const r = el ? el.getBoundingClientRect() : { left: innerWidth / 2, top: innerHeight / 2, width: 0 };
                 const [x, y] = toLow(r.left + r.width / 2, r.top);
-                if (kind === "hot") { pop("HIT!", x, y - 6, "#7dffa8"); ring(x, y, "#7dffa8", 26); burst(x, y, 28, ["#7dffa8", "#2f9e5a", "#fff"]); flash = .55; flashC = "#9dffb8"; amp += 3; launch(x, y, 2); }
-                if (kind === "warm") { pop("SAFE", x, y - 6, "#ffe27d"); ring(x, y, "#ffe27d", 20); burst(x, y, 16, ["#ffe27d", "#f0b92e", "#fff"]); flash = .3; flashC = "#ffe9a0"; amp += 1.5; launch(x, y); }
-                if (kind === "cold") { pop("BALL", x, y - 6, "#9fb4cc"); burst(x, y, 8, ["#9fb4cc", "#6b7f99"], 1.1); amp += .5; }
+                if (kind === "hot") { pop("HIT!", x, y - 6, "#7dffa8"); ring(x, y, "#7dffa8", 26); burst(x, y, 28, ["#7dffa8", "#2f9e5a", "#fff"]); flash = .55; flashC = "#9dffb8"; amp += 3; boost += 3; launch(x, y, 2); }
+                if (kind === "warm") { pop("SAFE", x, y - 6, "#ffe27d"); ring(x, y, "#ffe27d", 20); burst(x, y, 16, ["#ffe27d", "#f0b92e", "#fff"]); flash = .3; flashC = "#ffe9a0"; amp += 1.5; boost += 1.5; launch(x, y); }
+                if (kind === "cold") { pop("BALL", x, y - 6, "#9fb4cc"); burst(x, y, 8, ["#9fb4cc", "#6b7f99"], 1.1); amp += .5; boost += .6; }
                 if (kind === "win") {
-                    pop("GOAL!", W / 2, H * .28, "#f0b92e", 3); for (let i = 0; i < 8; i++) setTimeout(rocket, i * 240);
-                    flash = 1; flashC = "#fff"; amp = 8; launch(x, y, 6); burst(x, y, 40, FW, 2.4);
+                    pop("GOAL!", W / 2, H * .3, "#f0b92e", 3); for (let i = 0; i < 8; i++) setTimeout(rocket, i * 240);
+                    flash = 1; flashC = "#fff"; amp = 8; warp = 1; boost += 6; launch(x, y, 6); burst(x, y, 40, FW, 2.4);
                 }
                 if (kind === "lose") {
-                    pop("OUT", W / 2, H * .28, "#ff6a5d", 3); dim = 1; amp = 0;
+                    pop("OUT", W / 2, H * .3, "#ff6a5d", 3); dim = 1; amp = 0;
                     for (let i = 0; i < 46; i++) parts.push({ x: rnd(0, W), y: rnd(-20, 0), vx: -.3, vy: rnd(1.5, 3), l: 80, c: "#8fa6c4", s: 1, gv: .02 });
                 }
             }
 
             // ---- one frame ----
+            // function draw() {
+            //     const p = goal();
+            //     KEYS.forEach(k => { const t = hex(p[k]); for (let i = 0; i < 3; i++) cur[k][i] += (t[i] - cur[k][i]) * .08; });
+            //     const C = {}; KEYS.forEach(k => C[k] = "rgb(" + cur[k].map(Math.round).join() + ")");
+            //     const night = !isDay(), gh = H - HZ;
+            //     amp += (.6 - amp) * .03; flash *= .9; dim *= .96;
+            //     g.imageSmoothingEnabled = false;
+
+            //     for (let i = 0; i < 10; i++) rect(0, i * HZ / 10, W, Math.ceil(HZ / 10) + 1, mixc(cur.skyT, cur.skyB, i / 9));
+            //     if (night) stars.forEach(s => { if (Math.sin(T * .003 + s.p) > .1) rect(s.x, s.y, s.s, s.s, "#fff"); });
+            //     g.globalAlpha = night ? .3 : .9;
+            //     clouds.forEach(c => { c.x += c.v; if (c.x > W + 4) c.x = -c.w; rect(c.x, c.y, c.w, 3, "#fff"); rect(c.x + 3, c.y - 2, c.w - 8, 2, "#fff"); rect(c.x + 6, c.y + 3, c.w - 12, 2, "#fff"); });
+            //     g.globalAlpha = 1;
+
+            //     [W * .1, W * .9].forEach(tx => {                                    // floodlight towers
+            //         tx |= 0;
+            //         if (night) { g.globalAlpha = .08 + flash * .22; rect(tx - 20, HZ - 66, 44, 56, "#fff6c0"); g.globalAlpha = 1; }
+            //         rect(tx, HZ - 46, 2, 30, "#1b2438"); rect(tx - 5, HZ - 52, 12, 7, "#2a3552");
+            //         for (let i = 0; i < 4; i++) for (let j = 0; j < 2; j++) rect(tx - 4 + i * 3, HZ - 51 + j * 3, 2, 2, night ? "#fff6c0" : "#aab4c8");
+            //     });
+
+            //     rect(0, HZ - 19, W, 19, C.wall); rect(0, HZ - 19, W, 1, "rgba(255,255,255,.12)");   // crowd
+            //     const cols = Math.ceil(W / 3), shirts = [C.acc, "#f4f6f8", "#d93a3a", "#3a6fd9"], skin = ["#f1c27d", "#e0ac69", "#c68642", "#8d5524"];
+            //     for (let r = 0; r < 3; r++) for (let i = 0; i < cols; i++) {
+            //         const s = crowd[r * cols + i], bob = Math.round(Math.max(0, Math.sin(i * .45 - T * .008 + r)) * amp * .9);
+            //         const x = i * 3, y = HZ - 17 + r * 5 - bob, fl = Math.random() < .002;
+            //         rect(x, y, 2, 2, fl ? "#fff" : skin[(s * 4) | 0]); rect(x, y + 2, 2, 2, fl ? "#fff" : shirts[((s * 16) | 0) % 4]);
+            //     }
+
+            //     rect(0, HZ, W, gh, C.g1);                                            // field
+            //     const sw = 14, off = (T * .012) % (sw * 2);
+            //     for (let x = -sw * 2 + off; x < W; x += sw * 2) rect(x, HZ, sw, gh, C.g2);
+            //     g.globalAlpha = .55;
+            //     if (mode === "pro") for (let x = -sw * 2 + off; x < W; x += sw * 2) rect(x, HZ, 1, gh, C.line);
+            //     else {
+            //         const cx = W / 2, cy = HZ + gh * .55, rx = Math.min(W * .3, gh * .8), ry = gh * .24;
+            //         for (let a = 0; a < 6.283; a += .05) rect(cx + Math.cos(a) * rx, cy + Math.sin(a) * ry, 1, 1, C.line);
+            //         rect(cx, HZ + 2, 1, gh, C.line);
+            //     }
+            //     rect(0, HZ + 2, W, 1, C.line); g.globalAlpha = 1;
+
+            //     balls.forEach(b => {
+            //         b.vy += .12; b.x += b.vx; b.y += b.vy;
+            //         if (b.y > b.gy - 9) { b.y = b.gy - 9; b.vy *= -.78; b.vx *= .985; if (Math.abs(b.vy) < 1) b.vy = b.amb ? -rnd(3.5, 6) : 0; }
+            //         if (b.x < 0 || b.x > W - 9) { b.vx *= -1; b.x = Math.max(0, Math.min(W - 9, b.x)); }
+            //         if (!b.amb) b.life--;
+            //         g.globalAlpha = .3; rect(b.x + 1, b.gy, 7, 1, "#000"); g.globalAlpha = 1;
+            //         if (b.amb || b.life > 20 || b.life % 2) g.drawImage(SPR[b.t], b.x | 0, b.y | 0);
+            //     });
+            //     balls = balls.filter(b => b.amb || b.life > 0);
+
+            //     rings.forEach(r => {
+            //         r.r += 1.1; const n = Math.max(12, (r.r * 5) | 0);
+            //         for (let i = 0; i < n; i++) { const a = i / n * 6.283; rect(r.x + Math.cos(a) * r.r, r.y + Math.sin(a) * r.r, 1, 1, r.c); }
+            //     });
+            //     rings = rings.filter(r => r.r < r.max);
+
+            //     rockets.forEach(k => {
+            //         k.y += k.vy; parts.push({ x: k.x, y: k.y, vx: rnd(-.1, .1), vy: .4, l: 10, c: "#ffe9a8", s: 1, gv: .02 });
+            //         if (k.y <= k.top) {
+            //             k.dead = true; flash = Math.max(flash, .35); flashC = "#fff";
+            //             for (let i = 0; i < 34; i++) {
+            //                 const a = i / 34 * 6.283, s = rnd(.8, 2.2);
+            //                 parts.push({ x: k.x, y: k.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, l: (36 + rnd(0, 14)) | 0, c: Math.random() < .3 ? "#fff" : k.c, s: 1, gv: .05 });
+            //             }
+            //         }
+            //     });
+            //     rockets = rockets.filter(k => !k.dead);
+
+            //     parts.forEach(q => { q.vy += q.gv ?? .12; q.x += q.vx; q.y += q.vy; q.l--; if (q.l > 8 || q.l % 2) rect(q.x, q.y, q.s, q.s, q.c); });
+            //     parts = parts.filter(q => q.l > 0 && q.y < H + 4);
+
+            //     pops.forEach(o => {
+            //         o.l--; o.y -= .25;
+            //         if (o.l > 12 || o.l % 2) {
+            //             const w = o.s.length * 4 * o.sc - o.sc, x = o.x - w / 2;
+            //             [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(([dx, dy]) => text(o.s, x + dx, o.y + dy, o.sc, "#0a0f1a")); text(o.s, x, o.y, o.sc, o.c);
+            //         }
+            //     });
+            //     pops = pops.filter(o => o.l > 0);
+
+            //     if (flash > .02) { g.globalAlpha = flash * .35; rect(0, 0, W, H, flashC); g.globalAlpha = 1; }
+            //     if (dim > .02) { g.globalAlpha = dim * .5; rect(0, 0, W, H, "#000"); g.globalAlpha = 1; }
+            //     if (wipe >= 0) { wipe += W / 22; rect(wipe - 8, 0, 8, H, C.acc); g.globalAlpha = .35; rect(wipe - 40, 0, 32, H, C.acc); g.globalAlpha = 1; if (wipe > W + 60) wipe = -1; }
+            // }
             function draw() {
                 const p = goal();
                 KEYS.forEach(k => { const t = hex(p[k]); for (let i = 0; i < 3; i++) cur[k][i] += (t[i] - cur[k][i]) * .08; });
-                const C = {}; KEYS.forEach(k => C[k] = "rgb(" + cur[k].map(Math.round).join() + ")");
-                const night = !isDay(), gh = H - HZ;
+                const C = {}; KEYS.forEach(k => C[k] = rgb(cur[k]));
+
+                // ---- journey physics: ease toward the target stop; travel speed grows with the distance left ----
+                const d = stage - pos;
+                pos += d * (.035 + warp * .09); if (Math.abs(stage - pos) < .003) pos = stage;
+                const speed = Math.min(26, .35 + Math.abs(d) * (2.2 + warp * 14) + boost);
+                trav += speed; boost *= .93; warp *= .965; fade *= .88;
                 amp += (.6 - amp) * .03; flash *= .9; dim *= .96;
+
+                const night = !isDay(), gh = H - HZ, by = HZ + 3, rd = HZ + gh * .38, fa = clamp(pos - 5);
+                const si = Math.min(5, Math.floor(pos)), sf = pos - si;
+                const B = si === 5 ? [cur.skyT, cur.skyB] : SKY[si + 1];
+                const skyTop = mixa(SKY[si][0], B[0], sf), skyBot = mixa(SKY[si][1], B[1], sf);
                 g.imageSmoothingEnabled = false;
 
-                for (let i = 0; i < 10; i++) rect(0, i * HZ / 10, W, Math.ceil(HZ / 10) + 1, mixc(cur.skyT, cur.skyB, i / 9));
-                if (night) stars.forEach(s => { if (Math.sin(T * .003 + s.p) > .1) rect(s.x, s.y, s.s, s.s, "#fff"); });
-                g.globalAlpha = night ? .3 : .9;
-                clouds.forEach(c => { c.x += c.v; if (c.x > W + 4) c.x = -c.w; rect(c.x, c.y, c.w, 3, "#fff"); rect(c.x + 3, c.y - 2, c.w - 8, 2, "#fff"); rect(c.x + 6, c.y + 3, c.w - 12, 2, "#fff"); });
+                // sky + sun + stars + clouds
+                for (let i = 0; i < 10; i++) rect(0, i * HZ / 10, W, Math.ceil(HZ / 10) + 1, mixc(skyTop, skyBot, i / 9));
+                if (pos < 5.3) {
+                    const t = clamp(pos / 5.2), sx = W * (.12 + .76 * t), sy = HZ * (.95 - Math.sin(t * Math.PI) * .75);
+                    const col = rgb(mixa([255, 190, 110], [255, 244, 190], Math.sin(t * Math.PI)));
+                    rect(sx - 4, sy - 2, 8, 4, col); rect(sx - 3, sy - 3, 6, 6, col); rect(sx - 2, sy - 4, 4, 8, col);
+                }
+                const starsA = night ? clamp((pos - 4.3) / 1.4) : 0;
+                if (starsA > .02) { g.globalAlpha = starsA; stars.forEach(s => { if (Math.sin(T * .003 + s.p) > .1) rect(s.x, s.y, s.s, s.s, "#fff"); }); g.globalAlpha = 1; }
+                g.globalAlpha = .9 - .6 * clamp((pos - 3.5) / 2);
+                clouds.forEach(c => { c.x += c.v + speed * .02; if (c.x > W + 4) c.x = -c.w; rect(c.x, c.y, c.w, 3, "#fff"); rect(c.x + 3, c.y - 2, c.w - 8, 2, "#fff"); rect(c.x + 6, c.y + 3, c.w - 12, 2, "#fff"); });
                 g.globalAlpha = 1;
 
-                [W * .1, W * .9].forEach(tx => {                                    // floodlight towers
-                    tx |= 0;
-                    if (night) { g.globalAlpha = .08 + flash * .22; rect(tx - 20, HZ - 66, 44, 56, "#fff6c0"); g.globalAlpha = 1; }
-                    rect(tx, HZ - 46, 2, 30, "#1b2438"); rect(tx - 5, HZ - 52, 12, 7, "#2a3552");
-                    for (let i = 0; i < 4; i++) for (let j = 0; j < 2; j++) rect(tx - 4 + i * 3, HZ - 51 + j * 3, 2, 2, night ? "#fff6c0" : "#aab4c8");
-                });
-
-                rect(0, HZ - 19, W, 19, C.wall); rect(0, HZ - 19, W, 1, "rgba(255,255,255,.12)");   // crowd
-                const cols = Math.ceil(W / 3), shirts = [C.acc, "#f4f6f8", "#d93a3a", "#3a6fd9"], skin = ["#f1c27d", "#e0ac69", "#c68642", "#8d5524"];
-                for (let r = 0; r < 3; r++) for (let i = 0; i < cols; i++) {
-                    const s = crowd[r * cols + i], bob = Math.round(Math.max(0, Math.sin(i * .45 - T * .008 + r)) * amp * .9);
-                    const x = i * 3, y = HZ - 17 + r * 5 - bob, fl = Math.random() < .002;
-                    rect(x, y, 2, 2, fl ? "#fff" : skin[(s * 4) | 0]); rect(x, y + 2, 2, 2, fl ? "#fff" : shirts[((s * 16) | 0) % 4]);
+                // the destination: a tiny stadium on the horizon that grows as you get closer
+                if (fa < .99) {
+                    const s = .12 + .8 * Math.pow(Math.min(pos, 5) / 5, 2), cx = W * .68, w = (W * (.08 + s * .5)) | 0, h = (HZ * (.05 + s * .33)) | 0, th = (6 + s * 6) | 0;
+                    const haze = rgb(mixa(skyBot, [22, 30, 54], .55 + .45 * s));
+                    g.globalAlpha = 1 - fa;
+                    rect(cx - w / 2, HZ - h, w, h + 2, haze); rect(cx - w / 2 + 2, HZ - h - 2, w - 4, 2, haze);
+                    for (let x = cx - w / 2 + 2; x < cx + w / 2 - 2; x += 3) rect(x, HZ - h + 2, 2, 1, "#ffe9a8");
+                    [cx - w / 2, cx + w / 2 - 1].forEach(tx => { rect(tx, HZ - h - th - 2, 1, th, haze); rect(tx - 1, HZ - h - th - 3, 3, 2, pos > 3 ? "#fff6c0" : "#b8c0d0"); });
+                    g.globalAlpha = 1;
                 }
 
-                rect(0, HZ, W, gh, C.g1);                                            // field
-                const sw = 14, off = (T * .012) % (sw * 2);
-                for (let x = -sw * 2 + off; x < W; x += sw * 2) rect(x, HZ, sw, gh, C.g2);
-                g.globalAlpha = .55;
-                if (mode === "pro") for (let x = -sw * 2 + off; x < W; x += sw * 2) rect(x, HZ, 1, gh, C.line);
-                else {
-                    const cx = W / 2, cy = HZ + gh * .55, rx = Math.min(W * .3, gh * .8), ry = gh * .24;
-                    for (let a = 0; a < 6.283; a += .05) rect(cx + Math.cos(a) * rx, cy + Math.sin(a) * ry, 1, 1, C.line);
-                    rect(cx, HZ + 2, 1, gh, C.line);
-                }
-                rect(0, HZ + 2, W, 1, C.line); g.globalAlpha = 1;
+                // the road (fades out as the real field fades in)
+                rect(0, HZ, W, gh, rgb(mixa([58, 138, 72], [20, 62, 46], clamp(pos / 5.5))));
+                rect(0, rd, W, (gh * .5) | 0, "#3a3f4a"); rect(0, rd, W, 1, "#cfd3da"); rect(0, rd + ((gh * .5) | 0), W, 1, "#cfd3da");
+                for (let x = -((trav * 1.2) % 18); x < W; x += 18) rect(x, rd + ((gh * .25) | 0), 9, 1, "#e8e2b0");
 
+                // ---- the 6 road settings, cross-fading as you travel ----
+                const SETS = [
+                    () => {   // 0 HOME: houses + trees
+                        const hc = ["#c9785a", "#e8d9b0", "#7a9ec9", "#d9a05a"];
+                        lay(.6, 46, (x, i) => {
+                            const c = hc[(hh(i) * 4) | 0];
+                            rect(x, by - 9, 14, 9, c); rect(x - 2, by - 11, 18, 2, "#6b3b2e"); rect(x, by - 13, 14, 2, "#6b3b2e"); rect(x + 3, by - 15, 8, 2, "#6b3b2e");
+                            rect(x + 6, by - 5, 3, 5, "#5a3a22"); rect(x + 2, by - 8, 3, 3, "#ffe9a8"); rect(x + 10, by - 8, 3, 3, "#ffe9a8");
+                        });
+                        lay(.8, 23, (x, i) => { if (hh(i + 5) < .35) return; rect(x + 3, by - 6, 2, 6, "#5a3a22"); rect(x, by - 14, 8, 8, "#2f7a3a"); rect(x + 2, by - 16, 4, 2, "#2f7a3a"); });
+                    },
+                    () => {   // 1 FARM: hills, fields, windmill, poles
+                        for (let x = 0; x < W; x += 2) { const y = Math.round(HZ - 8 - Math.sin((x + trav * .12) * .045) * 5); rect(x, y, 2, HZ - y + 2, "#5f9a63"); }
+                        lay(.35, 30, (x, i) => rect(x, HZ - 3, 22, 3, hh(i) < .5 ? "#d9c36a" : "#8bc16a"));
+                        lay(.8, 17, (x, i) => { if (hh(i + 2) < .4) return; rect(x + 2, by - 5, 2, 5, "#5a3a22"); rect(x, by - 11, 6, 6, "#2f7a3a"); });
+                        lay(1, 150, x => {
+                            rect(x, by - 24, 3, 24, "#d9d2c0"); const a = T * .004;
+                            for (let b = 0; b < 4; b++) for (let r = 2; r < 9; r++) rect(x + 1 + Math.cos(a + b * 1.5708) * r, by - 24 + Math.sin(a + b * 1.5708) * r, 1, 1, "#f4f6f8");
+                        });
+                        lay(1, 34, x => { rect(x, by - 20, 1, 22, "#3a2a1a"); rect(x - 3, by - 19, 7, 1, "#3a2a1a"); });
+                    },
+                    () => {   // 2 ROAD: billboards, overpass, traffic
+                        const words = ["SPORTS", "PLAY", "FANS", "BALL"], carC = ["#d93a3a", "#3b8dff", "#f0b92e", "#e8f1e8"];
+                        lay(.7, 90, (x, i) => {
+                            rect(x + 4, by - 16, 2, 16, "#444"); rect(x + 18, by - 16, 2, 16, "#444"); rect(x, by - 28, 25, 12, "#1c2b4a");
+                            text(words[(hh(i) * 4) | 0], x + 2, by - 24, 1, C.acc);
+                        });
+                        lay(1, 230, x => { rect(x, by - 34, 64, 4, "#6b7280"); rect(x + 4, by - 30, 3, 34, "#4b5563"); rect(x + 56, by - 30, 3, 34, "#4b5563"); });
+                        for (let k = 0; k < 4; k++) {
+                            const dir = k % 2 ? -1 : 1, M = W + 40, x = (((k * 83 + T * .05 * dir * (1 + k * .25)) % M) + M) % M - 20, y = rd + 3 + (k % 2) * 7;
+                            rect(x, y, 10, 3, carC[k]); rect(x + 2, y - 2, 6, 2, carC[k]); rect(x + 1, y + 3, 2, 1, "#000"); rect(x + 7, y + 3, 2, 1, "#000");
+                        }
+                    },
+                    () => {   // 3 CITY: two skyline layers with lit windows
+                        lay(.22, 15, (x, i) => { const h = (14 + hh(i) * 30) | 0, w = 11 + ((hh(i + 9) * 5) | 0); rect(x, HZ - h, w, h + 2, "#222c47"); });
+                        lay(.45, 17, (x, i) => {
+                            const h = (10 + hh(i + 4) * 22) | 0, w = 12 + ((hh(i + 1) * 4) | 0);
+                            rect(x, HZ - h, w, h + 2, "#1a2238");
+                            for (let r = 0; r * 4 < h - 4; r++) for (let c = 0; c * 4 < w - 4; c++) if (hh(i * 31 + r * 7 + c) > .55) rect(x + 2 + c * 4, HZ - h + 2 + r * 4, 2, 2, "#ffe9a8");
+                        });
+                    },
+                    () => {   // 4 TAILGATE: tents, flags, jumping fans
+                        const tc = ["#d93a3a", "#3b8dff", "#f0b92e", "#f4f6f8"];
+                        lay(.8, 38, (x, i) => { const c = tc[(hh(i) * 4) | 0]; rect(x, by - 4, 14, 4, c); rect(x + 2, by - 7, 10, 3, c); rect(x + 4, by - 9, 6, 2, c); rect(x + 6, by - 4, 2, 4, "#222"); });
+                        lay(.9, 26, (x, i) => { rect(x, by - 15, 1, 15, "#ddd"); rect(x + 1, by - 15, 4 + Math.round(Math.sin(T * .012 + i)), 3, C.acc); });
+                        lay(1.1, 9, (x, i) => {
+                            const j = Math.round(Math.max(0, Math.sin(T * .01 + i * 2)) * 2);
+                            rect(x, by - 5 - j, 2, 2, "#f1c27d"); rect(x, by - 3 - j, 2, 3, tc[(hh(i + 3) * 4) | 0]);
+                        });
+                    },
+                    () => {   // 5 GATES: the stadium wall, arches, banners
+                        lay(.8, 92, (x, i) => {
+                            rect(x, by - 30, 84, 30, "#2a3552"); rect(x, by - 31, 84, 1, "#5a6a94");
+                            for (let k = 0; k < 3; k++) { const ax = x + 8 + k * 26; rect(ax, by - 15, 14, 15, "#0b0f14"); rect(ax + 2, by - 17, 10, 2, "#0b0f14"); rect(ax + 5, by - 26, 4, 8, k === 1 ? C.acc : "#d93a3a"); }
+                            for (let k = 0; k < 8; k++) rect(x + 4 + k * 10, by - 29, 2, 2, "#fff6c0");
+                        });
+                        lay(1.2, 11, (x, i) => { rect(x, by - 4, 2, 2, "#f1c27d"); rect(x, by - 2, 2, 3, ["#d93a3a", "#f4f6f8", "#3b8dff"][(hh(i) * 3) | 0]); });
+                    }
+                ];
+                SETS.forEach((fn, i) => { const a = 1 - Math.abs(pos - i); if (a > .02) { g.globalAlpha = a; fn(); } });
+                g.globalAlpha = 1;
+
+                // ---- the final stop: towers, crowd and the field fade in over the road ----
+                if (fa > .01) {
+                    const ga = v => { g.globalAlpha = v * fa; };
+                    ga(1);
+                    [W * .1, W * .9].forEach(tx => {
+                        tx |= 0;
+                        if (night) { ga(.08 + flash * .22); rect(tx - 20, HZ - 66, 44, 56, "#fff6c0"); ga(1); }
+                        rect(tx, HZ - 46, 2, 30, "#1b2438"); rect(tx - 5, HZ - 52, 12, 7, "#2a3552");
+                        for (let i = 0; i < 4; i++) for (let j = 0; j < 2; j++) rect(tx - 4 + i * 3, HZ - 51 + j * 3, 2, 2, night ? "#fff6c0" : "#aab4c8");
+                    });
+                    rect(0, HZ - 19, W, 19, C.wall); rect(0, HZ - 19, W, 1, "rgba(255,255,255,.12)");
+                    const cols = Math.ceil(W / 3), shirts = [C.acc, "#f4f6f8", "#d93a3a", "#3a6fd9"], skin = ["#f1c27d", "#e0ac69", "#c68642", "#8d5524"];
+                    for (let r = 0; r < 3; r++) for (let i = 0; i < cols; i++) {
+                        const s = crowd[r * cols + i], bob = Math.round(Math.max(0, Math.sin(i * .45 - T * .008 + r)) * amp * .9);
+                        const x = i * 3, y = HZ - 17 + r * 5 - bob, fl = Math.random() < .002;
+                        rect(x, y, 2, 2, fl ? "#fff" : skin[(s * 4) | 0]); rect(x, y + 2, 2, 2, fl ? "#fff" : shirts[((s * 16) | 0) % 4]);
+                    }
+                    rect(0, HZ, W, gh, C.g1);
+                    const sw = 14, off = (trav * .9) % (sw * 2);
+                    for (let x = -off; x < W; x += sw * 2) rect(x, HZ, sw, gh, C.g2);
+                    ga(.55);
+                    if (mode === "pro") for (let x = -off; x < W; x += sw * 2) rect(x, HZ, 1, gh, C.line);
+                    else {
+                        const cx = W / 2, cy = HZ + gh * .55, rx = Math.min(W * .3, gh * .8), ry = gh * .24;
+                        for (let a = 0; a < 6.283; a += .05) rect(cx + Math.cos(a) * rx, cy + Math.sin(a) * ry, 1, 1, C.line);
+                        rect(cx, HZ + 2, 1, gh, C.line);
+                    }
+                    rect(0, HZ + 2, W, 1, C.line);
+                    g.globalAlpha = 1;
+                }
+
+                // ---- balls, effects ----
                 balls.forEach(b => {
                     b.vy += .12; b.x += b.vx; b.y += b.vy;
                     if (b.y > b.gy - 9) { b.y = b.gy - 9; b.vy *= -.78; b.vx *= .985; if (Math.abs(b.vy) < 1) b.vy = b.amb ? -rnd(3.5, 6) : 0; }
@@ -3647,6 +3862,13 @@
                 parts.forEach(q => { q.vy += q.gv ?? .12; q.x += q.vx; q.y += q.vy; q.l--; if (q.l > 8 || q.l % 2) rect(q.x, q.y, q.s, q.s, q.c); });
                 parts = parts.filter(q => q.l > 0 && q.y < H + 4);
 
+                // speed lines when you're really moving (or warping to the end)
+                if (warp > .05 || speed > 6) {
+                    g.globalAlpha = clamp(Math.max(warp, speed / 20)) * .55;
+                    for (let k = 0; k < 16; k++) { const y = (hh(k * 3.7 + ((T / 60) | 0)) * H) | 0, len = (14 + hh(k + 7) * 40) | 0, x = W - ((T * .6 + k * 47) % (W + len)); rect(x, y, len, 1, "#fff"); }
+                    g.globalAlpha = 1;
+                }
+
                 pops.forEach(o => {
                     o.l--; o.y -= .25;
                     if (o.l > 12 || o.l % 2) {
@@ -3658,6 +3880,7 @@
 
                 if (flash > .02) { g.globalAlpha = flash * .35; rect(0, 0, W, H, flashC); g.globalAlpha = 1; }
                 if (dim > .02) { g.globalAlpha = dim * .5; rect(0, 0, W, H, "#000"); g.globalAlpha = 1; }
+                if (fade > .02) { g.globalAlpha = fade * .8; rect(0, 0, W, H, "#000"); g.globalAlpha = 1; }
                 if (wipe >= 0) { wipe += W / 22; rect(wipe - 8, 0, 8, H, C.acc); g.globalAlpha = .35; rect(wipe - 40, 0, 32, H, C.acc); g.globalAlpha = 1; if (wipe > W + 60) wipe = -1; }
             }
 
@@ -3690,10 +3913,19 @@
             build();
             if (reduce) draw(); else requestAnimationFrame(frame);
 
+            function journey(t) {
+                if (reduce) { stage = pos = t; draw(); return; }
+                if (first) { first = false; stage = pos = t; pop(NAMES[t], W / 2, H * .16, "#fff", 2); return; }
+                if (t < stage) { stage = pos = t; fade = 1; pop(NAMES[t], W / 2, H * .16, "#fff", 2); return; }   // new game: back to the start
+                if (t > stage) { if (t - stage >= 2) warp = 1; stage = t; pop(NAMES[t], W / 2, H * .16, "#fff", 2); }   // jumped 2+ stops = woosh
+            }
+
             return {
                 react,
+                journey,
                 mode(m) { mode = PAL[m] ? m : "pro"; if (reduce) return; wipe = 0; pop(m === "pro" ? "PRO" : m.toUpperCase(), W / 2, H * .28, "#fff", 3); }
             };
+
         })();
 
         function heat(g) {
